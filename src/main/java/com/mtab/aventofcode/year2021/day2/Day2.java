@@ -1,4 +1,4 @@
-package com.mtab.aventofcode.year2021.day1;
+package com.mtab.aventofcode.year2021.day2;
 
 import com.mtab.aventofcode.models.IInputLoader;
 
@@ -10,7 +10,7 @@ public class Day2 implements
         Supplier<Integer>,
         IInputLoader<Day2.Instruction> {
 
-    private static String INPUT_PATH = "2021/day2/input.txt";
+    private static final String INPUT_PATH = "2021/day2/input.txt";
 
     @Override
     public Integer get() {

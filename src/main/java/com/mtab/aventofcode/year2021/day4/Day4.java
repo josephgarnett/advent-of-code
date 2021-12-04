@@ -86,12 +86,20 @@ public class Day4 implements Supplier<Map<BingoBoard, Integer>> {
         final Map.Entry<BingoBoard, Integer> firstWinningEntry = winningBoards.get(0);
         final Map.Entry<BingoBoard, Integer> lastWinningEntry = winningBoards.get(winningBoards.size() - 1);
 
+        final int firstResult = firstWinningEntry.getKey().unmarkedValue() * firstWinningEntry.getValue();
+        final int lastResult = lastWinningEntry.getKey().unmarkedValue() * lastWinningEntry.getValue();
+
+        assert firstResult == 27027;
+        assert lastResult == 36975;
+
         System.out.printf(
                 "First winner %d%n",
-                firstWinningEntry.getKey().unmarkedValue() * firstWinningEntry.getValue());
+                firstResult);
 
         System.out.printf(
                 "Last winner %d%n",
-                lastWinningEntry.getKey().unmarkedValue() * lastWinningEntry.getValue());
+                lastResult);
+
+        System.out.println(sw.elapsed(TimeUnit.MILLISECONDS));
     }
 }

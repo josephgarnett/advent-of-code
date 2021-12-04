@@ -3,7 +3,7 @@ package com.mtab.aventofcode.models;
 import java.io.File;
 import java.util.Objects;
 
-public interface InputLoader <R> {
+public interface InputLoader<R> {
 
     default File getResourceFile(final String resourcePath) {
         final ClassLoader classloader = Thread.currentThread().getContextClassLoader();

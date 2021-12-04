@@ -6,8 +6,7 @@ import com.mtab.aventofcode.models.InputLoader;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
@@ -31,50 +30,44 @@ public class Day4 implements
     }
 
     @Override
-    public Bingo getInput(final String filePath) {
-        try (BufferedReader br = new BufferedReader(
-                new FileReader(
-                        this.getResourceFile(filePath)))) {
-            final Bingo.Builder builder = new Bingo.Builder();
+    public Bingo transformResource(final BufferedReader bufferedReader) throws IOException {
+        final Bingo.Builder builder = new Bingo.Builder();
 
-            String line;
-            int index = 0;
-            Optional<BingoBoard> currentBoard = Optional.empty();
-            while ((line = br.readLine()) != null) {
-                if (index == 0 ) {
-                    final String[] numbers = line.split(",");
-                    builder.addNumbers(numbers);
-
-                    index++;
-                    continue;
-                }
-
-                if (StringUtils.isEmpty(line)) {
-                    currentBoard.ifPresent(builder::addBoard);
-                    currentBoard = Optional.of(new BingoBoard());
-                    index++;
-                    continue;
-                }
-
-                String finalLine = line;
-                currentBoard.ifPresent(board -> {
-                    board.addLine(
-                            Arrays
-                                    .stream(
-                                            finalLine.split("\\s+"))
-                                    .filter(StringUtils::isNotEmpty)
-                                    .collect(Collectors.toList()));
-                });
+        String line;
+        int index = 0;
+        Optional<BingoBoard> currentBoard = Optional.empty();
+        while ((line = bufferedReader.readLine()) != null) {
+            if (index == 0) {
+                final String[] numbers = line.split(",");
+                builder.addNumbers(numbers);
 
                 index++;
+                continue;
             }
 
-            currentBoard.ifPresent(builder::addBoard);
+            if (StringUtils.isEmpty(line)) {
+                currentBoard.ifPresent(builder::addBoard);
+                currentBoard = Optional.of(new BingoBoard());
+                index++;
+                continue;
+            }
 
-            return builder.build();
-        } catch (final Exception e) {
-            throw new RuntimeException(e);
+            String finalLine = line;
+            currentBoard.ifPresent(board -> {
+                board.addLine(
+                        Arrays
+                                .stream(
+                                        finalLine.split("\\s+"))
+                                .filter(StringUtils::isNotEmpty)
+                                .collect(Collectors.toList()));
+            });
+
+            index++;
         }
+
+        currentBoard.ifPresent(builder::addBoard);
+
+        return builder.build();
     }
 
     public static void main(final String[] args) {

@@ -2,6 +2,7 @@ package com.mtab.aventofcode.year2021.day4;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Stopwatch;
+import com.mtab.aventofcode.models.InputLoader;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.BufferedReader;
@@ -12,14 +13,16 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-public class Day4 implements Supplier<Map<BingoBoard, Integer>> {
+public class Day4 implements
+        InputLoader<Bingo>,
+        Supplier<Map<BingoBoard, Integer>> {
 
     private static final String INPUT_PATH = "2021/day4/input.txt";
 
     private final Bingo input;
 
     Day4() {
-        this.input = this.getInput();
+        this.input = this.getInput(INPUT_PATH);
     }
 
     @Override
@@ -27,12 +30,11 @@ public class Day4 implements Supplier<Map<BingoBoard, Integer>> {
         return this.input.get();
     }
 
-    public Bingo getInput() {
-        final ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-        final String path = Objects.requireNonNull(classloader.getResource(INPUT_PATH)).getPath();
-        final File file = new File(path);
-
-        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+    @Override
+    public Bingo getInput(final String filePath) {
+        try (BufferedReader br = new BufferedReader(
+                new FileReader(
+                        this.getResourceFile(filePath)))) {
             final Bingo.Builder builder = new Bingo.Builder();
 
             String line;

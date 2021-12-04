@@ -2,7 +2,7 @@ package com.mtab.aventofcode.year2021.day3;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Stopwatch;
-import com.mtab.aventofcode.models.IInputLoader;
+import com.mtab.aventofcode.models.InputListLoader;
 
 import java.util.BitSet;
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class Day3 implements
-        IInputLoader<BitSet>,
+        InputListLoader<BitSet>,
         Supplier<Long[]> {
     private static final String INPUT_PATH = "2021/day3/input.txt";
     private static final int LENGTH = 12;

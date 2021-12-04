@@ -3,14 +3,15 @@ package com.mtab.aventofcode.year2021.day1;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableList;
+import com.mtab.aventofcode.models.InputListLoader;
 
-import java.io.*;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
-public class Day1 implements Supplier<Integer> {
+public class Day1 implements
+        InputListLoader<Integer>,
+        Supplier<Integer> {
     private final boolean compareCondensed;
 
     private Day1() {
@@ -23,11 +24,18 @@ public class Day1 implements Supplier<Integer> {
 
     @Override
     public Integer get() {
+        final List<Integer> input = this.getInput("2021/day1/input.txt");
+
         if (this.compareCondensed) {
-            return this.compareCondensedList(this.INPUT);
+            return this.compareCondensedList(input);
         }
 
-        return this.compareFlatList(this.INPUT);
+        return this.compareFlatList(input);
+    }
+
+    @Override
+    public Integer parseLine(final String line, final int index) {
+        return Integer.parseInt(line);
     }
 
     private Integer compareFlatList(final List<Integer> input) {
@@ -56,30 +64,8 @@ public class Day1 implements Supplier<Integer> {
 
         }
 
-
-
         return this.compareFlatList(condensed.build());
     }
-
-    private static List<Integer> getInput() {
-        final ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-        final String path = Objects.requireNonNull(classloader.getResource("2021/day1/input.txt")).getPath();
-        final File file = new File(path);
-        final ImmutableList.Builder<Integer> builder = new ImmutableList.Builder<>();
-
-        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                builder.add(Integer.parseInt(line));
-            }
-
-            return builder.build();
-        } catch (final Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private List<Integer> INPUT = Day1.getInput();
 
     public static void main(final String[] args) {
         final Stopwatch sw = Stopwatch.createStarted();

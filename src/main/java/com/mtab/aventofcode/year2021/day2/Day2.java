@@ -3,7 +3,7 @@ package com.mtab.aventofcode.year2021.day2;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Stopwatch;
-import com.mtab.aventofcode.models.IInputLoader;
+import com.mtab.aventofcode.models.InputListLoader;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -12,7 +12,7 @@ import java.util.function.Supplier;
 
 public class Day2 implements
         Supplier<Integer>,
-        IInputLoader<Day2.Instruction> {
+        InputListLoader<Day2.Instruction> {
 
     private static final String INPUT_PATH = "2021/day2/input.txt";
 

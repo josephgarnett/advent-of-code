@@ -36,7 +36,7 @@ public class Day2 implements
     }
 
     @Override
-    public Instruction parseLine(String line) {
+    public Instruction parseLine(final String line, final int index) {
         final String[] parts = line.trim().split(" ");
         final Direction direction = Direction.valueOf(parts[0].toUpperCase());
         final int value = Integer.parseInt(parts[1]);

@@ -110,7 +110,7 @@ public class Day3 implements
     }
 
     @Override
-    public BitSet parseLine(String line) {
+    public BitSet parseLine(final String line, final int index) {
         final BitSet bitSet = new BitSet(LENGTH);
 
         for (int i = 0; i < LENGTH; ++i) {

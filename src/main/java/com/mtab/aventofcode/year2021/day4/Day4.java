@@ -1,5 +1,6 @@
 package com.mtab.aventofcode.year2021.day4;
 
+import com.google.common.base.Preconditions;
 import com.google.common.base.Stopwatch;
 import org.apache.commons.lang3.StringUtils;
 
@@ -89,8 +90,8 @@ public class Day4 implements Supplier<Map<BingoBoard, Integer>> {
         final int firstResult = firstWinningEntry.getKey().unmarkedValue() * firstWinningEntry.getValue();
         final int lastResult = lastWinningEntry.getKey().unmarkedValue() * lastWinningEntry.getValue();
 
-        assert firstResult == 27027;
-        assert lastResult == 36975;
+        Preconditions.checkArgument(firstResult == 27027);
+        Preconditions.checkArgument(lastResult == 36975);
 
         System.out.printf(
                 "First winner %d%n",

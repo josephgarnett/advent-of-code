@@ -1,9 +1,12 @@
 package com.mtab.aventofcode.year2021.day3;
 
+import com.google.common.base.Preconditions;
+import com.google.common.base.Stopwatch;
 import com.mtab.aventofcode.models.IInputLoader;
 
 import java.util.BitSet;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -121,12 +124,15 @@ public class Day3 implements
     }
 
     public static void main(final String[] args) {
+        final Stopwatch sw = Stopwatch.createStarted();
         final Long[] result = new Day3().get();
 
-        assert result[0] == 3320834;
+        Preconditions.checkArgument(result[0] == 3320834);
+        Preconditions.checkArgument(result[1] == 4481199);
 
         System.out.println(result[0]);
         System.out.println(result[1]);
+        System.out.printf("Execution time: %dms%n", sw.elapsed(TimeUnit.MILLISECONDS));
     }
 
 }

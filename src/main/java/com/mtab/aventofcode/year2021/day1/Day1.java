@@ -1,11 +1,13 @@
 package com.mtab.aventofcode.year2021.day1;
 
+import com.google.common.base.Preconditions;
+import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableList;
 
 import java.io.*;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
 public class Day1 implements Supplier<Integer> {
@@ -80,10 +82,14 @@ public class Day1 implements Supplier<Integer> {
     private List<Integer> INPUT = Day1.getInput();
 
     public static void main(final String[] args) {
+        final Stopwatch sw = Stopwatch.createStarted();
         final Integer flatResult = new Day1().get();
+        Preconditions.checkArgument(flatResult == 1581);
         System.out.println(flatResult);
 
         final Integer condensedResult = new Day1(true).get();
+        Preconditions.checkArgument(condensedResult == 1618);
         System.out.println(condensedResult);
+        System.out.printf("Execution time: %dms%n", sw.elapsed(TimeUnit.MILLISECONDS));
     }
 }

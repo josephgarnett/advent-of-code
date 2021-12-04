@@ -1,8 +1,12 @@
 package com.mtab.aventofcode.year2021.day2;
 
+import com.google.common.base.MoreObjects;
+import com.google.common.base.Preconditions;
+import com.google.common.base.Stopwatch;
 import com.mtab.aventofcode.models.IInputLoader;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
@@ -45,8 +49,11 @@ public class Day2 implements
     }
 
     public static void main(final String[] args) {
+        final Stopwatch sw = Stopwatch.createStarted();
         final Integer result = new Day2().get();
+        Preconditions.checkArgument(result == 1741971043);
         System.out.println(result);
+        System.out.printf("Execution time: %dms%n", sw.elapsed(TimeUnit.MILLISECONDS));
     }
 
     private enum Direction implements BiFunction<Integer, Integer, Integer> {
@@ -104,11 +111,10 @@ public class Day2 implements
         }
 
         public String toString() {
-            return "{"
-                    + String.format("direction: %s", this.direction.name())
-                    + ", "
-                    + String.format("value: %d", this.value)
-                    + " }";
+            return MoreObjects.toStringHelper(this)
+                    .add("direction", this.direction)
+                    .add("value", this.value)
+                    .toString();
         }
     }
 }

@@ -107,6 +107,7 @@ public class Day5 implements
 
         // Preconditions.checkArgument(result == 7414);
         // Preconditions.checkArgument(result == 12);
+        Preconditions.checkArgument(result == 19676);
 
         System.out.println(result);
         System.out.printf("Execution time: %dms%n", sw.elapsed(TimeUnit.MILLISECONDS));

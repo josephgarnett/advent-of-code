@@ -40,7 +40,11 @@ public class Day5 implements
                 .stream()
                 .flatMap((line) -> this.lineToPoints(line).stream())
                 .forEach((point) -> {
-                    result.computeIfPresent(point, (k, i) -> i + 1);
+                    if (result.containsKey(point)) {
+                        result.computeIfPresent(point, (k, i) -> i + 1);
+
+                        return;
+                    }
                     result.computeIfAbsent(point, (k) -> 1);
                 });
 

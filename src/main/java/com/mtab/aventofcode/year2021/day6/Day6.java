@@ -1,5 +1,6 @@
 package com.mtab.aventofcode.year2021.day6;
 
+import com.google.common.base.Preconditions;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableList;
 import com.mtab.aventofcode.models.InputLoader;
@@ -65,7 +66,7 @@ public class Day6 implements
         final Stopwatch sw = Stopwatch.createStarted();
         final long result = new Day6().get();
 
-        // Preconditions.checkArgument(result == 360268);
+        Preconditions.checkArgument(result == 1632146183902L);
 
         System.out.println(result);
         System.out.printf("Execution time: %dms%n", sw.elapsed(TimeUnit.MILLISECONDS));

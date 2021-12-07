@@ -18,6 +18,15 @@ public class Day7 implements
 
     private static final String INPUT_PATH = "2021/day7/input.txt";
 
+    private final boolean fuelRateConstant;
+
+    private Day7() {
+        this(true);
+    }
+    private Day7(final boolean constantFuelRate) {
+        this.fuelRateConstant = constantFuelRate;
+    }
+
     @Override
     public Integer get() {
         final List<Integer> positions = this.getInput(INPUT_PATH);
@@ -25,7 +34,7 @@ public class Day7 implements
 
         return values
                 .stream()
-                .mapToInt(i -> this.delta(i, positions))
+                .mapToInt(i -> this.cost(i, positions))
                 .min()
                 .orElseThrow(RuntimeException::new);
     }
@@ -46,11 +55,21 @@ public class Day7 implements
         return builder.build();
     }
 
-    private int delta(final int targetValue, final List<Integer> positions) {
+    private int cost(final int targetValue, final List<Integer> positions) {
         return positions
                 .stream()
-                .mapToInt(p -> Math.abs(p - targetValue))
+                .mapToInt(p -> this.fuelBurnt(p, targetValue))
                 .sum();
+    }
+
+    private int fuelBurnt(final int start, final int target) {
+        final int delta = Math.abs(start - target);
+
+        if (this.fuelRateConstant) {
+            return delta;
+        }
+
+        return (delta * (delta + 1)) / 2;
     }
 
     private List<Integer> targetValues(final List<Integer> numbers) {
@@ -59,6 +78,11 @@ public class Day7 implements
 
         final int[][] counts = new int[sorted.get(sorted.size() - 1)][2];
 
+        for (int i = 0; i < counts.length; ++i) {
+            counts[i][0] = i;
+        }
+
+        int acc = 0;
         for (int i = 0; i < sorted.size(); ++i) {
             if (i == sorted.size() - 1) {
                 break;
@@ -66,23 +90,30 @@ public class Day7 implements
 
             final int v = sorted.get(i);
 
-            counts[v][0] = v;
             counts[v][1]++;
+            acc+=v;
         }
 
+        final int average = acc / sorted.size();
+
         return Arrays.stream(counts)
-                .sorted((a, b) -> b[1] - a[1])
-                .filter(t -> t[1] > 0)
+                .sorted((a, b) -> {
+                    if (b[1] > 0 || a[1] > 0) {
+                        return b[1] - a[1];
+                    }
+
+                    return Math.abs(average - a[0]) - Math.abs(average - b[0]);
+                })
                 .map(t -> t[0])
                 .collect(Collectors.toList());
     }
 
     public static void main(final String[] args) {
         final Stopwatch sw = Stopwatch.createStarted();
-        final int result = new Day7().get();
+        final int result = new Day7(false).get();
 
         // Preconditions.checkArgument(result == 37);
-        Preconditions.checkArgument(result == 323647);
+        // Preconditions.checkArgument(result == 323647);
 
         System.out.println(result);
         System.out.printf("Execution time: %dms%n", sw.elapsed(TimeUnit.MILLISECONDS));

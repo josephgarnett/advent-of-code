@@ -74,8 +74,6 @@ public class Day7 implements
     }
 
     private List<Integer> targetValues(final List<Integer> numbers) {
-
-        int min = 0;
         int max = 0;
         int acc = 0;
         for (final int v : numbers) {

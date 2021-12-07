@@ -11,6 +11,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class Day7 implements
         InputLoader<List<Integer>>,
@@ -73,38 +74,23 @@ public class Day7 implements
     }
 
     private List<Integer> targetValues(final List<Integer> numbers) {
-        final List<Integer> sorted = new ArrayList<>(numbers);
-        sorted.sort(Comparator.comparingInt(a -> a));
 
-        final int[][] counts = new int[sorted.get(sorted.size() - 1)][2];
-
-        for (int i = 0; i < counts.length; ++i) {
-            counts[i][0] = i;
-        }
-
+        int min = 0;
+        int max = 0;
         int acc = 0;
-        for (int i = 0; i < sorted.size(); ++i) {
-            if (i == sorted.size() - 1) {
-                break;
+        for (final int v : numbers) {
+            acc += v;
+
+            if (v > max) {
+                max = v;
             }
-
-            final int v = sorted.get(i);
-
-            counts[v][1]++;
-            acc+=v;
         }
 
-        final int average = acc / sorted.size();
+        final int average = acc / numbers.size();
 
-        return Arrays.stream(counts)
-                .sorted((a, b) -> {
-                    if (b[1] > 0 || a[1] > 0) {
-                        return b[1] - a[1];
-                    }
-
-                    return Math.abs(average - a[0]) - Math.abs(average - b[0]);
-                })
-                .map(t -> t[0])
+        return IntStream.range(0, numbers.size() / 2)
+                .boxed()
+                .map(i -> i % 2 == 0 ? average - i : average + 1)
                 .collect(Collectors.toList());
     }
 

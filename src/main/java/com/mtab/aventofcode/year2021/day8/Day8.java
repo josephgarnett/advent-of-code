@@ -5,10 +5,7 @@ import com.google.common.collect.ImmutableList;
 import com.mtab.aventofcode.models.InputListLoader;
 import org.apache.commons.lang3.ArrayUtils;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -29,6 +26,7 @@ public class Day8 implements
         return this.input
                 .stream()
                 .mapToInt(Day8.Signal::getValue)
+                .peek(System.out::println)
                 .sum();
     }
 
@@ -47,7 +45,7 @@ public class Day8 implements
 
     public static void part1() {
         final Stopwatch sw = Stopwatch.createStarted();
-        final String inputPath = "2021/day8/test.txt";
+        final String inputPath = "2021/day8/input.txt";
         final int result = new Day8(inputPath).get();
 
         System.out.println(result);
@@ -70,14 +68,10 @@ public class Day8 implements
             final String[] display = this.display(this.signal);
 
             this.codeTable.put(new Hash(display[0] + display[1] + display[2] + display[3] + display[4] + display[5]), 0);
-            this.codeTable.put(new Hash(display[5] + display[4]), 1);
             this.codeTable.put(new Hash(display[3] + display[4] + display[6] + display[1] + display[0]), 2);
             this.codeTable.put(new Hash(display[3] + display[4] + display[6] + display[5] + display[0]), 3);
-            this.codeTable.put(new Hash(display[2] + display[6] + display[4] + display[5]), 4);
             this.codeTable.put(new Hash(display[3] + display[2] + display[6] + display[5] + display[0]), 5);
             this.codeTable.put(new Hash(display[3] + display[2] + display[6] + display[5] + display[0] + display[1]), 6);
-            this.codeTable.put(new Hash(display[3] + display[4] + display[5]), 7);
-            this.codeTable.put(new Hash(display[0] + display[1] + display[2] + display[3] + display[4] + display[5] + display[6]), 8);
             this.codeTable.put(new Hash(display[3] + display[2] + display[6] + display[4] + display[5] + display[0]), 9);
         }
 
@@ -91,54 +85,112 @@ public class Day8 implements
              *             1    5
              *              0000
              */
-            final String[] result = new String[7];
-            final List<String> sigs = new ArrayList<>(signals);
+            final Map<Integer, List<BitSet>> grouped = new HashMap<>(10);
 
-            sigs.sort(Comparator.comparing(String::length));
+            for (final String s: signals) {
+                grouped.computeIfPresent(s.length(), (k, v) -> {
+                    v.add(this.stringToBitset(s));
 
-            // TODO: refine logic to provide accurate display
-            for (final String s: sigs) {
-                final int len = s.length();
-                final String[] letters = s.split("");
+                    return v;
+                });
+                grouped.computeIfAbsent(s.length(), (k) -> {
+                    final List<BitSet> r = new ArrayList<>();
 
-                // overlay 1 & 7
-                // get value for 3 + 2 possible values for 4 & 5
-                // overlay 3 get value for 0
-                // overlay 2 get value for 4 & 5 & 6 & 2
-                // overlay 5 get value for 1
+                    r.add(this.stringToBitset(s));
 
-                if (len == 2) {
-                    result[4] = letters[0];
-                    result[5] = letters[1];
-                    continue;
-                }
-
-                if (len == 3) {
-                    if (!ArrayUtils.contains(result, letters[0])) {
-                        result[3] = letters[0];
-                    }
-                    if (!ArrayUtils.contains(result, letters[1])) {
-                        result[3] = letters[1];
-                    }
-                    if (!ArrayUtils.contains(result, letters[2])) {
-                        result[3] = letters[2];
-                    }
-                    continue;
-                }
-
-                if (len == 4) {
-                    result[2] = letters[0];
-                    result[6] = letters[2];
-                    continue;
-                }
-
-                if (len == 6 && !s.contains(result[4])) {
-                    result[0] = letters[0];
-                    result[1] = letters[3];
-                }
+                    return r;
+                });
             }
 
+            final String[] result = new String[7];
+
+            final BitSet one = grouped.get(2).get(0);
+            final BitSet seven = grouped.get(3).get(0);
+            final BitSet four = grouped.get(4).get(0);
+            final BitSet eight = grouped.get(7).get(0);
+
+            final BitSet six = grouped.get(6)
+                    .stream()
+                    .filter((b) -> {
+                        final BitSet t = new BitSet();
+                        t.or(b);
+                        t.and(one);
+
+                        return t.cardinality() == 1;
+                    })
+                    .findFirst()
+                    .orElseThrow(RuntimeException::new);
+            final BitSet nine = grouped.get(6)
+                    .stream()
+                    .filter(b -> {
+                        final BitSet t = new BitSet();
+                        t.or(b);
+                        t.and(four);
+
+                        return t.cardinality() == 4;
+                    })
+                    .findFirst()
+                    .orElseThrow(RuntimeException::new);
+
+            final BitSet zero = grouped.get(6)
+                    .stream()
+                    .filter(b -> b != nine && b != six)
+                    .findFirst()
+                    .orElseThrow(RuntimeException::new);
+
+            final BitSet displayPos0 = new BitSet();
+            final BitSet displayPos1 = new BitSet();
+            final BitSet displayPos2 = new BitSet();
+            final BitSet displayPos3 = new BitSet();
+            final BitSet displayPos4 = new BitSet();
+            final BitSet displayPos5 = new BitSet();
+            final BitSet displayPos6 = new BitSet();
+
+            displayPos4.or(six);
+            displayPos4.xor(eight);
+            displayPos5.or(one);
+            displayPos5.xor(displayPos4);
+
+            displayPos3.or(one);
+            displayPos3.xor(seven);
+
+            displayPos2.or(four);
+            displayPos2.xor(one);
+            displayPos6.or(displayPos2);
+
+            displayPos1.or(nine);
+            displayPos1.xor(eight);
+
+            displayPos0.or(four);
+            displayPos0.or(seven);
+            displayPos0.xor(eight);
+            displayPos0.and(nine);
+
+            displayPos6.or(eight);
+            displayPos6.xor(zero);
+
+            displayPos2.xor(displayPos6);
+
+            result[0] = Character.toString(displayPos0.nextSetBit(0));
+            result[1] = Character.toString(displayPos1.nextSetBit(0));
+            result[2] = Character.toString(displayPos2.nextSetBit(0));
+            result[3] = Character.toString(displayPos3.nextSetBit(0));
+            result[4] = Character.toString(displayPos4.nextSetBit(0));
+            result[5] = Character.toString(displayPos5.nextSetBit(0));
+            result[6] = Character.toString(displayPos6.nextSetBit(0));
+
             return result;
+        }
+
+        private BitSet stringToBitset(final String s) {
+            final BitSet b = new BitSet();
+
+            for (int i = 0; i < s.length(); ++i) {
+                final String letter = s.substring(i, i + 1);
+                b.set(letter.codePointAt(0));
+            }
+
+            return b;
         }
 
         public List<Hash> getOutput() {
@@ -153,8 +205,26 @@ public class Day8 implements
             return Integer.parseInt(
                     this.output
                             .stream()
-                            .map(this.codeTable::get)
-                            .peek(System.out::println)
+                            .map(n -> {
+                                final int len = n.toString().length();
+                                if (len == 2) {
+                                    return 1;
+                                }
+
+                                if (len == 4) {
+                                    return 4;
+                                }
+
+                                if (len == 3) {
+                                    return 7;
+                                }
+
+                                if (len == 7) {
+                                    return 8;
+                                }
+
+                                return this.codeTable.get(n);
+                            })
                             .map(Object::toString)
                             .collect(Collectors.joining("")));
         }
@@ -166,7 +236,7 @@ public class Day8 implements
 
         public Hash(final String s) {
             this.decoded = s;
-            this.hashCode = s.chars().sum();
+            this.hashCode = s.chars().sorted().reduce(1, (acc, e) -> acc * e);
         }
 
         @Override

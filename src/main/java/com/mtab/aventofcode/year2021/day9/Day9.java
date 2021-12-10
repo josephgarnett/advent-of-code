@@ -1,11 +1,13 @@
 package com.mtab.aventofcode.year2021.day9;
 
+import com.google.common.base.Stopwatch;
 import com.mtab.aventofcode.models.InputLoader;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
@@ -49,11 +51,9 @@ public class Day9 implements
         return lowpoints
                 .stream()
                 .map(lowpoint -> this.basinPoints(grid, lowpoint))
-                .peek(System.out::println)
                 .map(List::size)
                 .sorted(Collections.reverseOrder())
                 .limit(3)
-                .peek(System.out::println)
                 .reduce(1, (acc, e) -> acc * e);
     }
 
@@ -149,8 +149,10 @@ public class Day9 implements
     }
 
     public static void main(final String... args) {
+        final Stopwatch sw = Stopwatch.createStarted();
         final long result = new Day9("2021/day9/input.txt").get();
 
         System.out.println(result);
+        System.out.printf("Execution time: %dms%n", sw.elapsed(TimeUnit.MILLISECONDS));
     }
 }

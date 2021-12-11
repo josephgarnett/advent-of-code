@@ -21,9 +21,6 @@ public class Day9 implements
         this.input = this.getInput(resourcePath);
     }
 
-    // TODO: Mapping basin
-    // from each low point expand in each direction until numbers stop increasing or 9 is reached
-
     @Override
     public Long get() {
         final List<int[]> lowpoints = new ArrayList<>();

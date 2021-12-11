@@ -15,7 +15,7 @@ public class Day11 implements
 
     private static final int CYCLES = 1000;
 
-    private OctopusGrid input;
+    private final OctopusGrid input;
     private final AtomicLong flashes = new AtomicLong(0);
 
     public Day11(final String resourcePath) {

@@ -1,5 +1,7 @@
 package com.mtab.aventofcode.year2021.day12;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.*;
 
 public class CaveSystem {
@@ -15,7 +17,7 @@ public class CaveSystem {
     }
 
     public void map() {
-        this.map(this.getCave(START_CAVE), this.caves.get(END_CAVE), new HashMap<>());
+        this.map(this.getCave(START_CAVE), this.caves.get(END_CAVE), new LinkedHashMap<>());
     }
     private void map(
             final Cave start,
@@ -32,17 +34,27 @@ public class CaveSystem {
             if (!this.canVisit(c, visited)) {
                 continue;
             }
-            this.map(c, destination, new HashMap<>(visited));
+            this.map(c, destination, new LinkedHashMap<>(visited));
         }
     }
 
     private void updateVisited(final Cave c, final HashMap<Cave, Integer> visited) {
-        visited.computeIfPresent(c, (cave, count) -> count++);
+        visited.computeIfPresent(c, (cave, count) -> count + 1);
         visited.putIfAbsent(c, 1);
     }
 
     private boolean canVisit(final Cave c, final HashMap<Cave, Integer> visited) {
-        return !visited.containsKey(c) || !c.isSmall();
+        if (StringUtils.equals(c.getName(), START_CAVE)) {
+            return false;
+        }
+
+        if (visited.containsKey(c) && c.isSmall()) {
+            return visited.entrySet()
+                    .stream()
+                    .noneMatch(entry -> entry.getKey().isSmall() && entry.getValue() > 1);
+        }
+
+        return true;
     }
 
     public int getPathCount() {

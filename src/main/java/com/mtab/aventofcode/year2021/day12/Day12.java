@@ -48,7 +48,7 @@ public class Day12 implements
 
     public static void main(final String... args) {
         final Stopwatch sw = Stopwatch.createStarted();
-        final int result = new Day12("2021/day12/testA.txt").get();
+        final int result = new Day12("2021/day12/input.txt").get();
 
         System.out.println(result);
         System.out.printf("Execution time: %dms%n", sw.elapsed(TimeUnit.MILLISECONDS));

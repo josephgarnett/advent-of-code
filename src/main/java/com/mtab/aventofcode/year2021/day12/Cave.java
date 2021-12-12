@@ -49,7 +49,14 @@ public class Cave {
 
     @Override
     public boolean equals(final Object that) {
-        //TODO
+        if (this == that) {
+            return true;
+        }
+
+        if (that instanceof Cave) {
+            return StringUtils.equals(this.getName(), ((Cave) that).getName());
+        }
+
         return false;
     }
 

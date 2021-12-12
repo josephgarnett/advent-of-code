@@ -3,8 +3,8 @@ package com.mtab.aventofcode.year2021.day12;
 import java.util.*;
 
 public class CaveSystem {
-    private static String START_CAVE = "start";
-    private static String END_CAVE = "end";
+    private static final String START_CAVE = "start";
+    private static final String END_CAVE = "end";
 
     private final Map<String, Cave> caves;
 
@@ -15,13 +15,13 @@ public class CaveSystem {
     }
 
     public void map() {
-        this.map(this.getCave(START_CAVE), this.caves.get(END_CAVE), new HashSet<>());
+        this.map(this.getCave(START_CAVE), this.caves.get(END_CAVE), new HashMap<>());
     }
     private void map(
             final Cave start,
             final Cave destination,
-            final Set<Cave> visited) {
-        visited.add(start);
+            final HashMap<Cave, Integer> visited) {
+        this.updateVisited(start, visited);
         if (start == destination) {
             pathCount++;
 
@@ -29,11 +29,20 @@ public class CaveSystem {
         }
 
         for (final Cave c: start.getConnections()) {
-            if (visited.contains(c) && c.isSmall()) {
+            if (!this.canVisit(c, visited)) {
                 continue;
             }
-            this.map(c, destination, new HashSet<>(visited));
+            this.map(c, destination, new HashMap<>(visited));
         }
+    }
+
+    private void updateVisited(final Cave c, final HashMap<Cave, Integer> visited) {
+        visited.computeIfPresent(c, (cave, count) -> count++);
+        visited.putIfAbsent(c, 1);
+    }
+
+    private boolean canVisit(final Cave c, final HashMap<Cave, Integer> visited) {
+        return !visited.containsKey(c) || !c.isSmall();
     }
 
     public int getPathCount() {

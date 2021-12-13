@@ -44,14 +44,25 @@ public class Paper implements Grid<Paper.Point> {
     public String print() {
         final StringBuilder sb = new StringBuilder();
 
-        for (int i = 0; i < 15; ++i) {
-            for (int j = 0; j < 11; ++j) {
+        final int y = (int)this.points
+                .stream()
+                .mapToDouble(p -> p.getPosition().getY())
+                .max()
+                .orElse(0);
+        final int x = (int)this.points
+                .stream()
+                .mapToDouble(p -> p.getPosition().getX())
+                .max()
+                .orElse(0);
+
+        for (int i = 0; i < y + 1; ++i) {
+            for (int j = 0; j < x + 1; ++j) {
                 final Point2D p = new Point2D.Float(j, i);
 
                 if (this.points.contains(new Point(true, p))) {
-                    sb.append("#");
+                    sb.append(" @ ");
                 } else {
-                    sb.append(".");
+                    sb.append("   ");
                 }
             }
             sb.append("\n");
@@ -103,18 +114,24 @@ public class Paper implements Grid<Paper.Point> {
             final Point2D p = this.getPosition();
 
             if (fold.getAxis() == FoldAxis.VERTICAL) {
+                final int offset = (int)Math.abs(fold.getFoldLine().getX() - p.getX());
+                final int factor = p.getX() < fold.getFoldLine().getX() ? 1 : -1;
+
                 return new Point(
                         this.getValue(),
                         new Point2D.Float(
-                                (float)(Math.abs(fold.getFoldLine().getX() - p.getX())),
+                                (float)(fold.getFoldLine().getX() + (offset * factor)),
                                 (float)this.getPosition().getY()));
             }
+
+            final int offset = (int)Math.abs(fold.getFoldLine().getY() - p.getY());
+            final int factor = p.getY() < fold.getFoldLine().getY() ? 1 : -1;
 
             return new Point(
                     this.getValue(),
                     new Point2D.Float(
                             (float)this.getPosition().getX(),
-                            (float)(Math.abs(fold.getFoldLine().getY() - p.getY()))));
+                            (float)fold.getFoldLine().getY() + (offset * factor)));
         }
 
         @Override

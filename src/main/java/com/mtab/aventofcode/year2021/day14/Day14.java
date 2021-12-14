@@ -15,18 +15,26 @@ public class Day14 implements
         InputLoader<Day14.Schematic>,
         Supplier<Long> {
 
-    private final Map<String, Integer> counts;
+    private final Map<String, Long> counts;
     private final Schematic schematic;
 
-    private static final int EXECUTIONS = 10;
+    private static final int EXECUTIONS = 40;
 
     private Day14(final String resourcePath) {
         this.counts = new HashMap<>();
         this.schematic = this.getInput(resourcePath);
     }
 
-    private Map<String, Integer> polymerize(final String input) {
-        final var polymerMap = new HashMap<String, Integer>();
+    private void resetCounts() {
+        this.counts.clear();
+
+        for (final String c: this.schematic.input.split("")) {
+            this.counts.compute(c, (k, v) -> v == null ? 1 : v + 1);
+        }
+    }
+
+    private Map<String, Long> polymerize(final String input) {
+        final var polymerMap = new HashMap<String, Long>();
 
         for (int i = 0; i < input.length() - 1; i++) {
             final String first = input.substring(i, i + 1);
@@ -37,16 +45,25 @@ public class Day14 implements
 
         return polymerMap;
     }
-    // TODO: getting there - need to account for last character of input if its odd
-    private Map<String, Integer> polymerize(final Map<String, Integer> polymerMap) {
-        final Map<String, Integer> result = new HashMap<>(polymerMap);
 
-        for (final Map.Entry<String, Integer> e: polymerMap.entrySet()) {
+    private Map<String, Long> polymerize(final Map<String, Long> polymerMap) {
+        final Map<String, Long> result = new HashMap<>(polymerMap);
+
+        for (final Map.Entry<String, Long> e: polymerMap.entrySet()) {
             final String pair = e.getKey();
-            final int value = e.getValue();
+            final long value = e.getValue();
+
+            if (value == 0) {
+                continue;
+            }
+
             final String synthesized = this.schematic.getTransformations().get(pair);
 
-            result.compute(pair.charAt(0) + synthesized, (k, v) -> v == null ? 1 : v + value);
+            this.counts.compute(synthesized, (k, v) -> v == null ? value : v + value);
+
+            result.compute(pair, (k, v) -> v == null ? 0 : v - value);
+            result.compute(pair.charAt(0) + synthesized, (k, v) -> v == null ? value : v + value);
+            result.compute(synthesized + pair.charAt(1), (k, v) -> v == null ? value : v + value);
         }
 
         return result;
@@ -71,38 +88,31 @@ public class Day14 implements
 
     @Override
     public Long get() {
-        Map<String, Integer> formula = this.polymerize(this.schematic.input);
-        System.out.println(formula);
+        Map<String, Long> formula = this.polymerize(this.schematic.input);
+
+        this.resetCounts();
+
         for (int i = 0; i < EXECUTIONS; ++i) {
             formula = this.polymerize(formula);
-            System.out.println(formula);
         }
 
-        final Map<String, Integer> result = new HashMap<>();
-
-        for (final Map.Entry<String, Integer> e: formula.entrySet()) {
-            final String key = e.getKey();
-            result.compute(key.substring(0, 1), (k, v) -> v == null ? 1 : v + e.getValue());
-            result.compute(key.substring(1, 2), (k, v) -> v == null ? 1 : v + e.getValue());
-        }
-
-        final long max = result.values()
+        final long max = this.counts.values()
                 .stream()
-                .mapToLong(Integer::intValue)
+                .mapToLong(Long::longValue)
                 .max()
-                .orElse(0) / 2;
-        final long min = result.values()
+                .orElse(0);
+        final long min = this.counts.values()
                 .stream()
-                .mapToLong(Integer::intValue)
+                .mapToLong(Long::longValue)
                 .min()
-                .orElse(0) / 2;
+                .orElse(0);
 
         return max - min;
     }
 
     public static void main(final String... args) {
         final var sw = Stopwatch.createStarted();
-        final long result = new Day14("2021/day14/test.txt").get();
+        final long result = new Day14("2021/day14/input.txt").get();
 
         System.out.println(result);
         System.out.printf("Execution time: %dms%n", sw.elapsed(TimeUnit.MILLISECONDS));

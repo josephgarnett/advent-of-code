@@ -27,12 +27,12 @@ public class Day13 implements InputLoader<Object[]>, Supplier<Integer> {
     public Integer get() {
         Paper p = this.paper;
 
-        System.out.println(this.paper.print());
-
         for (final Paper.FoldInstruction f: this.folds) {
             p = p.fold(f);
-            System.out.println(p.print());
         }
+
+        System.out.println("");
+        System.out.println(p.print());
 
         return p.countPoints();
     }
@@ -76,7 +76,7 @@ public class Day13 implements InputLoader<Object[]>, Supplier<Integer> {
 
     public static void main(final String... args) {
         final Stopwatch sw = Stopwatch.createStarted();
-        final int result = new Day13("2021/day13/test.txt").get();
+        final int result = new Day13("2021/day13/input.txt").get();
 
         System.out.println(result);
         System.out.printf("Execution time: %dms%n", sw.elapsed(TimeUnit.MILLISECONDS));

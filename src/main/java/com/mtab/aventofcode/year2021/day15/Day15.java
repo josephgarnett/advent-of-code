@@ -1,138 +1,134 @@
 package com.mtab.aventofcode.year2021.day15;
 
-import com.google.common.base.MoreObjects;
 import com.google.common.base.Stopwatch;
-import com.mtab.aventofcode.models.InputGridLoader;
-import com.mtab.aventofcode.models.grid.IntGrid;
-import com.mtab.aventofcode.models.grid.IntPoint;
+import com.mtab.aventofcode.models.InputLoader;
 
+import java.awt.geom.Point2D;
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 public class Day15 implements
-        InputGridLoader<IntPoint, IntGrid>,
+        InputLoader<int[][]>,
         Supplier<Integer> {
 
-    private final IntGrid grid;
+    private static final int GRID_SIZE = 100;
+
+    private final int[][] grid;
+    private final Map<Point2D, Double> unvisited;
+    private final AtomicReference<Point2D> pointRef = new AtomicReference<>(new Point2D.Double());
 
     private Day15(final String resourcePath) {
         this.grid = this.getInput(resourcePath);
-    }
-
-    @Override
-    public IntPoint parseElement(String e, int x, int y) {
-        return new IntPoint(Integer.parseInt(e), x, y);
-    }
-
-    @Override
-    public IntGrid createGrid(List<IntPoint> points) {
-        return new IntGrid(points);
+        this.unvisited = new HashMap<>();
     }
 
     @Override
     public Integer get() {
-        final var start = this.grid.getPointAt(0, 0);
-
-        final List<Integer> results = this.pathfinder(
-                start,
-                this.grid.getPointAt(9, 9));
-
-        return results.size();
+        return this.pathfinder();
     }
 
+    private Integer pathfinder() {
+        for (int i = 0; i < GRID_SIZE; ++i) {
+            for (int j = 0; j < GRID_SIZE; ++j) {
+                unvisited.put(new Point2D.Double(j, i), Double.POSITIVE_INFINITY);
+            }
+        }
 
-    private List<Integer> pathfinder(final IntPoint current, final IntPoint destination) {
-        final Map<IntPoint, Double> unvisited = new HashMap<>();
+        final Point2D start = new Point2D.Double(0, 0);
+        final Point2D destination = new Point2D.Double(GRID_SIZE - 1, GRID_SIZE - 1);
 
-        this.grid.getGrid()
-                .values()
-                .forEach(p -> unvisited.put(p, Double.POSITIVE_INFINITY));
+        unvisited.put(start, 0d);
 
-        unvisited.put(current, 0d);
-
-        return this.pathfinder(current, destination, unvisited, new AtomicInteger(0));
+        return this.pathfinder(start, destination);
     }
-    private List<Integer> pathfinder(
-            final IntPoint current,
-            final IntPoint destination,
-            final Map<IntPoint, Double> unvisited,
-            final AtomicInteger risk) {
-        final int currentValue = current.getValue().get();
-        risk.addAndGet(currentValue);
-        final var neighbours = this.grid.getCardinalNeighbours(current)
-                .stream()
-                .filter(unvisited::containsKey)
-                .peek(p -> unvisited.compute(p, (k, v) -> Math.min(v, p.getValue().get() + unvisited.get(current))))
-                .collect(Collectors.toList());
+    private Integer pathfinder(
+            final Point2D current,
+            final Point2D destination) {
+        final double currentValue = unvisited.get(current);
+
+        // north
+        this.pointRef.get().setLocation(current.getX(), current.getY() - 1);
+        if (this.pointRef.get().getY() > -1 && this.pointRef.get().getY() < GRID_SIZE) {
+            final var distance = this.grid[(int)this.pointRef.get().getY()][(int)this.pointRef.get().getX()];
+            unvisited.computeIfPresent(this.pointRef.get(), (k, v) -> Math.min(v, distance + currentValue));
+        }
+
+        // east
+        this.pointRef.get().setLocation(current.getX() + 1, current.getY());
+        if (this.pointRef.get().getX() > -1 && this.pointRef.get().getX() < GRID_SIZE) {
+            final var distance = this.grid[(int)this.pointRef.get().getY()][(int)this.pointRef.get().getX()];
+            unvisited.computeIfPresent(this.pointRef.get(), (k, v) -> Math.min(v, distance + currentValue));
+        }
+
+        // south
+        this.pointRef.get().setLocation(current.getX(), current.getY() + 1);
+        if (this.pointRef.get().getY() > -1 && this.pointRef.get().getY() < GRID_SIZE) {
+            final var distance = this.grid[(int)this.pointRef.get().getY()][(int)this.pointRef.get().getX()];
+            unvisited.computeIfPresent(this.pointRef.get(), (k, v) -> Math.min(v, distance + currentValue));
+        }
+
+        // west
+        this.pointRef.get().setLocation(current.getX() - 1, current.getY());
+        if (this.pointRef.get().getX() > -1 && this.pointRef.get().getX() < GRID_SIZE) {
+            final var distance = this.grid[(int)this.pointRef.get().getY()][(int)this.pointRef.get().getX()];
+            unvisited.computeIfPresent(this.pointRef.get(), (k, v) -> Math.min(v, distance + currentValue));
+        }
 
         unvisited.remove(current);
 
-        if (current == destination) {
-            return List.of(risk.get());
+        if (current.equals(destination)) {
+            return (int)currentValue;
         }
 
-        final double minValue = neighbours
-                .stream()
-                .map(unvisited::get)
-                .mapToDouble(Double::doubleValue)
-                .min()
-                .orElse(0);
+        double minValue = Double.POSITIVE_INFINITY;
 
-        return unvisited
-                .entrySet()
-                .stream()
-                .filter(e -> neighbours.contains(e.getKey()) && e.getValue() == minValue)
-                .map(Map.Entry::getKey)
-                .flatMap(p -> this.pathfinder(
-                        p,
-                        destination,
-                        new HashMap<>(unvisited),
-                        new AtomicInteger(risk.get()))
-                        .stream())
-                .collect(Collectors.toList());
+        for (final double e: unvisited.values()) {
+            if (e < minValue) {
+                minValue = e;
+            }
+        }
+
+        for (final Map.Entry<Point2D, Double> entry: unvisited.entrySet()) {
+            if (entry.getValue() == minValue) {
+                if (entry.getKey().equals(destination)) {
+                    return (int)currentValue + this.grid[(int)entry.getKey().getY()][(int)entry.getKey().getX()];
+                }
+                return this.pathfinder(entry.getKey(), destination);
+            }
+        }
+
+        return (int)currentValue;
     }
 
     public static void main(final String... args) {
         final var sw = Stopwatch.createStarted();
-        final long result = new Day15("2021/day15/test.txt").get();
+        final long result = new Day15("2021/day15/input.txt").get();
 
         System.out.println(result);
         System.out.printf("Execution time: %dms%n", sw.elapsed(TimeUnit.MILLISECONDS));
     }
 
-    private static class Path {
-        private final List<IntPoint> points;
-        private final boolean isComplete;
+    @Override
+    public int[][] transformResource(BufferedReader bufferedReader) throws IOException {
+        final int[][] grid = new int[GRID_SIZE][GRID_SIZE];
 
-        public Path(final List<IntPoint> points, final boolean isComplete) {
-            this.points = List.copyOf(points);
-            this.isComplete = isComplete;
+        String line;
+        int i = 0;
+        while((line = bufferedReader.readLine()) != null) {
+            final String[] numbers = line.split("");
+
+            int j = 0;
+            for (final String n: numbers) {
+                grid[i][j++] = Integer.parseInt(n);
+            }
+
+            i++;
         }
 
-        public boolean isComplete() {
-            return this.isComplete;
-        }
-
-        public List<IntPoint> getPoints() {
-            return this.points;
-        }
-
-        public int riskIndex() {
-            return this.points
-                    .stream()
-                    .mapToInt(p -> p.getValue().get())
-                    .sum();
-        }
-
-        @Override
-        public String toString() {
-            return MoreObjects.toStringHelper(this)
-                    .add("points", this.getPoints())
-                    .add("isComplete", this.isComplete)
-                    .toString();
-        }
+        return grid;
     }
 }

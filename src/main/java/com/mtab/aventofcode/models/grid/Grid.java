@@ -23,19 +23,38 @@ public interface Grid<ElementType extends GridPoint<?>> {
         final int x = (int) point.getPosition().getX();
         final int y = (int) point.getPosition().getY();
         return Stream.of(
-                        new Point2D.Float(x, y - 1), // N
-                        new Point2D.Float(x + 1, y - 1), // NE
-                        new Point2D.Float(x + 1, y), // E
-                        new Point2D.Float(x + 1, y + 1), // SE
-                        new Point2D.Float(x, y + 1), // S
-                        new Point2D.Float(x - 1, y + 1), // SW
-                        new Point2D.Float(x - 1, y), // W
-                        new Point2D.Float(x - 1, y - 1)) // NW
+                        new Point2D.Double(x, (double)y - 1), // N
+                        new Point2D.Double((double)x + 1, (double)y - 1), // NE
+                        new Point2D.Double((double)x + 1, y), // E
+                        new Point2D.Double((double)x + 1, (double)y + 1), // SE
+                        new Point2D.Double(x, (double)y + 1), // S
+                        new Point2D.Double((double)x - 1, (double)y + 1), // SW
+                        new Point2D.Double((double)x - 1, y), // W
+                        new Point2D.Double((double)x - 1, (double)y - 1)) // NW
                 .map(this::getGridElement)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());
     }
+
+    default List<ElementType> getCardinalNeighbours(ElementType point) {
+        final int x = (int) point.getPosition().getX();
+        final int y = (int) point.getPosition().getY();
+        return Stream.of(
+                        new Point2D.Double(x, (double)y - 1), // N
+                        new Point2D.Double((double)x + 1, y), // E
+                        new Point2D.Double(x, (double)y + 1), // S
+                        new Point2D.Double((double)x - 1, y)) // W
+                .map(this::getGridElement)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
+    }
+
+    default ElementType getPointAt(final int x, final int y) {
+        return this.getGrid().get(new Point2D.Double(x, y));
+    }
+
 
     default int size() {
         return this.getGrid().size();

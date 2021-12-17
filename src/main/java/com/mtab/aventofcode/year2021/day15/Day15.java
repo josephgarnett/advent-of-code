@@ -6,11 +6,11 @@ import com.mtab.aventofcode.models.InputGridLoader;
 import com.mtab.aventofcode.models.grid.IntGrid;
 import com.mtab.aventofcode.models.grid.IntPoint;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 public class Day15 implements
         InputGridLoader<IntPoint, IntGrid>,
@@ -34,49 +34,65 @@ public class Day15 implements
 
     @Override
     public Integer get() {
-        final List<IntPoint> visited = new ArrayList<>();
-        visited.add(this.grid.getPointAt(0, 0));
-        final List<Path> paths = this.pathfinder(visited.get(0), visited);
+        final var start = this.grid.getPointAt(0, 0);
 
-        return paths
-                .stream()
-                .filter(Path::isComplete)
-                .mapToInt(Path::riskIndex)
-                .min()
-                .orElseThrow(RuntimeException::new);
+        final List<Integer> results = this.pathfinder(
+                start,
+                this.grid.getPointAt(9, 9));
+
+        return results.size();
     }
 
-    // TODO: need to know grid size for bottom right position
-    // TODO: create Path class records visited nodes and if the path completes
 
-    // rules if there is a neighbour value 1 its worth following
-    // otherwise lookahead 2 and sum
-    // prefer not to go upwards
-    private List<Path> pathfinder(final IntPoint start, final List<IntPoint> visited) {
-        visited.add(start);
-        if (start == this.grid.getPointAt(9, 9)) {
-            return List.of(new Path(visited, true));
+    private List<Integer> pathfinder(final IntPoint current, final IntPoint destination) {
+        final Map<IntPoint, Double> unvisited = new HashMap<>();
+
+        this.grid.getGrid()
+                .values()
+                .forEach(p -> unvisited.put(p, Double.POSITIVE_INFINITY));
+
+        unvisited.put(current, 0d);
+
+        return this.pathfinder(current, destination, unvisited, new AtomicInteger(0));
+    }
+    private List<Integer> pathfinder(
+            final IntPoint current,
+            final IntPoint destination,
+            final Map<IntPoint, Double> unvisited,
+            final AtomicInteger risk) {
+        final int currentValue = current.getValue().get();
+        risk.addAndGet(currentValue);
+        final var neighbours = this.grid.getCardinalNeighbours(current)
+                .stream()
+                .filter(unvisited::containsKey)
+                .peek(p -> unvisited.compute(p, (k, v) -> Math.min(v, p.getValue().get() + unvisited.get(current))))
+                .collect(Collectors.toList());
+
+        unvisited.remove(current);
+
+        if (current == destination) {
+            return List.of(risk.get());
         }
 
-        final List<Path> result = new ArrayList<>();
-        final List<IntPoint> neighbours = this.grid.getCardinalNeighbours(start);
+        final double minValue = neighbours
+                .stream()
+                .map(unvisited::get)
+                .mapToDouble(Double::doubleValue)
+                .min()
+                .orElse(0);
 
-        // remove N from neighbours
-
-        for (final IntPoint p : neighbours) {
-            if (visited.contains(p)) {
-                continue;
-            }
-
-            if (p.getValue().get() == 1) {
-                result.addAll(this.pathfinder(p, new ArrayList<>(visited)));
-            }
-        }
-
-        // of points which have not been visited or are 1 - lookahead 2 and sum numbers
-        // if cannot proceed in same axis look round the corner
-
-        return result;
+        return unvisited
+                .entrySet()
+                .stream()
+                .filter(e -> neighbours.contains(e.getKey()) && e.getValue() == minValue)
+                .map(Map.Entry::getKey)
+                .flatMap(p -> this.pathfinder(
+                        p,
+                        destination,
+                        new HashMap<>(unvisited),
+                        new AtomicInteger(risk.get()))
+                        .stream())
+                .collect(Collectors.toList());
     }
 
     public static void main(final String... args) {

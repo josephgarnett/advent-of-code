@@ -46,62 +46,64 @@ public class Day15 implements
         return this.pathfinder(start, destination);
     }
     private Integer pathfinder(
-            final Point2D current,
+            final Point2D c,
             final Point2D destination) {
-        final double currentValue = unvisited.get(current);
+        Point2D current = c;
 
-        // north
-        this.pointRef.get().setLocation(current.getX(), current.getY() - 1);
-        if (this.pointRef.get().getY() > -1 && this.pointRef.get().getY() < GRID_SIZE) {
-            final var distance = this.grid[(int)this.pointRef.get().getY()][(int)this.pointRef.get().getX()];
-            unvisited.computeIfPresent(this.pointRef.get(), (k, v) -> Math.min(v, distance + currentValue));
-        }
-
-        // east
-        this.pointRef.get().setLocation(current.getX() + 1, current.getY());
-        if (this.pointRef.get().getX() > -1 && this.pointRef.get().getX() < GRID_SIZE) {
-            final var distance = this.grid[(int)this.pointRef.get().getY()][(int)this.pointRef.get().getX()];
-            unvisited.computeIfPresent(this.pointRef.get(), (k, v) -> Math.min(v, distance + currentValue));
-        }
-
-        // south
-        this.pointRef.get().setLocation(current.getX(), current.getY() + 1);
-        if (this.pointRef.get().getY() > -1 && this.pointRef.get().getY() < GRID_SIZE) {
-            final var distance = this.grid[(int)this.pointRef.get().getY()][(int)this.pointRef.get().getX()];
-            unvisited.computeIfPresent(this.pointRef.get(), (k, v) -> Math.min(v, distance + currentValue));
-        }
-
-        // west
-        this.pointRef.get().setLocation(current.getX() - 1, current.getY());
-        if (this.pointRef.get().getX() > -1 && this.pointRef.get().getX() < GRID_SIZE) {
-            final var distance = this.grid[(int)this.pointRef.get().getY()][(int)this.pointRef.get().getX()];
-            unvisited.computeIfPresent(this.pointRef.get(), (k, v) -> Math.min(v, distance + currentValue));
-        }
-
-        unvisited.remove(current);
-
-        if (current.equals(destination)) {
-            return (int)currentValue;
-        }
-
-        double minValue = Double.POSITIVE_INFINITY;
-
-        for (final double e: unvisited.values()) {
-            if (e < minValue) {
-                minValue = e;
+        while(current != null) {
+            final double currentValue = unvisited.get(current);
+            // north
+            this.pointRef.get().setLocation(current.getX(), current.getY() - 1);
+            if (this.pointRef.get().getY() > -1 && this.pointRef.get().getY() < GRID_SIZE) {
+                final var distance = this.grid[(int)this.pointRef.get().getY()][(int)this.pointRef.get().getX()];
+                unvisited.computeIfPresent(this.pointRef.get(), (k, v) -> Math.min(v, distance + currentValue));
             }
-        }
 
-        for (final Map.Entry<Point2D, Double> entry: unvisited.entrySet()) {
-            if (entry.getValue() == minValue) {
-                if (entry.getKey().equals(destination)) {
-                    return (int)currentValue + this.grid[(int)entry.getKey().getY()][(int)entry.getKey().getX()];
+            // east
+            this.pointRef.get().setLocation(current.getX() + 1, current.getY());
+            if (this.pointRef.get().getX() > -1 && this.pointRef.get().getX() < GRID_SIZE) {
+                final var distance = this.grid[(int)this.pointRef.get().getY()][(int)this.pointRef.get().getX()];
+                unvisited.computeIfPresent(this.pointRef.get(), (k, v) -> Math.min(v, distance + currentValue));
+            }
+
+            // south
+            this.pointRef.get().setLocation(current.getX(), current.getY() + 1);
+            if (this.pointRef.get().getY() > -1 && this.pointRef.get().getY() < GRID_SIZE) {
+                final var distance = this.grid[(int)this.pointRef.get().getY()][(int)this.pointRef.get().getX()];
+                unvisited.computeIfPresent(this.pointRef.get(), (k, v) -> Math.min(v, distance + currentValue));
+            }
+
+            // west
+            this.pointRef.get().setLocation(current.getX() - 1, current.getY());
+            if (this.pointRef.get().getX() > -1 && this.pointRef.get().getX() < GRID_SIZE) {
+                final var distance = this.grid[(int)this.pointRef.get().getY()][(int)this.pointRef.get().getX()];
+                unvisited.computeIfPresent(this.pointRef.get(), (k, v) -> Math.min(v, distance + currentValue));
+            }
+
+            unvisited.remove(current);
+
+            if (current.equals(destination)) {
+                return (int)currentValue;
+            }
+
+            double minValue = Double.POSITIVE_INFINITY;
+
+            for (final double e: unvisited.values()) {
+                if (e < minValue) {
+                    minValue = e;
                 }
-                return this.pathfinder(entry.getKey(), destination);
             }
+
+            for (final Map.Entry<Point2D, Double> entry: unvisited.entrySet()) {
+                if (entry.getValue() == minValue) {
+                    current = entry.getKey();
+                    break;
+                }
+            }
+
         }
 
-        return (int)currentValue;
+        return -1;
     }
 
     public static void main(final String... args) {

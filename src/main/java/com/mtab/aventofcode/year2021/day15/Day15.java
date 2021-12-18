@@ -15,7 +15,8 @@ public class Day15 implements
         InputLoader<int[][]>,
         Supplier<Integer> {
 
-    private static final int GRID_SIZE = 100;
+    private static final int GRID_SIZE = 10;
+    private static final int VIRTUAL_GRID_SIZE = 50;
 
     private final int[][] grid;
     private final Map<Point2D, Double> unvisited;
@@ -31,53 +32,101 @@ public class Day15 implements
         return this.pathfinder();
     }
 
+    private int getDistance(final Point2D point) {
+        final int x = (int)point.getX();
+        final int y = (int)point.getY();
+
+        if (x < GRID_SIZE && y < GRID_SIZE) {
+            return this.grid[y][x];
+        }
+
+        final int translatedX = x % GRID_SIZE;
+        final int translatedY = y % GRID_SIZE;
+        final int translationsFactorX = (int)Math.floor((double)x / GRID_SIZE);
+        final int translationFactorY = (int)Math.floor((double)y / GRID_SIZE);
+
+        int value = this.grid[translatedY][translatedX];
+
+        if (x != translatedX) {
+            value+=translationsFactorX;
+        }
+
+        if (y != translatedY) {
+            value+=translationFactorY;
+        }
+
+        if (value > 9) {
+            value-= 9;
+        }
+
+        return value;
+    }
+
     private Integer pathfinder() {
-        for (int i = 0; i < GRID_SIZE; ++i) {
-            for (int j = 0; j < GRID_SIZE; ++j) {
+        final List<List<Integer>> t = new ArrayList<>();
+        for (int i = 0; i < VIRTUAL_GRID_SIZE; ++i) {
+            t.add(new ArrayList<>());
+            for (int j = 0; j < VIRTUAL_GRID_SIZE; ++j) {
+                t.get(i).add(this.getDistance(new Point2D.Double(j, i)));
                 unvisited.put(new Point2D.Double(j, i), Double.POSITIVE_INFINITY);
             }
         }
 
+        /* System.out.println("");
+        System.out.println(t.toString()
+                .replace("], ", "]\n")
+                .replace("[", "")
+                .replace("]", "")
+                .replace("-1", "@"));
+        System.out.println(""); */
+
         final Point2D start = new Point2D.Double(0, 0);
-        final Point2D destination = new Point2D.Double(GRID_SIZE - 1, GRID_SIZE - 1);
+        final Point2D destination = new Point2D.Double(VIRTUAL_GRID_SIZE - 1, VIRTUAL_GRID_SIZE - 1);
 
         unvisited.put(start, 0d);
 
+        // final var q = new PriorityQueue<Node>((a, b) -> (int)(a.getValue() - b.getValue()));
+
+        // q.add(new Node(start, 0));
         return this.pathfinder(start, destination);
     }
     private Integer pathfinder(
-            final Point2D c,
+            final Point2D start,
             final Point2D destination) {
-        Point2D current = c;
+        Point2D current = start;
 
-        while(current != null) {
+        while((current) != null) {
             final double currentValue = unvisited.get(current);
             // north
             this.pointRef.get().setLocation(current.getX(), current.getY() - 1);
-            if (this.pointRef.get().getY() > -1 && this.pointRef.get().getY() < GRID_SIZE) {
-                final var distance = this.grid[(int)this.pointRef.get().getY()][(int)this.pointRef.get().getX()];
-                unvisited.computeIfPresent(this.pointRef.get(), (k, v) -> Math.min(v, distance + currentValue));
+            if (this.pointRef.get().getY() > -1 && this.pointRef.get().getY() < VIRTUAL_GRID_SIZE) {
+                unvisited.computeIfPresent(
+                        this.pointRef.get(),
+                        (k, v) -> Math.min(v, this.getDistance(this.pointRef.get()) + currentValue));
             }
 
             // east
             this.pointRef.get().setLocation(current.getX() + 1, current.getY());
-            if (this.pointRef.get().getX() > -1 && this.pointRef.get().getX() < GRID_SIZE) {
-                final var distance = this.grid[(int)this.pointRef.get().getY()][(int)this.pointRef.get().getX()];
-                unvisited.computeIfPresent(this.pointRef.get(), (k, v) -> Math.min(v, distance + currentValue));
+            if (this.pointRef.get().getX() > -1 && this.pointRef.get().getX() < VIRTUAL_GRID_SIZE) {
+                unvisited.computeIfPresent(
+                        this.pointRef.get(),
+                        (k, v) -> Math.min(v, this.getDistance(this.pointRef.get()) + currentValue));
             }
 
             // south
             this.pointRef.get().setLocation(current.getX(), current.getY() + 1);
-            if (this.pointRef.get().getY() > -1 && this.pointRef.get().getY() < GRID_SIZE) {
-                final var distance = this.grid[(int)this.pointRef.get().getY()][(int)this.pointRef.get().getX()];
-                unvisited.computeIfPresent(this.pointRef.get(), (k, v) -> Math.min(v, distance + currentValue));
+            if (this.pointRef.get().getY() > -1 && this.pointRef.get().getY() < VIRTUAL_GRID_SIZE) {
+                unvisited.computeIfPresent(
+                        this.pointRef.get(),
+                        (k, v) -> Math.min(v, this.getDistance(this.pointRef.get()) + currentValue));
             }
 
             // west
             this.pointRef.get().setLocation(current.getX() - 1, current.getY());
-            if (this.pointRef.get().getX() > -1 && this.pointRef.get().getX() < GRID_SIZE) {
-                final var distance = this.grid[(int)this.pointRef.get().getY()][(int)this.pointRef.get().getX()];
-                unvisited.computeIfPresent(this.pointRef.get(), (k, v) -> Math.min(v, distance + currentValue));
+            if (this.pointRef.get().getX() > -1 && this.pointRef.get().getX() < VIRTUAL_GRID_SIZE) {
+                unvisited.computeIfPresent(
+                        this.pointRef.get(),
+                        (k, v) -> Math.min(v, this.getDistance(this.pointRef.get()) + currentValue));
             }
 
             unvisited.remove(current);
@@ -88,7 +137,9 @@ public class Day15 implements
 
             double minValue = Double.POSITIVE_INFINITY;
 
-            for (final double e: unvisited.values()) {
+            // TODO: eliminate these 2 loops
+
+           for (final double e: unvisited.values()) {
                 if (e < minValue) {
                     minValue = e;
                 }
@@ -100,7 +151,6 @@ public class Day15 implements
                     break;
                 }
             }
-
         }
 
         return -1;
@@ -108,7 +158,7 @@ public class Day15 implements
 
     public static void main(final String... args) {
         final var sw = Stopwatch.createStarted();
-        final long result = new Day15("2021/day15/input.txt").get();
+        final long result = new Day15("2021/day15/test.txt").get();
 
         System.out.println(result);
         System.out.printf("Execution time: %dms%n", sw.elapsed(TimeUnit.MILLISECONDS));
@@ -132,5 +182,30 @@ public class Day15 implements
         }
 
         return grid;
+    }
+
+    public static class Node implements Map.Entry<Point2D, Double> {
+        private final Point2D point;
+        private final double value;
+
+        public Node(final Point2D p, final double d) {
+            this.point = p;
+            this.value = d;
+        }
+
+        @Override
+        public Point2D getKey() {
+            return this.point;
+        }
+
+        @Override
+        public Double getValue() {
+            return this.value;
+        }
+
+        @Override
+        public Double setValue(Double value) {
+            return null;
+        }
     }
 }

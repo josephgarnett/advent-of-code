@@ -62,6 +62,7 @@ public class Day15 implements
         return value;
     }
 
+    // TODO: priority queue to speed up algorithm
     private Integer pathfinder() {
         final List<List<Integer>> t = new ArrayList<>();
         for (int i = 0; i < VIRTUAL_GRID_SIZE; ++i) {

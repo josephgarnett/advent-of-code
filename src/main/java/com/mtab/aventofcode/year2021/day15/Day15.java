@@ -15,8 +15,8 @@ public class Day15 implements
         InputLoader<int[][]>,
         Supplier<Integer> {
 
-    private static final int GRID_SIZE = 10;
-    private static final int VIRTUAL_GRID_SIZE = 50;
+    private static final int GRID_SIZE = 100;
+    private static final int VIRTUAL_GRID_SIZE = 500;
 
     private final int[][] grid;
     private final Map<Point2D, Double> unvisited;
@@ -85,9 +85,6 @@ public class Day15 implements
 
         unvisited.put(start, 0d);
 
-        // final var q = new PriorityQueue<Node>((a, b) -> (int)(a.getValue() - b.getValue()));
-
-        // q.add(new Node(start, 0));
         return this.pathfinder(start, destination);
     }
     private Integer pathfinder(
@@ -158,7 +155,7 @@ public class Day15 implements
 
     public static void main(final String... args) {
         final var sw = Stopwatch.createStarted();
-        final long result = new Day15("2021/day15/test.txt").get();
+        final long result = new Day15("2021/day15/input.txt").get();
 
         System.out.println(result);
         System.out.printf("Execution time: %dms%n", sw.elapsed(TimeUnit.MILLISECONDS));

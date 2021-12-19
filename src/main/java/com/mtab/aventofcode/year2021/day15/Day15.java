@@ -73,14 +73,6 @@ public class Day15 implements
             }
         }
 
-        /* System.out.println("");
-        System.out.println(t.toString()
-                .replace("], ", "]\n")
-                .replace("[", "")
-                .replace("]", "")
-                .replace("-1", "@"));
-        System.out.println(""); */
-
         final Point2D start = new Point2D.Double(0, 0);
         final Point2D destination = new Point2D.Double(VIRTUAL_GRID_SIZE - 1, VIRTUAL_GRID_SIZE - 1);
 

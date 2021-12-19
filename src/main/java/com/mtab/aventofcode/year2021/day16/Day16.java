@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
@@ -33,7 +34,7 @@ public class Day16 implements
     public Long get() {
         return this.input
                 .stream()
-                .mapToLong(Packet::sumVersions)
+                .mapToLong(Packet::compute)
                 .sum();
     }
 
@@ -51,8 +52,7 @@ public class Day16 implements
 
         private final long value;
 
-        // enum to cope with packet instructions
-        // private final PacketType type;
+        private final PacketType type;
 
         private final List<Packet> subPackets;
 
@@ -63,12 +63,25 @@ public class Day16 implements
                 final List<Packet> subPackets) {
             this.version = version;
             this.packetId = packetId;
+            this.type = PacketType.fromValue((int)packetId);
             this.value = value;
             this.subPackets = ImmutableList.copyOf(subPackets);
         }
 
         public long getVersion() {
             return this.version;
+        }
+
+        public List<Packet> getSubPackets() {
+            return this.subPackets;
+        }
+
+        public long getValue() {
+            return this.value;
+        }
+
+        public long compute() {
+            return this.type.apply(this);
         }
 
         public long sumVersions() {
@@ -78,9 +91,90 @@ public class Day16 implements
                     .sum();
         }
 
-        public enum PacketType {
-            LITERAL(4),
-            OPERATOR(6);
+        public enum PacketType implements Function<Packet, Long> {
+            SUM(0) {
+                @Override
+                public Long apply(final Packet packet) {
+                    return packet.getSubPackets()
+                            .stream()
+                            .mapToLong(Packet::compute)
+                            .sum();
+                }
+            },
+            PRODUCT(1) {
+                @Override
+                public Long apply(final Packet packet) {
+                    return packet.getSubPackets()
+                            .stream()
+                            .mapToLong(Packet::compute)
+                            .reduce(1, (acc, v) -> acc * v);
+                }
+            },
+            MINIMUM(2) {
+                @Override
+                public Long apply(final Packet packet) {
+                    return packet.getSubPackets()
+                            .stream()
+                            .mapToLong(Packet::compute)
+                            .min()
+                            .orElseThrow(RuntimeException::new);
+                }
+            },
+            MAXIMUM(3) {
+                @Override
+                public Long apply(final Packet packet) {
+                    return packet.getSubPackets()
+                            .stream()
+                            .mapToLong(Packet::compute)
+                            .max()
+                            .orElseThrow(RuntimeException::new);
+                }
+            },
+            LITERAL(4) {
+                @Override
+                public Long apply(final Packet packet) {
+                    return packet.getValue();
+                }
+            },
+            GREATER_THAN(5) {
+                @Override
+                public Long apply(final Packet packet) {
+                    if (packet.getSubPackets().size() == 2) {
+                        if(packet.getSubPackets().get(0).compute() > packet.getSubPackets().get(1).compute()) {
+                           return 1L;
+                        }
+                        return 0L;
+                    }
+
+                    return 0L;
+                }
+            },
+            LESS_THAN(6) {
+                @Override
+                public Long apply(final Packet packet) {
+                    if (packet.getSubPackets().size() == 2) {
+                        if(packet.getSubPackets().get(0).compute() < packet.getSubPackets().get(1).compute()) {
+                            return 1L;
+                        }
+                        return 0L;
+                    }
+
+                    return 0L;
+                }
+            },
+            EQUAL(7) {
+                @Override
+                public Long apply(final Packet packet) {
+                    if (packet.getSubPackets().size() == 2) {
+                        if(packet.getSubPackets().get(0).compute() == packet.getSubPackets().get(1).compute()) {
+                            return 1L;
+                        }
+                        return 0L;
+                    }
+
+                    return 0L;
+                }
+            };
 
             private final int value;
             PacketType(final int value) {
@@ -89,6 +183,29 @@ public class Day16 implements
 
             public int getValue() {
                 return this.value;
+            }
+
+            public static PacketType fromValue(final int value) {
+                switch(value) {
+                    case 0:
+                        return PacketType.SUM;
+                    case 1:
+                        return PacketType.PRODUCT;
+                    case 2:
+                        return PacketType.MINIMUM;
+                    case 3:
+                        return PacketType.MAXIMUM;
+                    case 4:
+                        return PacketType.LITERAL;
+                    case 5:
+                        return PacketType.GREATER_THAN;
+                    case 6:
+                        return PacketType.LESS_THAN;
+                    case 7:
+                        return PacketType.EQUAL;
+                }
+
+                throw new IllegalStateException("Value does not translate to PacketType");
             }
         }
 
@@ -113,15 +230,21 @@ public class Day16 implements
         public static Pattern ZEROES = Pattern.compile("^0+$");
 
         public static List<Packet> decode(final String encoded) {
-            return Packet.decodeFromBinaryString(Packet.decodeToBinaryString(encoded));
+            return Packet.decodeFromBinaryString(Packet.decodeToBinaryString(encoded), 0);
         }
 
-        public static List<Packet> decodeFromBinaryString(final AtomicReference<String> binary) {
+        public static List<Packet> decodeFromBinaryString(final AtomicReference<String> binary, final int limit) {
             final List<Packet> result = new ArrayList<>();
-
             final AtomicReference<String> consumed = binary;
 
+            int decoded = 0;
+
             while(consumed.get().length() > 0) {
+
+                if (limit != 0 && decoded == limit) {
+                    return result;
+                }
+
                 if (ZEROES.matcher(consumed.get()).matches()) {
                     return result;
                 }
@@ -145,7 +268,7 @@ public class Day16 implements
                         packetLength = Integer.parseInt(consumed.get().substring(0, 11), 2);
                         consumed.set(consumed.get().substring(11));
 
-                        subPackets.addAll(Packet.decodeFromBinaryString(consumed));
+                        subPackets.addAll(Packet.decodeFromBinaryString(consumed, packetLength));
                     }
 
                     // 15 bits
@@ -155,7 +278,7 @@ public class Day16 implements
 
                         final String sub = consumed.get().substring(0, packetLength);
                         consumed.set(consumed.get().substring(packetLength));
-                        subPackets.addAll(Packet.decodeFromBinaryString(new AtomicReference<>(sub)));
+                        subPackets.addAll(Packet.decodeFromBinaryString(new AtomicReference<>(sub), 0));
                     }
 
                     if (packetLength == 0) {
@@ -178,6 +301,7 @@ public class Day16 implements
                 }
 
                 result.add(new Packet(version, packetId, literalValue, subPackets));
+                decoded++;
             }
             return result;
         }

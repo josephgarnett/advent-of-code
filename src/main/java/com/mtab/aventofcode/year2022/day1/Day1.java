@@ -7,6 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.OptionalInt;
 import java.util.concurrent.TimeUnit;
@@ -34,9 +35,13 @@ public class Day1 implements
 
     @Override
     public OptionalInt get() {
-        return this.input.stream()
-                .mapToInt(Elf::sumSnacks)
-                .max();
+        return OptionalInt.of(
+                this.input.stream()
+                        .map(Elf::sumSnacks)
+                        .sorted(Comparator.reverseOrder())
+                        .mapToInt(i -> i)
+                        .limit(3)
+                        .sum());
     }
 
     @Override

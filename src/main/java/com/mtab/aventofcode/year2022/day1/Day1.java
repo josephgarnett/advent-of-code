@@ -1,25 +1,35 @@
 package com.mtab.aventofcode.year2022.day1;
 
 import com.google.common.base.Stopwatch;
-import com.mtab.aventofcode.models.InputLoader;
-import org.apache.commons.lang3.StringUtils;
+import com.mtab.aventofcode.utils.InputUtils;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Comparator;
 import java.util.List;
 import java.util.OptionalInt;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 public class Day1 implements
-        InputLoader<List<Day1.Elf>>,
         Supplier<OptionalInt> {
 
-    public static void main(final String[] args) {
+    public static void main(final String[] args) throws IOException {
         final Stopwatch sw = Stopwatch.createStarted();
-        final var result = new Day1("2022/day1/input.txt")
+        final List<Elf> elves = Files.lines(
+                Path.of(InputUtils.getInputPath("2022/day1/input.txt")))
+                        .collect(new InputUtils.StringCollator())
+                        .stream()
+                        .map(calories -> new Elf(calories
+                                .stream()
+                                .map(Integer::valueOf)
+                                .collect(Collectors.toList())))
+                        .collect(Collectors.toList());
+
+        final var result = new Day1(elves)
                 .get()
                 .orElseThrow(RuntimeException::new);
 
@@ -27,39 +37,21 @@ public class Day1 implements
         System.out.printf("Execution time: %dms%n", sw.elapsed(TimeUnit.MILLISECONDS));
     }
 
-    private final List<Elf> input;
+    private final List<Elf> elves;
 
-    private Day1(final String resourcePath) {
-        this.input = this.getInput(resourcePath);
+    private Day1(final List<Elf> elves) {
+        this.elves = elves;
     }
 
     @Override
     public OptionalInt get() {
         return OptionalInt.of(
-                this.input.stream()
+                this.elves.stream()
                         .map(Elf::sumSnacks)
                         .sorted(Comparator.reverseOrder())
                         .mapToInt(i -> i)
                         .limit(3)
                         .sum());
-    }
-
-    @Override
-    public List<Elf> transformResource(BufferedReader br) throws IOException {
-        final List<Elf> elves = new ArrayList<>();
-
-        List<Integer> snacks = new ArrayList<>();
-        String line;
-        while ((line = br.readLine()) != null) {
-            if (StringUtils.isEmpty(line)) {
-                elves.add(new Elf(snacks));
-                snacks = new ArrayList<>();
-            } else {
-                snacks.add(Integer.parseInt(line));
-            }
-        }
-
-        return elves;
     }
 
     public static class Elf {

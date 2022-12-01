@@ -1,5 +1,6 @@
 package com.mtab.aventofcode.year2022.day1;
 
+import com.google.common.base.Preconditions;
 import com.google.common.base.Stopwatch;
 import com.mtab.aventofcode.utils.InputUtils;
 
@@ -34,6 +35,8 @@ public class Day1 implements
 
         System.out.println(result);
         System.out.printf("Execution time: %dms%n", sw.elapsed(TimeUnit.MILLISECONDS));
+
+        Preconditions.checkArgument(result == 196804);
     }
 
     private final List<Elf> elves;

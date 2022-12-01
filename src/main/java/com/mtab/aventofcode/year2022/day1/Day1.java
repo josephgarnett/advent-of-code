@@ -22,10 +22,10 @@ public class Day1 implements
                 Path.of(InputUtils.getInputPath("2022/day1/input.txt")))
                         .collect(new InputUtils.StringCollator())
                         .stream()
-                        .map(calories -> new Elf(calories
-                                .stream()
+                        .map((strings) -> strings.stream()
                                 .map(Integer::valueOf)
-                                .collect(Collectors.toList())))
+                                .collect(Collectors.toList()))
+                        .map(Elf::new)
                         .collect(Collectors.toList());
 
         final var result = new Day1(elves)

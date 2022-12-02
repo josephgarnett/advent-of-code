@@ -33,7 +33,7 @@ public class Day2 implements Function<List<Day2.RPSRound>, Long> {
         System.out.println(result);
         System.out.printf("Execution time: %dms%n", sw.elapsed(TimeUnit.MILLISECONDS));
 
-        Preconditions.checkArgument(result == 12156);
+        Preconditions.checkArgument(result == 10835);
     }
 
     @Override

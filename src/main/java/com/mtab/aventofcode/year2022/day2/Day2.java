@@ -89,6 +89,18 @@ public class Day2 implements Function<List<Day2.RPSRound>, Long> {
                 "Z", Result.WIN
         );
 
+        private static final Map<RPS, RPS> PRECEDENCE_WIN = Map.of(
+                RPS.ROCK, RPS.PAPER,
+                RPS.PAPER, RPS.SCISSORS,
+                RPS.SCISSORS, RPS.ROCK
+        );
+
+        private static final Map<RPS, RPS> PRECEDENCE_LOSE = Map.of(
+                RPS.ROCK, RPS.SCISSORS,
+                RPS.PAPER, RPS.ROCK,
+                RPS.SCISSORS, RPS.PAPER
+        );
+
         private final RPS lhs;
         private final Result rhs;
 
@@ -99,46 +111,16 @@ public class Day2 implements Function<List<Day2.RPSRound>, Long> {
 
         @Override
         public Integer get() {
-            if (lhs == RPS.ROCK) {
-                if (rhs == Result.WIN) {
-                    return Result.WIN.getValue() + RPS.PAPER.getValue();
-                }
-
-                if (rhs == Result.DRAW) {
-                    return Result.DRAW.getValue() + RPS.ROCK.getValue();
-                }
-
-                if (rhs == Result.LOSE) {
-                    return Result.LOSE.getValue() + RPS.SCISSORS.getValue();
-                }
+            if (rhs == Result.LOSE) {
+                return Result.LOSE.getValue() + RPSRound.PRECEDENCE_LOSE.get(lhs).getValue();
             }
 
-            if (lhs == RPS.PAPER) {
-                if (rhs == Result.WIN) {
-                    return Result.WIN.getValue() + RPS.SCISSORS.getValue();
-                }
-
-                if (rhs == Result.DRAW) {
-                    return Result.DRAW.getValue() + RPS.PAPER.getValue();
-                }
-
-                if (rhs == Result.LOSE) {
-                    return Result.LOSE.getValue() + RPS.ROCK.getValue();
-                }
+            if (rhs == Result.DRAW) {
+                return Result.DRAW.getValue() + lhs.getValue();
             }
 
-            if (lhs == RPS.SCISSORS) {
-                if (rhs == Result.WIN) {
-                    return Result.WIN.getValue() + RPS.ROCK.getValue();
-                }
-
-                if (rhs == Result.DRAW) {
-                    return Result.DRAW.getValue() + RPS.SCISSORS.getValue();
-                }
-
-                if (rhs == Result.LOSE) {
-                    return Result.LOSE.getValue() + RPS.PAPER.getValue();
-                }
+            if (rhs == Result.WIN) {
+                return Result.WIN.getValue() + RPSRound.PRECEDENCE_WIN.get(lhs).getValue();
             }
 
             throw new IllegalStateException();

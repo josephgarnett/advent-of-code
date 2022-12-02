@@ -40,7 +40,7 @@ public class Day2 implements Function<List<Day2.RPSRound>, Long> {
     public Long apply(final List<Day2.RPSRound> rounds) {
         return rounds
                 .stream()
-                .mapToLong((r) -> r.get())
+                .mapToLong(RPSRound::get)
                 .sum();
     }
 
@@ -50,7 +50,7 @@ public class Day2 implements Function<List<Day2.RPSRound>, Long> {
             PAPER(2),
             SCISSORS(3);
 
-            private int value;
+            private final int value;
             RPS(final int value) {
                 this.value = value;
             }
@@ -66,7 +66,7 @@ public class Day2 implements Function<List<Day2.RPSRound>, Long> {
             LOSE(0),
             DRAW(3);
 
-            private int value;
+            private final int value;
             Result(final int value) {
                 this.value = value;
             }

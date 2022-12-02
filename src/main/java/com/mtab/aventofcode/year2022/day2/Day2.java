@@ -61,20 +61,36 @@ public class Day2 implements Function<List<Day2.RPSRound>, Long> {
 
         }
 
+        private enum Result {
+            WIN(6),
+            LOSE(0),
+            DRAW(3);
+
+            private int value;
+            Result(final int value) {
+                this.value = value;
+            }
+
+            int getValue() {
+                return this.value;
+            }
+
+        }
+
         private static final Map<String, RPS> CIPHER_LHS = Map.of(
                 "A", RPS.ROCK,
                 "B", RPS.PAPER,
                 "C", RPS.SCISSORS
         );
 
-        private static final Map<String, RPS> CIPHER_RHS = Map.of(
-                "Y", RPS.PAPER,
-                "X", RPS.ROCK,
-                "Z", RPS.SCISSORS
+        private static final Map<String, Result> CIPHER_RHS = Map.of(
+                "Y", Result.DRAW,
+                "X", Result.LOSE,
+                "Z", Result.WIN
         );
 
         private final RPS lhs;
-        private final RPS rhs;
+        private final Result rhs;
 
         public RPSRound(final String hand1, final String hand2) {
             this.lhs = CIPHER_LHS.get(hand1);
@@ -84,44 +100,44 @@ public class Day2 implements Function<List<Day2.RPSRound>, Long> {
         @Override
         public Integer get() {
             if (lhs == RPS.ROCK) {
-                if (rhs == RPS.ROCK) {
-                    return 3 + RPS.ROCK.getValue();
+                if (rhs == Result.WIN) {
+                    return Result.WIN.getValue() + RPS.PAPER.getValue();
                 }
 
-                if (rhs == RPS.PAPER) {
-                    return 6 + RPS.PAPER.getValue();
+                if (rhs == Result.DRAW) {
+                    return Result.DRAW.getValue() + RPS.ROCK.getValue();
                 }
 
-                if (rhs == RPS.SCISSORS) {
-                    return RPS.SCISSORS.getValue();
+                if (rhs == Result.LOSE) {
+                    return Result.LOSE.getValue() + RPS.SCISSORS.getValue();
                 }
             }
 
             if (lhs == RPS.PAPER) {
-                if (rhs == RPS.ROCK) {
-                    return RPS.ROCK.getValue();
+                if (rhs == Result.WIN) {
+                    return Result.WIN.getValue() + RPS.SCISSORS.getValue();
                 }
 
-                if (rhs == RPS.PAPER) {
-                    return 3 + RPS.PAPER.getValue();
+                if (rhs == Result.DRAW) {
+                    return Result.DRAW.getValue() + RPS.PAPER.getValue();
                 }
 
-                if (rhs == RPS.SCISSORS) {
-                    return 6 + RPS.SCISSORS.getValue();
+                if (rhs == Result.LOSE) {
+                    return Result.LOSE.getValue() + RPS.ROCK.getValue();
                 }
             }
 
             if (lhs == RPS.SCISSORS) {
-                if (rhs == RPS.ROCK) {
-                    return 6 + RPS.ROCK.getValue();
+                if (rhs == Result.WIN) {
+                    return Result.WIN.getValue() + RPS.ROCK.getValue();
                 }
 
-                if (rhs == RPS.PAPER) {
-                    return RPS.PAPER.getValue();
+                if (rhs == Result.DRAW) {
+                    return Result.DRAW.getValue() + RPS.SCISSORS.getValue();
                 }
 
-                if (rhs == RPS.SCISSORS) {
-                    return 3 + RPS.SCISSORS.getValue();
+                if (rhs == Result.LOSE) {
+                    return Result.LOSE.getValue() + RPS.PAPER.getValue();
                 }
             }
 

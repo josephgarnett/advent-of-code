@@ -13,11 +13,7 @@ import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-import java.util.function.BiConsumer;
-import java.util.function.BinaryOperator;
 import java.util.function.Function;
-import java.util.function.Supplier;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class Day3 implements Function<List<Day3.Backpack>, Long> {
@@ -42,7 +38,7 @@ public class Day3 implements Function<List<Day3.Backpack>, Long> {
     private int getBadgeValue(final List<Backpack> groups) {
         return groups.stream()
                 .map(Backpack::getContents)
-                .collect(CustomCollectors.collectIntersection)
+                .collect(CustomCollectors.collectIntersection())
                 .stream()
                 .mapToInt(letter -> letter.codePointAt(0))
                 .map(value -> value >= 97 ? value - 96 : value - 64 + 26)

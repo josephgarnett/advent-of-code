@@ -12,7 +12,10 @@ import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
+import java.util.function.BiConsumer;
+import java.util.function.BinaryOperator;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
@@ -35,17 +38,46 @@ public class Day3 implements Function<List<Day3.Backpack>, Long> {
         Preconditions.checkArgument(result == 2276);
     }
 
+    private static final Collector<List<String>, Set<String>, Set<String>> collectIntersection = new Collector<>() {
+        @Override
+        public Supplier<Set<String>> supplier() {
+            return HashSet::new;
+        }
+
+        @Override
+        public BiConsumer<Set<String>, List<String>> accumulator() {
+            return (acc, v) -> {
+                if (acc.isEmpty()) {
+                    acc.addAll(v);
+                } else {
+                    acc.retainAll(v);
+                }
+            };
+        }
+
+        @Override
+        public BinaryOperator<Set<String>> combiner() {
+            return (set1, set2) -> {
+                set1.addAll(set2);
+                return set1;
+            };
+        }
+
+        @Override
+        public Function<Set<String>, Set<String>> finisher() {
+            return Set::copyOf;
+        }
+
+        @Override
+        public Set<Characteristics> characteristics() {
+            return Sets.immutableEnumSet(Characteristics.UNORDERED);
+        }
+    };
+
     private int getBadgeValue(final List<Backpack> groups) {
         return groups.stream()
                 .map(Backpack::getContents)
-                .collect(Collector.of(
-                        () -> new HashSet<>(groups.get(0).getContents()),
-                        AbstractCollection::retainAll,
-                        (set1, set2) -> {
-                            set1.retainAll(set2);
-                            return set1;
-                        },
-                        Set::copyOf))
+                .collect(collectIntersection)
                 .stream()
                 .mapToInt(letter -> letter.codePointAt(0))
                 .map(value -> value >= 97 ? value - 96 : value - 64 + 26)

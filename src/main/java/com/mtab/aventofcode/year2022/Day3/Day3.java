@@ -1,4 +1,4 @@
-package com.mtab.aventofcode.year2022.page3;
+package com.mtab.aventofcode.year2022.Day3;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Stopwatch;

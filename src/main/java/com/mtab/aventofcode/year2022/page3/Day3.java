@@ -2,20 +2,18 @@ package com.mtab.aventofcode.year2022.page3;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Stopwatch;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.mtab.aventofcode.utils.InputUtils;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Day3 implements Function<List<Day3.Backpack>, Long> {
     private static List<Backpack> getInput() throws IOException {
@@ -33,15 +31,45 @@ public class Day3 implements Function<List<Day3.Backpack>, Long> {
         System.out.println(result);
         System.out.printf("Execution time: %dms%n", sw.elapsed(TimeUnit.MILLISECONDS));
 
-        Preconditions.checkArgument(result == 10835);
+        Preconditions.checkArgument(result == 2276);
+    }
+
+    private int getBadgeValue(final List<Backpack> groups) {
+        final var content = groups.stream()
+                .map(Backpack::getContents)
+                .map(Set::copyOf)
+                .toList();
+
+        Set<String> result = Set.copyOf(groups.get(0).getContents());
+
+        for (final var c: content) {
+            result = Sets.intersection(result, c);
+        }
+
+        return result
+                .stream()
+                .mapToInt(letter -> letter.codePointAt(0))
+                .map(value -> value >= 97 ? value - 96 : value - 64 + 26)
+                .sum();
+    }
+
+    private Function<List<Backpack>, Long> part1() {
+        return (final List<Backpack> backpacks) -> backpacks
+                    .stream()
+                    .mapToLong(Backpack::getPriority)
+                    .sum();
+    }
+
+    private Function<List<Backpack>, Long> part2() {
+        return (final List<Backpack> backpacks) -> Lists.partition(backpacks, 3)
+                    .stream()
+                    .mapToLong(this::getBadgeValue)
+                    .sum();
     }
 
     @Override
     public Long apply(List<Backpack> backpacks) {
-        return backpacks
-                .stream()
-                .mapToLong(Backpack::getPriority)
-                .sum();
+        return part2().apply(backpacks);
     }
 
     static class Backpack {
@@ -61,8 +89,16 @@ public class Day3 implements Function<List<Day3.Backpack>, Long> {
             this.compartment2 = Arrays.asList(compartment2);
         }
 
-        int getPriority() {
+        List<String> getContents() {
+            final ArrayList<String> contents = new ArrayList<>();
 
+            contents.addAll(this.compartment1);
+            contents.addAll(this.compartment2);
+
+            return contents;
+        }
+
+        int getPriority() {
             return Sets.intersection(
                     Set.copyOf(this.compartment1),
                             Set.copyOf(this.compartment2))

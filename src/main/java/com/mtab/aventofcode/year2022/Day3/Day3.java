@@ -13,6 +13,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import java.util.function.Function;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class Day3 implements Function<List<Day3.Backpack>, Long> {
@@ -35,18 +36,16 @@ public class Day3 implements Function<List<Day3.Backpack>, Long> {
     }
 
     private int getBadgeValue(final List<Backpack> groups) {
-        final var content = groups.stream()
+        return groups.stream()
                 .map(Backpack::getContents)
-                .map(Set::copyOf)
-                .toList();
-
-        Set<String> result = Set.copyOf(groups.get(0).getContents());
-
-        for (final var c: content) {
-            result = Sets.intersection(result, c);
-        }
-
-        return result
+                .collect(Collector.of(
+                        () -> new HashSet<>(groups.get(0).getContents()),
+                        AbstractCollection::retainAll,
+                        (set1, set2) -> {
+                            set1.retainAll(set2);
+                            return set1;
+                        },
+                        Set::copyOf))
                 .stream()
                 .mapToInt(letter -> letter.codePointAt(0))
                 .map(value -> value >= 97 ? value - 96 : value - 64 + 26)

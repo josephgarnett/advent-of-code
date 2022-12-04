@@ -2,7 +2,6 @@ package com.mtab.aventofcode.year2022.day4;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Stopwatch;
-import com.google.common.collect.Sets;
 import com.mtab.aventofcode.utils.CustomCollectors;
 import com.mtab.aventofcode.utils.InputUtils;
 
@@ -12,10 +11,8 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class Day4 implements Function<List<Day4.GroupAssignment>, Long> {

@@ -2,6 +2,7 @@ package com.mtab.aventofcode.utils;
 
 import com.google.common.collect.Sets;
 
+import java.util.BitSet;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -42,6 +43,40 @@ public class CustomCollectors {
             @Override
             public Function<Set<T>, Set<T>> finisher() {
                 return Set::copyOf;
+            }
+
+            @Override
+            public Set<Characteristics> characteristics() {
+                return Sets.immutableEnumSet(Characteristics.UNORDERED);
+            }
+        };
+    }
+
+    public static
+    Collector<Integer, BitSet, BitSet> toBitSet() {
+        return new Collector<>() {
+            @Override
+            public Supplier<BitSet> supplier() {
+                return BitSet::new;
+            }
+
+            @Override
+            public BiConsumer<BitSet, Integer> accumulator() {
+                return BitSet::set;
+            }
+
+            @Override
+            public BinaryOperator<BitSet> combiner() {
+                return (set1, set2) -> {
+                    set1.or(set2);
+
+                    return set1;
+                };
+            }
+
+            @Override
+            public Function<BitSet, BitSet> finisher() {
+                return bitSet -> bitSet;
             }
 
             @Override

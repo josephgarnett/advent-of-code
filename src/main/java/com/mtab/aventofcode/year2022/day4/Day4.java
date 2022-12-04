@@ -3,12 +3,14 @@ package com.mtab.aventofcode.year2022.day4;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.Sets;
+import com.mtab.aventofcode.utils.CustomCollectors;
 import com.mtab.aventofcode.utils.InputUtils;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -28,7 +30,7 @@ public class Day4 implements Function<List<Day4.GroupAssignment>, Long> {
                         final String[] sections = elf.split("-");
 
                         assignments.add(
-                                new Assignment(
+                                Assignment.of(
                                         Integer.parseInt(sections[0]),
                                         Integer.parseInt(sections[1])));
                     }
@@ -63,18 +65,17 @@ public class Day4 implements Function<List<Day4.GroupAssignment>, Long> {
             final Assignment assignment1 = this.assignments.get(0);
             final Assignment assignment2 = this.assignments.get(1);
 
-            return Sets.intersection(
-                    assignment1.getSections(),
-                    assignment2.getSections())
-                    .size() > 0;
+            return assignment1.sections()
+                    .intersects(assignment2.sections());
         }
     }
 
-    record Assignment(int start, int end) {
-        Set<Integer> getSections() {
-            return IntStream.range(this.start, this.end + 1)
+    record Assignment(int start, int end, BitSet sections) {
+        static Assignment of(final int start, final int end) {
+            final var sections = IntStream.range(start, end + 1)
                     .boxed()
-                    .collect(Collectors.toSet());
+                    .collect(CustomCollectors.toBitSet());
+            return new Assignment(start, end, sections);
         }
     }
 }

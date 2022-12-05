@@ -1,5 +1,6 @@
 package com.mtab.aventofcode.year2022.day5;
 
+import com.google.common.base.Preconditions;
 import com.google.common.base.Stopwatch;
 import com.mtab.aventofcode.utils.InputUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -17,12 +18,12 @@ import java.util.stream.Collectors;
 public class Day5 implements Function<Day5.ShipyardManager, String> {
     private static final Pattern INSTRUCTION = Pattern.compile("move (\\d+) from (\\d+) to (\\d+)");
 
-    static Optional<Stack<String>> getStack(final List<Stack<String>> stacks, final int index) {
-        try {
-            return Optional.of(stacks.get(index));
-        } catch (final IndexOutOfBoundsException e) {
-            return Optional.empty();
-        }
+    private static boolean isLayout(final String line) {
+        return line.contains("1");
+    }
+
+    private static boolean isContainer(final String line) {
+        return line.contains("[");
     }
 
     private static ShipyardManager getInput() throws IOException {
@@ -45,28 +46,21 @@ public class Day5 implements Function<Day5.ShipyardManager, String> {
         Files.lines(
                 Path.of(InputUtils.getInputPath("2022/day5/container-layout.txt")))
                 .forEach(line -> {
-                    if (line.contains("1")) {
-                        final var numberOfContainers = line.replace(" ", "").length();
+                    if (Day5.isLayout(line)) {
+                        final int numberOfContainers = line.replace(" ", "").length();
 
                         for (int i = 0; i < numberOfContainers; ++i) {
                             stacks.add(new Stack<>());
                         }
-
-                        return;
-                    }
-
-                    if (line.contains("[")) {
+                    } else if (Day5.isContainer(line)) {
                         for (int i = 0; (i * 3) + i < line.length(); ++i) {
                             final String container = line.substring((i * 3) + i, (i * 3) + i + 3).trim();
 
                             if (StringUtils.isNotEmpty(container)) {
-                                final var stack = Day5.getStack(stacks, i)
-                                        .orElse(new Stack<>());
-
+                                final var stack = stacks.get(i);
                                 stack.push(container
                                         .replace("[", "")
                                         .replace("]", ""));
-                                stacks.set(i, stack);
                             }
                         }
                     }
@@ -84,6 +78,8 @@ public class Day5 implements Function<Day5.ShipyardManager, String> {
 
         System.out.println(result);
         System.out.printf("Execution time: %dms%n", sw.elapsed(TimeUnit.MILLISECONDS));
+
+        Preconditions.checkArgument(StringUtils.equals("RGLVRCQSB", result));
     }
 
     @Override
@@ -123,7 +119,6 @@ public class Day5 implements Function<Day5.ShipyardManager, String> {
 
         @Override
         public Void apply(final List<Stack<String>> containers) {
-
             this.crateMover9001(containers);
 
             return null;

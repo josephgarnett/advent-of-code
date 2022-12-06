@@ -3,6 +3,8 @@ package com.mtab.aventofcode.year2022.day1;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Stopwatch;
 import com.mtab.aventofcode.utils.InputUtils;
+import com.mtab.aventofcode.utils.TaskUtils;
+import com.mtab.aventofcode.year2022.Application;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -17,24 +19,25 @@ import java.util.stream.Collectors;
 public class Day1 implements
         Supplier<OptionalInt> {
 
-    public static void main(final String[] args) throws IOException {
-        final Stopwatch sw = Stopwatch.createStarted();
-        final List<Elf> elves = Files.lines(
-                Path.of(InputUtils.getInputPath("2022/day1/input.txt")))
-                        .collect(new InputUtils.StringCollator())
-                        .stream()
-                        .map((strings) -> strings.stream()
-                                .map(Integer::valueOf)
-                                .collect(Collectors.toList()))
-                        .map(Elf::new)
-                        .collect(Collectors.toList());
+    public static void main(final String[] args) throws Exception {
+        final var result = Application.challenge(
+                "2022/day1",
+                () -> {
+                    final List<Elf> elves = Files.lines(
+                                    Path.of(InputUtils.getInputPath("2022/day1/input.txt")))
+                            .collect(new InputUtils.StringCollator())
+                            .stream()
+                            .map((strings) -> strings.stream()
+                                    .map(Integer::valueOf)
+                                    .collect(Collectors.toList()))
+                            .map(Elf::new)
+                            .collect(Collectors.toList());
 
-        final var result = new Day1(elves)
-                .get()
-                .orElseThrow(RuntimeException::new);
-
-        System.out.println(result);
-        System.out.printf("Execution time: %dms%n", sw.elapsed(TimeUnit.MILLISECONDS));
+                    return new Day1(elves)
+                            .get()
+                            .orElseThrow(RuntimeException::new);
+                }
+        );
 
         Preconditions.checkArgument(result == 196804);
     }

@@ -4,6 +4,8 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Stopwatch;
 import com.mtab.aventofcode.utils.CustomCollectors;
 import com.mtab.aventofcode.utils.InputUtils;
+import com.mtab.aventofcode.utils.TaskUtils;
+import com.mtab.aventofcode.year2022.Application;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -37,13 +39,10 @@ public class Day4 implements Function<List<Day4.GroupAssignment>, Long> {
                 .toList();
     }
 
-    public static void main(final String[] args) throws IOException {
-        final Stopwatch sw = Stopwatch.createStarted();
-
-        final var result = new Day4().apply(Day4.getInput());
-
-        System.out.println(result);
-        System.out.printf("Execution time: %dms%n", sw.elapsed(TimeUnit.MILLISECONDS));
+    public static void main(final String[] args) throws Exception {
+        final var result = Application.challenge(
+                "2022/day4",
+                () -> new Day4().apply(Day4.getInput()));
 
         Preconditions.checkArgument(result == 852);
     }

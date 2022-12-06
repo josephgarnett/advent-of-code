@@ -3,6 +3,8 @@ package com.mtab.aventofcode.year2022.day5;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Stopwatch;
 import com.mtab.aventofcode.utils.InputUtils;
+import com.mtab.aventofcode.utils.TaskUtils;
+import com.mtab.aventofcode.year2022.Application;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
@@ -71,13 +73,10 @@ public class Day5 implements Function<Day5.ShipyardManager, String> {
         return new ShipyardManager(stacks, instructions);
     }
 
-    public static void main(final String[] args) throws IOException {
-        final Stopwatch sw = Stopwatch.createStarted();
-
-        final var result = new Day5().apply(Day5.getInput());
-
-        System.out.println(result);
-        System.out.printf("Execution time: %dms%n", sw.elapsed(TimeUnit.MILLISECONDS));
+    public static void main(final String[] args) throws Exception {
+        final var result = Application.challenge(
+                "2022/day5",
+                () -> new Day5().apply(Day5.getInput()));
 
         Preconditions.checkArgument(StringUtils.equals("RGLVRCQSB", result));
     }

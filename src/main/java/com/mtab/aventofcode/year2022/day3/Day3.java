@@ -6,6 +6,8 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.mtab.aventofcode.utils.CustomCollectors;
 import com.mtab.aventofcode.utils.InputUtils;
+import com.mtab.aventofcode.utils.TaskUtils;
+import com.mtab.aventofcode.year2022.Application;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -24,13 +26,10 @@ public class Day3 implements Function<List<Day3.Backpack>, Long> {
                 .collect(Collectors.toList());
     }
 
-    public static void main(final String[] args) throws IOException {
-        final Stopwatch sw = Stopwatch.createStarted();
-
-        final var result = new Day3().apply(Day3.getInput());
-
-        System.out.println(result);
-        System.out.printf("Execution time: %dms%n", sw.elapsed(TimeUnit.MILLISECONDS));
+    public static void main(final String[] args) throws Exception {
+        final var result = Application.challenge(
+                "2022/day3",
+                () -> new Day3().apply(Day3.getInput()));
 
         Preconditions.checkArgument(result == 2276);
     }

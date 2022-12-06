@@ -36,18 +36,9 @@ public class Day6 implements Function<String, Integer> {
     public Integer apply(final String signal) {
 
 
-        for (int i = 0; i < signal.length(); ++i) {;
-            final String behind = signal.substring(Math.max(i - (LENGTH - 1), 0), i + 1);
+        for (int i = 0; i < signal.length(); ++i) {
             final String ahead = signal.substring(i, Math.min(i + LENGTH, signal.length()));
             final BitSet bitSet = new BitSet();
-
-            behind.chars().forEach(bitSet::set);
-
-            if (bitSet.cardinality() > LENGTH - 1) {
-                return i;
-            }
-
-            bitSet.clear();
 
             ahead.chars().forEach(bitSet::set);
 

@@ -40,7 +40,7 @@ public class Day6 implements Function<String, Integer> {
                             .chars()
                             .boxed()
                             .collect(Collectors.toSet())
-                            .size() > LENGTH - 1)
+                            .size() == LENGTH)
                 .findFirst()
                 .map(n -> n + LENGTH)
                 .orElse(-1);

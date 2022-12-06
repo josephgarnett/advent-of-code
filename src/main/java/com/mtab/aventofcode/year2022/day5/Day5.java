@@ -28,39 +28,36 @@ public class Day5 implements Function<Day5.ShipyardManager, String> {
     private static ShipyardManager getInput() throws IOException {
         final List<Instruction> instructions = Files.lines(
                 Path.of(InputUtils.getInputPath("2022/day5/instructions.txt")))
-                .map(line -> {
-                    final Matcher matcher = INSTRUCTION.matcher(line);
-
-                    if (matcher.matches()) {
-                        return new Instruction(
+                .map(INSTRUCTION::matcher)
+                .filter(Matcher::matches)
+                .map(matcher -> new Instruction(
                                 Integer.parseInt(matcher.group(2)),
                                 Integer.parseInt(matcher.group(3)),
-                                Integer.parseInt(matcher.group(1)));
-                    }
-
-                    throw new IllegalStateException();
-                })
+                                Integer.parseInt(matcher.group(1))))
                 .toList();
+
         final List<Stack<String>> stacks = new ArrayList<>();
         Files.lines(
                 Path.of(InputUtils.getInputPath("2022/day5/container-layout.txt")))
-                .forEach(line -> {
+                .peek(line -> {
                     if (Day5.isLayout(line)) {
                         final int numberOfContainers = line.replace(" ", "").length();
 
                         for (int i = 0; i < numberOfContainers; ++i) {
                             stacks.add(new Stack<>());
                         }
-                    } else if (Day5.isContainer(line)) {
-                        for (int i = 0; (i * 3) + i < line.length(); ++i) {
-                            final String container = line.substring((i * 3) + i, (i * 3) + i + 3).trim();
+                    }
+                })
+                .filter(Day5::isContainer)
+                .forEach(line -> {
+                    for (int i = 0; (i * 3) + i < line.length(); ++i) {
+                        final String container = line.substring((i * 3) + i, (i * 3) + i + 3).trim();
 
-                            if (StringUtils.isNotEmpty(container)) {
-                                final var stack = stacks.get(i);
-                                stack.push(container
-                                        .replace("[", "")
-                                        .replace("]", ""));
-                            }
+                        if (StringUtils.isNotEmpty(container)) {
+                            final var stack = stacks.get(i);
+                            stack.push(container
+                                    .replace("[", "")
+                                    .replace("]", ""));
                         }
                     }
                 });

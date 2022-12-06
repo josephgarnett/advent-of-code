@@ -7,10 +7,10 @@ import com.mtab.aventofcode.utils.InputUtils;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.BitSet;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class Day6 implements Function<String, Integer> {
     private static final int LENGTH = 14;
@@ -34,17 +34,15 @@ public class Day6 implements Function<String, Integer> {
 
     @Override
     public Integer apply(final String signal) {
-        for (int i = 0; i < signal.length(); ++i) {
-            final String ahead = signal.substring(i, Math.min(i + LENGTH, signal.length()));
-            final BitSet bitSet = new BitSet();
-
-            ahead.chars().forEach(bitSet::set);
-
-            if (bitSet.cardinality() > LENGTH - 1) {
-                return i + ahead.length();
-            }
-        }
-
-        return -1;
+        return IntStream.range(0, signal.length() - LENGTH)
+                .boxed()
+                .filter(i -> signal.substring(i, Math.min(i + LENGTH, signal.length()))
+                            .chars()
+                            .boxed()
+                            .collect(Collectors.toSet())
+                            .size() > LENGTH - 1)
+                .findFirst()
+                .map(n -> n + LENGTH)
+                .orElse(-1);
     }
 }

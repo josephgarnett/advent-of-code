@@ -1,17 +1,14 @@
 package com.mtab.aventofcode.year2022.day5;
 
 import com.google.common.base.Preconditions;
-import com.google.common.base.Stopwatch;
+import com.mtab.aventofcode.Application;
 import com.mtab.aventofcode.utils.InputUtils;
-import com.mtab.aventofcode.utils.TaskUtils;
-import com.mtab.aventofcode.year2022.Application;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

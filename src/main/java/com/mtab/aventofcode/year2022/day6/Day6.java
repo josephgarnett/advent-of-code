@@ -1,15 +1,13 @@
 package com.mtab.aventofcode.year2022.day6;
 
 import com.google.common.base.Preconditions;
-import com.google.common.base.Stopwatch;
+import com.mtab.aventofcode.Application;
 import com.mtab.aventofcode.utils.InputUtils;
-import com.mtab.aventofcode.utils.TaskUtils;
-import com.mtab.aventofcode.year2022.Application;
+import com.mtab.aventofcode.year2022.Challenge2022;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;

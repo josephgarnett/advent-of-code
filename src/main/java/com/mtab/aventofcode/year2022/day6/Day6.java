@@ -13,7 +13,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class Day6 implements Function<String, Integer> {
-    private static int LENGTH = 14;
+    private static final int LENGTH = 14;
 
     private static String getInput() throws IOException {
         return Files.lines(
@@ -29,7 +29,7 @@ public class Day6 implements Function<String, Integer> {
         System.out.println(result);
         System.out.printf("Execution time: %dms%n", sw.elapsed(TimeUnit.MILLISECONDS));
 
-        Preconditions.checkArgument(result == 1757);
+        Preconditions.checkArgument(result == 2950);
     }
 
     @Override
@@ -37,13 +37,13 @@ public class Day6 implements Function<String, Integer> {
 
 
         for (int i = 0; i < signal.length(); ++i) {;
-            final String behind = signal.substring(Math.max(i - 3, 0), i + 1);
-            final String ahead = signal.substring(i, Math.min(i + 4, signal.length()));
+            final String behind = signal.substring(Math.max(i - (LENGTH - 1), 0), i + 1);
+            final String ahead = signal.substring(i, Math.min(i + LENGTH, signal.length()));
             final BitSet bitSet = new BitSet();
 
             behind.chars().forEach(bitSet::set);
 
-            if (bitSet.cardinality() > 3) {
+            if (bitSet.cardinality() > LENGTH - 1) {
                 return i;
             }
 
@@ -51,7 +51,7 @@ public class Day6 implements Function<String, Integer> {
 
             ahead.chars().forEach(bitSet::set);
 
-            if (bitSet.cardinality() > 3) {
+            if (bitSet.cardinality() > LENGTH - 1) {
                 return i + ahead.length();
             }
         }

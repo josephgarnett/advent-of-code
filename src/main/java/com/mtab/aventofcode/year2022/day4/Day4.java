@@ -9,30 +9,25 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.BitSet;
 import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class Day4 implements Function<List<Day4.GroupAssignment>, Long> {
     private static List<Day4.GroupAssignment> getInput() throws IOException {
         return Files.lines(
                         Path.of(InputUtils.getInputPath("2022/day4/input.txt")))
-                .map((line) -> {
-                    final String[] elves = line.split(",");
-                    final List<Assignment> assignments = new ArrayList<>();
-
-                    for (final String elf: elves) {
-                        final String[] sections = elf.split("-");
-
-                        assignments.add(
-                                Assignment.of(
+                .map(line -> line.split(","))
+                .map(elves -> Arrays.stream(elves)
+                        .map(elf -> elf.split("-"))
+                        .map(sections -> Assignment.of(
                                         Integer.parseInt(sections[0]),
-                                        Integer.parseInt(sections[1])));
-                    }
-
-                    return new GroupAssignment(assignments);
-                })
+                                        Integer.parseInt(sections[1])))
+                        .toList())
+                .map(GroupAssignment::new)
                 .toList();
     }
 

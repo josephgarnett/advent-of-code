@@ -17,10 +17,8 @@ public class Day2 implements Function<List<Day2.RPSRound>, Long> {
     private static List<RPSRound> getInput() throws IOException {
         return Files.lines(
                         Path.of(InputUtils.getInputPath("2022/day2/input.txt")))
-                .map(line -> {
-                    final var parts = line.split(" ");
-                    return new Day2.RPSRound(parts[0], parts[1]);
-                })
+                .map(s -> s.split(" "))
+                .map(parts -> new Day2.RPSRound(parts[0], parts[1]))
                 .collect(Collectors.toList());
     }
 

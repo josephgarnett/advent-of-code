@@ -34,8 +34,6 @@ public class Day6 implements Function<String, Integer> {
 
     @Override
     public Integer apply(final String signal) {
-
-
         for (int i = 0; i < signal.length(); ++i) {
             final String ahead = signal.substring(i, Math.min(i + LENGTH, signal.length()));
             final BitSet bitSet = new BitSet();

@@ -10,6 +10,8 @@ import com.mtab.aventofcode.year2022.day6.Day6;
 
 import java.util.concurrent.TimeUnit;
 
+import static org.fusesource.jansi.Ansi.ansi;
+
 public class Challenge2022 {
     public static void main(final String[] args) throws Exception {
         final Stopwatch sw = Stopwatch.createStarted();
@@ -21,6 +23,12 @@ public class Challenge2022 {
         Day5.main(args);
         Day6.main(args);
 
-        System.out.printf("All challenges run, execution time: %dms%n", sw.elapsed(TimeUnit.MILLISECONDS));
+        System.out.print(
+                ansi()
+                .fgYellow()
+                .a(String.format(
+                        "\uD83C\uDF89\uD83C\uDF89 All challenges run, execution time: %dms%n",
+                        sw.elapsed(TimeUnit.MILLISECONDS)))
+                .reset());
     }
 }

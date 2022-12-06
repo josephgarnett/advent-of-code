@@ -11,7 +11,6 @@ public class Application {
 
     }
 
-
     public static <T> T challenge(
             final String baseResourcePath,
             final Callable<T> task) throws Exception {

@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import com.mtab.aventofcode.Application;
 import com.mtab.aventofcode.utils.InputUtils;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Comparator;
@@ -14,26 +15,24 @@ import java.util.stream.Collectors;
 
 public class Day1 implements
         Supplier<OptionalInt> {
+    public static List<Elf> getInput() throws IOException {
+        return Files.lines(
+                        Path.of(InputUtils.getInputPath("2022/day1/input.txt")))
+                .collect(new InputUtils.StringCollator())
+                .stream()
+                .map((strings) -> strings.stream()
+                        .map(Integer::valueOf)
+                        .collect(Collectors.toList()))
+                .map(Elf::new)
+                .collect(Collectors.toList());
+    }
 
     public static void main(final String[] args) throws Exception {
         final var result = Application.challenge(
                 "2022/day1",
-                () -> {
-                    final List<Elf> elves = Files.lines(
-                                    Path.of(InputUtils.getInputPath("2022/day1/input.txt")))
-                            .collect(new InputUtils.StringCollator())
-                            .stream()
-                            .map((strings) -> strings.stream()
-                                    .map(Integer::valueOf)
-                                    .collect(Collectors.toList()))
-                            .map(Elf::new)
-                            .collect(Collectors.toList());
-
-                    return new Day1(elves)
+                () -> new Day1(Day1.getInput())
                             .get()
-                            .orElseThrow(RuntimeException::new);
-                }
-        );
+                            .orElseThrow(RuntimeException::new));
 
         Preconditions.checkArgument(result == 196804);
     }

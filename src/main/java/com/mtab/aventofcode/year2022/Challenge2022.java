@@ -21,6 +21,6 @@ public class Challenge2022 {
         Day5.main(args);
         Day6.main(args);
 
-        System.out.printf("All tests run, execution time: %dms%n", sw.elapsed(TimeUnit.MILLISECONDS));
+        System.out.printf("All challenges run, execution time: %dms%n", sw.elapsed(TimeUnit.MILLISECONDS));
     }
 }

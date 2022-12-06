@@ -13,6 +13,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class Day6 implements Function<String, Integer> {
+    private static int LENGTH = 14;
+
     private static String getInput() throws IOException {
         return Files.lines(
                         Path.of(InputUtils.getInputPath("2022/day6/input.txt")))
@@ -27,7 +29,7 @@ public class Day6 implements Function<String, Integer> {
         System.out.println(result);
         System.out.printf("Execution time: %dms%n", sw.elapsed(TimeUnit.MILLISECONDS));
 
-        Preconditions.checkArgument(result == 2276);
+        Preconditions.checkArgument(result == 1757);
     }
 
     @Override

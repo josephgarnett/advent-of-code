@@ -1,14 +1,14 @@
 package com.mtab.aventofcode;
 
-import com.google.common.base.Preconditions;
 import com.google.common.base.Stopwatch;
 import com.mtab.aventofcode.utils.TaskUtils;
 import org.fusesource.jansi.AnsiConsole;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.IntStream;
 
 import static org.fusesource.jansi.Ansi.ansi;
 
@@ -43,27 +43,35 @@ public class Application {
                     .reset());
         }
 
-        final List<Long> times = new ArrayList<>(tests);
-        final var result = task.call();
+        final AtomicReference<T> result = new AtomicReference<>();
+        final AtomicInteger i = new AtomicInteger(0);
+        final double average = IntStream.range(0, tests)
+                .parallel()
+                .peek(u -> System.out.printf("\r %.0f%%", (float)i.incrementAndGet() / (float)tests * 100))
+                .mapToLong(u -> {
+                    final Stopwatch sw = Stopwatch.createStarted();
+                    try {
+                        result.set(task.call());
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
 
-        for (int i = 1; i < tests; ++i) {
-            System.out.printf("\r %.0f%%", (float)i / (float)tests * 100);
-            final Stopwatch sw = Stopwatch.createStarted();
-            Preconditions.checkArgument(task.call().equals(result));
-            times.add(sw.elapsed(TimeUnit.MILLISECONDS));
-        }
+                    return sw.elapsed(TimeUnit.MILLISECONDS);
+                })
+                .average()
+                .orElseThrow();
 
         System.out.print("\r");
         System.out.println(result);
-        System.out.println("============================================");
+        System.out.println("============================================================");
         System.out.print(ansi()
                 .fgBrightGreen()
-                .a(String.format("Average execution time over %d runs: %.4fms%n",
+                .a(String.format("Average execution time over %d runs: %.2fms%n",
                         tests,
-                        times.stream().mapToLong(t -> t).average().orElseThrow()))
+                        average))
                 .reset());
-        System.out.println("============================================\n\n");
+        System.out.println("============================================================\n\n");
 
-        return result;
+        return result.get();
     }
 }

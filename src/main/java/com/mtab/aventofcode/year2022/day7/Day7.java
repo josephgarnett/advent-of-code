@@ -37,12 +37,18 @@ public class Day7 implements Function<List<Day7.File>, Long> {
                         final String dir = commandMatcher.group(2);
 
                         if (StringUtils.equals("cd", command)) {
-                            // TODO: what if nested path
-                            // e.g. cd a/e
-                            if (StringUtils.equals(dir, "..")) {
-                                tags.pop();
-                            } else {
-                                tags.push(dir);
+                            final String[] parts = dir.split("/");
+
+                            if (parts.length == 0) {
+                                tags.push("");
+                            }
+
+                            for (final String part: parts) {
+                                if (StringUtils.equals(part, "..")) {
+                                    tags.pop();
+                                } else {
+                                    tags.push(part);
+                                }
                             }
                         }
 
@@ -56,6 +62,8 @@ public class Day7 implements Function<List<Day7.File>, Long> {
                         files.add(File.of(name, size, List.copyOf(tags)));
                     }
                 });
+
+        System.out.println(files);
         return files;
     }
 

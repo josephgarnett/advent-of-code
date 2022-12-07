@@ -46,7 +46,6 @@ public class Application {
         final AtomicReference<T> result = new AtomicReference<>();
         final AtomicInteger i = new AtomicInteger(0);
         final double average = IntStream.range(0, tests)
-                .parallel()
                 .peek(u -> System.out.printf("\r %.0f%%", (float)i.incrementAndGet() / (float)tests * 100))
                 .mapToLong(u -> {
                     final Stopwatch sw = Stopwatch.createStarted();
@@ -56,7 +55,7 @@ public class Application {
                         throw new RuntimeException(e);
                     }
 
-                    return sw.elapsed(TimeUnit.MILLISECONDS);
+                    return sw.elapsed(TimeUnit.MICROSECONDS);
                 })
                 .average()
                 .orElseThrow();
@@ -66,7 +65,7 @@ public class Application {
         System.out.println("============================================================");
         System.out.print(ansi()
                 .fgBrightGreen()
-                .a(String.format("Average execution time over %d runs: %.2fms%n",
+                .a(String.format("Average execution time over %d runs: %.2fμs%n",
                         tests,
                         average))
                 .reset());

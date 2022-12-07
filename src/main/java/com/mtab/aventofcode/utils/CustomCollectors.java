@@ -1,11 +1,9 @@
 package com.mtab.aventofcode.utils;
 
 import com.google.common.collect.Sets;
+import com.mtab.aventofcode.year2022.day7.Day7;
 
-import java.util.BitSet;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
@@ -84,5 +82,30 @@ public class CustomCollectors {
                 return Sets.immutableEnumSet(Characteristics.UNORDERED);
             }
         };
+    }
+
+    public static <T>
+    Collector<T, Map<String, Set<T>>, Map<String, Set<T>>> collectFileTagGroups(
+            final Function<T, Collection<String>> keyAccessor) {
+        return Collector.of(
+                HashMap::new,
+                (map, item) -> keyAccessor.apply(item)
+                        .forEach((key) -> {
+                            map.computeIfAbsent(key, (k) -> {
+                                final Set<T> set = new HashSet<>();
+                                set.add(item);
+                                return set;
+                            });
+
+                            map.computeIfPresent(key, (k, v) -> {
+                                v.add(item);
+                                return v;
+                            });
+                        }),
+                (map1, map2) -> {
+                    map1.putAll(map2);
+                    return map1;
+                },
+                Map::copyOf);
     }
 }

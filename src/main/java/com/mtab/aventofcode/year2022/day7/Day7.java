@@ -1,6 +1,8 @@
 package com.mtab.aventofcode.year2022.day7;
 
+import com.google.common.base.Preconditions;
 import com.mtab.aventofcode.Application;
+import com.mtab.aventofcode.utils.CustomCollectors;
 import com.mtab.aventofcode.utils.InputUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -12,6 +14,8 @@ import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.LongStream;
 
 public class Day7 implements Function<List<Day7.File>, Long> {
     private static final Pattern COMMAND = Pattern.compile("^\\$\\s+(\\w+)\\s+(.*)$");
@@ -62,32 +66,13 @@ public class Day7 implements Function<List<Day7.File>, Long> {
         final var result = Application.challenge(
                 "2022/day7",
                 () -> new Day7().apply(Day7.getInput()));
+
+        Preconditions.checkArgument(result == 3866390);
     }
 
     private long part1(final List<File> files) {
         return files.stream()
-                .collect(
-                        Collector.of(
-                                () -> new HashMap<String, Set<Day7.File>>(),
-                                (map, file) -> {
-                                    for (final String tag: file.tags()) {
-                                        map.computeIfAbsent(tag, (key) -> {
-                                            final Set<File> set = new HashSet<>();
-                                            set.add(file);
-                                            return set;
-                                        });
-
-                                        map.computeIfPresent(tag, (key, list) -> {
-                                            list.add(file);
-                                            return list;
-                                        });
-                                    }
-                                },
-                                (map1, map2) -> {
-                                    map1.putAll(map2);
-                                    return map1;
-                                },
-                                Map::copyOf))
+                .collect(CustomCollectors.collectFileTagGroups(File::tags))
                 .values()
                 .stream()
                 .mapToLong(group -> group
@@ -99,46 +84,20 @@ public class Day7 implements Function<List<Day7.File>, Long> {
     }
 
     private long part2(final List<File> files) {
-        final Map<String, Set<Day7.File>> fileMap = files.stream()
-                .collect(
-                        Collector.of(
-                                () -> new HashMap<String, Set<Day7.File>>(),
-                                (map, file) -> {
-                                    for (final String tag: file.tags()) {
-                                        map.computeIfAbsent(tag, (key) -> {
-                                            final Set<File> set = new HashSet<>();
-                                            set.add(file);
-                                            return set;
-                                        });
-
-                                        map.computeIfPresent(tag, (key, list) -> {
-                                            list.add(file);
-                                            return list;
-                                        });
-                                    }
-                                },
-                                (map1, map2) -> {
-                                    map1.putAll(map2);
-                                    return map1;
-                                },
-                                Map::copyOf));
-
-        final long maxDirSize = fileMap
+        final long[] sizes = files.stream()
+                .collect(CustomCollectors.collectFileTagGroups(File::tags))
                 .values()
                 .stream()
                 .mapToLong((f) -> f.stream()
                         .mapToLong(File::size)
                         .sum())
+                .toArray();
+
+        final long unusedSpace = MAX_SPACE - Arrays.stream(sizes)
                 .max()
                 .orElseThrow(RuntimeException::new);
-        final long unusedSpace = MAX_SPACE - maxDirSize;
 
-        return fileMap
-                .values()
-                .stream()
-                .mapToLong((f) -> f.stream()
-                        .mapToLong(File::size)
-                        .sum())
+        return Arrays.stream(sizes)
                 .sorted()
                 .filter(t -> t + unusedSpace > REQUIRED_SPACE)
                 .findFirst()

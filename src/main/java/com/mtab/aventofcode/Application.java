@@ -20,7 +20,7 @@ public class Application {
 
     public static <T> T challenge(
             final String baseResourcePath,
-            final Callable<T> task) throws Exception {
+            final Callable<T> task) {
         return Application.challenge(
                 baseResourcePath,
                 task,
@@ -30,8 +30,9 @@ public class Application {
     public static <T> T challenge(
             final String baseResourcePath,
             final Callable<T> task,
-            final int tests) throws Exception {
+            final int tests) {
         try {
+
             System.out.println(
                     ansi().fgBrightBlue()
                             .a(TaskUtils.getDescription(baseResourcePath + "/readme.txt"))

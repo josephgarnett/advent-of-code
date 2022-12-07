@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -26,41 +27,44 @@ public class Day7 implements Function<List<Day7.File>, Long> {
         final Stack<String> tags = new Stack<>();
         final List<File> files = new ArrayList<>();
 
+        final Map<Pattern, Consumer<Matcher>> processor = Map.of(
+                FILE, (matcher) -> {
+                    final long size = Long.parseLong(matcher.group(1));
+                    final String name = matcher.group(2);
+
+                    files.add(File.of(name, size, List.copyOf(tags)));
+                },
+                COMMAND, (matcher) -> {
+                    final String command = matcher.group(1);
+                    final String dir = matcher.group(2);
+
+                    if (StringUtils.equals("cd", command)) {
+                        final String[] parts = dir.split("/");
+
+                        if (parts.length == 0) {
+                            tags.push("");
+                        }
+
+                        for (final String part: parts) {
+                            if (StringUtils.equals(part, "..")) {
+                                tags.pop();
+                            } else {
+                                tags.push(part);
+                            }
+                        }
+                    }
+                });
+
         Files.lines(
                 Path.of(InputUtils.getInputPath("2022/day7/input.txt")))
                 .forEach(line -> {
-                    final Matcher commandMatcher = COMMAND.matcher(line);
-                    final Matcher fileMatcher = FILE.matcher(line);
+                    processor.forEach((key, value) -> {
+                        final var matcher = key.matcher(line);
 
-                    if (commandMatcher.matches()) {
-                        final String command = commandMatcher.group(1);
-                        final String dir = commandMatcher.group(2);
-
-                        if (StringUtils.equals("cd", command)) {
-                            final String[] parts = dir.split("/");
-
-                            if (parts.length == 0) {
-                                tags.push("");
-                            }
-
-                            for (final String part: parts) {
-                                if (StringUtils.equals(part, "..")) {
-                                    tags.pop();
-                                } else {
-                                    tags.push(part);
-                                }
-                            }
+                        if (matcher.matches()) {
+                            value.accept(matcher);
                         }
-
-                        return;
-                    }
-
-                    if (fileMatcher.matches()) {
-                        final long size = Long.parseLong(fileMatcher.group(1));
-                        final String name = fileMatcher.group(2);
-
-                        files.add(File.of(name, size, List.copyOf(tags)));
-                    }
+                    });
                 });
 
         return files;

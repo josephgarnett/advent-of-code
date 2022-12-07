@@ -47,11 +47,13 @@ public class Application {
         final var result = task.call();
 
         for (int i = 1; i < tests; ++i) {
+            System.out.printf("\r %.0f%%", (float)i / (float)tests * 100);
             final Stopwatch sw = Stopwatch.createStarted();
             Preconditions.checkArgument(task.call().equals(result));
             times.add(sw.elapsed(TimeUnit.MILLISECONDS));
         }
 
+        System.out.print("\r");
         System.out.println(result);
         System.out.println("============================================");
         System.out.print(ansi()

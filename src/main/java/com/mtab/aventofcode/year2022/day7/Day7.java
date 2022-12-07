@@ -63,7 +63,6 @@ public class Day7 implements Function<List<Day7.File>, Long> {
                     }
                 });
 
-        System.out.println(files);
         return files;
     }
 

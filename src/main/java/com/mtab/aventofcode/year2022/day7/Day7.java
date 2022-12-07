@@ -12,14 +12,14 @@ import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 public class Day7 implements Function<List<Day7.File>, Long> {
     private static final Pattern COMMAND = Pattern.compile("^\\$\\s+(\\w+)\\s+(.*)$");
-    private static final Pattern DIRECTORY = Pattern.compile("^dir\\s+(.*)$");
     private static final Pattern FILE = Pattern.compile("^(\\d+)\\s+(.*)$");
 
     private static final int THRESHOLD = 100000;
+    private static final long MAX_SPACE = 70000000;
+    private static final long REQUIRED_SPACE = 30000000;
 
     private static List<File> getInput() throws IOException {
         final Stack<String> tags = new Stack<>();
@@ -64,10 +64,8 @@ public class Day7 implements Function<List<Day7.File>, Long> {
                 () -> new Day7().apply(Day7.getInput()));
     }
 
-    @Override
-    public Long apply(final List<File> files) {
+    private long part1(final List<File> files) {
         return files.stream()
-                // TODO: file can exist in multiple groups
                 .collect(
                         Collector.of(
                                 () -> new HashMap<String, Set<Day7.File>>(),
@@ -98,6 +96,58 @@ public class Day7 implements Function<List<Day7.File>, Long> {
                         .sum())
                 .filter(size -> size <= THRESHOLD)
                 .sum();
+    }
+
+    private long part2(final List<File> files) {
+        final Map<String, Set<Day7.File>> fileMap = files.stream()
+                .collect(
+                        Collector.of(
+                                () -> new HashMap<String, Set<Day7.File>>(),
+                                (map, file) -> {
+                                    for (final String tag: file.tags()) {
+                                        map.computeIfAbsent(tag, (key) -> {
+                                            final Set<File> set = new HashSet<>();
+                                            set.add(file);
+                                            return set;
+                                        });
+
+                                        map.computeIfPresent(tag, (key, list) -> {
+                                            list.add(file);
+                                            return list;
+                                        });
+                                    }
+                                },
+                                (map1, map2) -> {
+                                    map1.putAll(map2);
+                                    return map1;
+                                },
+                                Map::copyOf));
+
+        final long maxDirSize = fileMap
+                .values()
+                .stream()
+                .mapToLong((f) -> f.stream()
+                        .mapToLong(File::size)
+                        .sum())
+                .max()
+                .orElseThrow(RuntimeException::new);
+        final long unusedSpace = MAX_SPACE - maxDirSize;
+
+        return fileMap
+                .values()
+                .stream()
+                .mapToLong((f) -> f.stream()
+                        .mapToLong(File::size)
+                        .sum())
+                .sorted()
+                .filter(t -> t + unusedSpace > REQUIRED_SPACE)
+                .findFirst()
+                .orElseThrow(RuntimeException::new);
+    }
+
+    @Override
+    public Long apply(final List<File> files) {
+        return this.part2(files);
     }
 
     record File(String name, long size, Set<String> tags) {

@@ -35,10 +35,9 @@ public class Day8 implements Function<Day8.Forest, Long> {
     public static void main(final String[] args) throws Exception {
         final var result = Application.challenge(
                 "2022/day8",
-                () -> new Day8().apply(Day8.getInput()),
-                1);
+                () -> new Day8().apply(Day8.getInput()));
 
-        Preconditions.checkArgument(result == 1);
+        Preconditions.checkArgument(result == 291840);
     }
 
     @Override

@@ -8,6 +8,7 @@ import com.mtab.aventofcode.year2022.day4.Day4;
 import com.mtab.aventofcode.year2022.day5.Day5;
 import com.mtab.aventofcode.year2022.day6.Day6;
 import com.mtab.aventofcode.year2022.day7.Day7;
+import com.mtab.aventofcode.year2022.day8.Day8;
 
 import java.util.concurrent.TimeUnit;
 
@@ -24,6 +25,7 @@ public class Challenge2022 {
         Day5.main(args);
         Day6.main(args);
         Day7.main(args);
+        Day8.main(args);
 
         System.out.print(
                 ansi()

@@ -2,6 +2,7 @@ package com.mtab.adventofcode;
 
 import com.google.common.base.Stopwatch;
 import com.mtab.adventofcode.utils.TaskUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.fusesource.jansi.AnsiConsole;
 
 import java.util.concurrent.Callable;
@@ -46,7 +47,11 @@ public class Application {
         final AtomicReference<T> result = new AtomicReference<>();
         final AtomicInteger i = new AtomicInteger(0);
         final double average = IntStream.range(0, tests)
-                .peek(u -> System.out.printf("\r %.0f%%", (float)i.incrementAndGet() / (float)tests * 100))
+                .peek(u -> {
+                    if (StringUtils.isEmpty(System.getenv("CI"))) {
+                        System.out.printf("\r %.0f%%", (float)i.incrementAndGet() / (float)tests * 100);
+                    }
+                })
                 .mapToLong(u -> {
                     final Stopwatch sw = Stopwatch.createStarted();
                     try {

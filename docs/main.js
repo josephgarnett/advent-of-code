@@ -4,7 +4,7 @@
           return response.text();
         })
         .then((report) => {
-           document.getElementById('#root')
+           document.getElementById('root')
             .textContent = report;
         });
 })();

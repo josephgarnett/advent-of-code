@@ -11,7 +11,7 @@
 
            const list = document.createElement('ul');
 
-           lines.forEach((line) => {
+           lines.forEach((line, i) => {
              const li = document.createElement('li');
 
              if (COLOR_PATTERN.test(line) || TERMINATOR_PATTERN.test(line)) {
@@ -22,6 +22,11 @@
              if (line.startsWith('---')) {
                li.classList.add('title');
              }
+
+             if (line.startsWith('🎉')) {
+               li.classList.add('summary');
+             }
+
              li.textContent = line;
              list.appendChild(li);
            });

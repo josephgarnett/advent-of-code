@@ -20,5 +20,9 @@ jobs:
           echo "result<<EOF" >> $GITHUB_OUTPUT
           echo "$(java -jar ./target/AdventOfCode-1.0-shaded.jar)" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
-      - run: echo "${{ steps.run-report.outputs.result }}"
+      - run: echo "${{ steps.run-report.outputs.result }}" > ./docs/report.txt
+      - run: |
+          git add .
+          git commit -m "update output report"
+          git push origin main
 

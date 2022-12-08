@@ -22,6 +22,8 @@ jobs:
           echo "EOF" >> $GITHUB_OUTPUT
       - run: echo "${{ steps.run-report.outputs.result }}" > ./docs/report.txt
       - run: |
+          git config --global user.name 'Joe Garnett'
+          git config --global user.email 'josephgarnett@users.noreply.github.com'
           git add .
           git commit -m "update output report"
           git push origin main

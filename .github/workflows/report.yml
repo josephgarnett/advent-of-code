@@ -15,4 +15,8 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
       - run: mvn package
-      - run: report=$(java -jar ./target/AdventOfCode-1.0-shaded.jar) >> GITHUB_OUTPUT
+      - id: run-report
+        run: report=$(java -jar ./target/AdventOfCode-1.0-shaded.jar) >> GITHUB_OUTPUT
+      - run: |
+          echo ${{ steps.run-report.outputs.report }}
+

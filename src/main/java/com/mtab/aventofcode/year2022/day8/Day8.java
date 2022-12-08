@@ -9,9 +9,7 @@ import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -45,7 +43,7 @@ public class Day8 implements Function<Day8.Forest, Long> {
 
     @Override
     public Long apply(final Forest forest) {
-        return forest.countVisibleTrees();
+        return forest.getVisibilityIndex();
     }
 
     record Tree(int height, Point2D position) {
@@ -94,6 +92,29 @@ public class Day8 implements Function<Day8.Forest, Long> {
             }
         }
 
+        BiFunction<Tree, Direction, Long> createVisibilityIndex() {
+            final var map = this.getTreeMap();
+
+            return this.createVisibilityIndex(map);
+        }
+
+        BiFunction<Tree, Direction, Long> createVisibilityIndex(final Tree[][] map) {
+            return (final Tree tree, final Direction direction) -> {
+                final Point2D nextPos = this.getNextTreePosition(tree.position(), direction);
+
+                return this.getTreeFromMap(map, (int) nextPos.getX(), (int) nextPos.getY())
+                        .map(nextTree -> {
+                            if (nextTree.height() >= tree.height()) {
+                                return 1L;
+                            }
+
+                            return 1 + this.createVisibilityIndex(map)
+                                    .apply(new Tree(tree.height(), nextPos), direction);
+                        })
+                        .orElse(0L);
+            };
+        }
+
         BiFunction<Tree, Direction, Boolean> createVisibilityChecker() {
             final var map = this.getTreeMap();
 
@@ -115,6 +136,21 @@ public class Day8 implements Function<Day8.Forest, Long> {
                         })
                         .orElse(true);
             };
+        }
+
+        long getVisibilityIndex() {
+            final var computeVisibilityIndex = this.createVisibilityIndex();
+
+            return this.trees
+                    .stream()
+                    .mapToLong(t -> (
+                            computeVisibilityIndex.apply(t, Direction.NORTH) *
+                            computeVisibilityIndex.apply(t, Direction.EAST) *
+                            computeVisibilityIndex.apply(t, Direction.SOUTH) *
+                            computeVisibilityIndex.apply(t, Direction.WEST)
+                    ))
+                    .max()
+                    .orElseThrow();
         }
 
         long countVisibleTrees() {

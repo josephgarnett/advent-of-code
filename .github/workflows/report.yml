@@ -13,4 +13,5 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: 17
+          distribution: corretto
       - run: report=$(java -jar ./target/AdventOfCode-1.0-shaded.jar) >> GITHUB_OUTPUT

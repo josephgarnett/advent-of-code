@@ -19,8 +19,7 @@ public class Day8 implements Function<Day8.Forest, Long> {
     public static Forest getInput() throws IOException {
         final AtomicInteger x = new AtomicInteger(0);
         final AtomicInteger y = new AtomicInteger(-1);
-        final List<Tree> trees = Files.lines(
-                Path.of(InputUtils.getInputPath("2022/day8/input.txt")))
+        final List<Tree> trees = InputUtils.readLines("2022/day8/input.txt")
                 .peek(l -> {
                     x.set(0);
                     y.incrementAndGet();

@@ -16,8 +16,7 @@ import java.util.stream.IntStream;
 
 public class Day4 implements Function<List<Day4.GroupAssignment>, Long> {
     private static List<Day4.GroupAssignment> getInput() throws IOException {
-        return Files.lines(
-                        Path.of(InputUtils.getInputPath("2022/day4/input.txt")))
+        return InputUtils.readLines("2022/day4/input.txt")
                 .map(line -> line.split(","))
                 .map(elves -> Arrays.stream(elves)
                         .map(elf -> elf.split("-"))

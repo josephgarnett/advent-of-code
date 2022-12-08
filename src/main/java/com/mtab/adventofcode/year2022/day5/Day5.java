@@ -26,8 +26,7 @@ public class Day5 implements Function<Day5.ShipyardManager, String> {
     }
 
     private static ShipyardManager getInput() throws IOException {
-        final List<Instruction> instructions = Files.lines(
-                Path.of(InputUtils.getInputPath("2022/day5/instructions.txt")))
+        final List<Instruction> instructions = InputUtils.readLines("2022/day5/instructions.txt")
                 .map(INSTRUCTION::matcher)
                 .filter(Matcher::matches)
                 .map(matcher -> new Instruction(
@@ -37,8 +36,7 @@ public class Day5 implements Function<Day5.ShipyardManager, String> {
                 .toList();
 
         final List<Stack<String>> stacks = new ArrayList<>();
-        Files.lines(
-                Path.of(InputUtils.getInputPath("2022/day5/container-layout.txt")))
+        InputUtils.readLines("2022/day5/container-layout.txt")
                 .peek(line -> {
                     if (Day5.isLayout(line)) {
                         final int numberOfContainers = line.replace(" ", "").length();

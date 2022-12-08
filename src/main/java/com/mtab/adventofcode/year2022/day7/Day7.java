@@ -55,8 +55,7 @@ public class Day7 implements Function<List<Day7.File>, Long> {
                     }
                 });
 
-        Files.lines(
-                Path.of(InputUtils.getInputPath("2022/day7/input.txt")))
+        InputUtils.readLines("2022/day7/input.txt")
                 .forEach(line -> {
                     processor.forEach((key, value) -> {
                         final var matcher = key.matcher(line);

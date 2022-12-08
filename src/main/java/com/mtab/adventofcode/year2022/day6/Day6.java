@@ -15,8 +15,7 @@ public class Day6 implements Function<String, Integer> {
     private static final int LENGTH = 14;
 
     private static String getInput() throws IOException {
-        return Files.lines(
-                        Path.of(InputUtils.getInputPath("2022/day6/input.txt")))
+        return InputUtils.readLines("2022/day6/input.txt")
                 .collect(Collectors.joining());
     }
 

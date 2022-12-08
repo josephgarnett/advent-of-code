@@ -17,8 +17,7 @@ import java.util.stream.Collectors;
 
 public class Day3 implements Function<List<Day3.Backpack>, Long> {
     private static List<Backpack> getInput() throws IOException {
-        return Files.lines(
-                        Path.of(InputUtils.getInputPath("2022/day3/input.txt")))
+        return InputUtils.readLines("2022/day3/input.txt")
                 .map(Backpack::of)
                 .collect(Collectors.toList());
     }

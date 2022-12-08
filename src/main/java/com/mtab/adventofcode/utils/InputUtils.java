@@ -1,7 +1,13 @@
 package com.mtab.adventofcode.utils;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -11,12 +17,21 @@ import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
+import java.util.stream.Stream;
 
 public class InputUtils {
 
     public static String getInputPath(final String path) {
         final ClassLoader classloader = Thread.currentThread().getContextClassLoader();
         return Objects.requireNonNull(classloader.getResource(path)).getPath();
+    }
+
+    public static Stream<String> readLines(final String resourceName) throws IOException {
+        final ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+        final InputStream is = Objects.requireNonNull(classloader.getResourceAsStream(resourceName));
+
+        return IOUtils.readLines(is, StandardCharsets.UTF_8)
+                .stream();
     }
 
     public static class StringCollator implements Collector<String, List<String>, List<List<String>>> {

@@ -5,6 +5,7 @@ import com.mtab.adventofcode.Application;
 import com.mtab.adventofcode.utils.InputUtils;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Comparator;
@@ -15,9 +16,8 @@ import java.util.stream.Collectors;
 
 public class Day1 implements
         Supplier<OptionalInt> {
-    public static List<Elf> getInput() throws IOException {
-        return Files.lines(
-                        Path.of(InputUtils.getInputPath("2022/day1/input.txt")))
+    public static List<Elf> getInput() throws IOException, URISyntaxException {
+        return InputUtils.readLines("2022/day1/input.txt")
                 .collect(new InputUtils.StringCollator())
                 .stream()
                 .map((strings) -> strings.stream()

@@ -13,4 +13,4 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: 17
-      - run: java ./src/main/java/com.mtab.adventofcode/year2022/challenge2022
+      - run: report=$(java -jar ./target/AdventOfCode-1.0-shaded.jar) >> GITHUB_OUTPUT

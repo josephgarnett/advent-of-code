@@ -49,7 +49,6 @@ public class Day8 implements Function<Day8.Forest, Long> {
         static Tree of(final int height, final int x, final int y) {
             return new Tree(height, new Point2D.Double(x, y));
         }
-
     }
 
     record Forest(List<Tree> trees, int maxX, int maxY) {

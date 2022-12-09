@@ -2,12 +2,14 @@ package com.mtab.adventofcode.year2022.day9;
 
 import com.google.common.base.Preconditions;
 import com.mtab.adventofcode.Application;
+import com.mtab.adventofcode.utils.CustomErrors;
 import com.mtab.adventofcode.utils.Direction;
 import com.mtab.adventofcode.utils.InputUtils;
 
 import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.util.*;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.IntStream;
 
@@ -39,13 +41,28 @@ public class Day9 implements Function<List<Day9.Instruction>, Integer> {
                 new Point2D.Double(0,0));
     }
 
+    private BiFunction<Rope, Instruction, Rope> instructionReducer(
+            final Set<Point2D> collector) {
+        return (rope, instruction) -> instruction.stream()
+                .boxed()
+                .reduce(
+                        rope,
+                        (r, i) -> {
+                            final Rope next = Rope.from(r, instruction);
+                            collector.add(next.tail());
+
+                            return next;
+                        },
+                        CustomErrors.notImplementedCombiner());
+    }
+
     @Override
     public Integer apply(final List<Instruction> instructions) {
         final Rope start = new Rope(
                 new Point2D.Double(0, 0),
                 this.getKnots());
-        final Set<Point2D> visited = new HashSet<>();
 
+        final Set<Point2D> visited = new HashSet<>();
         visited.add(start.tail());
 
         instructions.stream()
@@ -62,9 +79,7 @@ public class Day9 implements Function<List<Day9.Instruction>, Integer> {
                                 (r1, r2) -> {
                                     throw new RuntimeException();
                                 }),
-                        (r1, r2) -> {
-                            throw new RuntimeException();
-                        });
+                        CustomErrors.notImplementedCombiner());
 
         return visited.size();
     }

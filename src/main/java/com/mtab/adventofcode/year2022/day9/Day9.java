@@ -26,20 +26,24 @@ public class Day9 implements Function<List<Day9.Instruction>, Integer> {
         Preconditions.checkArgument(result == 2557);
     }
 
+    private List<Point2D> getKnots() {
+        return List.of(
+                new Point2D.Double(0,0),
+                new Point2D.Double(0,0),
+                new Point2D.Double(0,0),
+                new Point2D.Double(0,0),
+                new Point2D.Double(0,0),
+                new Point2D.Double(0,0),
+                new Point2D.Double(0,0),
+                new Point2D.Double(0,0),
+                new Point2D.Double(0,0));
+    }
+
     @Override
     public Integer apply(final List<Instruction> instructions) {
         final Rope start = new Rope(
                 new Point2D.Double(0, 0),
-                List.of(
-                        new Point2D.Double(0,0),
-                        new Point2D.Double(0,0),
-                        new Point2D.Double(0,0),
-                        new Point2D.Double(0,0),
-                        new Point2D.Double(0,0),
-                        new Point2D.Double(0,0),
-                        new Point2D.Double(0,0),
-                        new Point2D.Double(0,0),
-                        new Point2D.Double(0,0)));
+                this.getKnots());
         final Set<Point2D> visited = new HashSet<>();
 
         visited.add(start.tail());

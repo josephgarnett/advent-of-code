@@ -24,14 +24,14 @@ public class Day9 implements Function<List<Day9.Instruction>, Integer> {
                 () -> new Day9().apply(Day9.getInput()),
                 1);
 
-        Preconditions.checkArgument(result == 291840);
+        Preconditions.checkArgument(result == 6269);
     }
 
     @Override
     public Integer apply(final List<Instruction> instructions) {
         final Rope start = new Rope(
                 new Point2D.Double(0, 0),
-                new Point2D.Double(0,0));
+                List.of(new Point2D.Double(0,0)));
         final Set<Point2D> visited = new HashSet<>();
 
         visited.add(start.tail());
@@ -76,7 +76,7 @@ public class Day9 implements Function<List<Day9.Instruction>, Integer> {
         }
     }
 
-    record Rope(Point2D head, Point2D tail) {
+    record Rope(Point2D head, List<Point2D> chain) {
         static Rope from(
                 final Rope source,
                 final Instruction instruction) {
@@ -88,7 +88,7 @@ public class Day9 implements Function<List<Day9.Instruction>, Integer> {
             };
 
             if (Rope.tailInRange(source, head)) {
-                return new Rope(head, source.tail());
+                return new Rope(head, List.of(source.tail()));
             }
 
             final Point2D tail = switch(instruction.direction()) {
@@ -99,7 +99,7 @@ public class Day9 implements Function<List<Day9.Instruction>, Integer> {
             };
 
 
-            return new Rope(head, tail);
+            return new Rope(head, List.of(tail));
         }
 
         static boolean tailInRange(
@@ -107,6 +107,10 @@ public class Day9 implements Function<List<Day9.Instruction>, Integer> {
                 final Point2D newHead) {
             return Math.abs(newHead.getY() - source.tail().getY()) <= 1
                     && Math.abs(newHead.getX() - source.tail().getX()) <= 1;
+        }
+
+        Point2D tail() {
+            return this.chain.get(this.chain.size() - 1);
         }
     }
 }

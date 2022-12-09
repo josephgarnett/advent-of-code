@@ -144,9 +144,7 @@ public class Day9 implements Function<List<Day9.Instruction>, Integer> {
 
                                 return list;
                             },
-                            (l1, l2) -> {
-                                throw new RuntimeException();
-                            });
+                            CustomErrors.notImplementedCombiner());
 
 
             return new Rope(head, chain);

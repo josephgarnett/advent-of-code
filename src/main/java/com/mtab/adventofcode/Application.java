@@ -47,11 +47,6 @@ public class Application {
         final AtomicReference<T> result = new AtomicReference<>();
         final AtomicInteger i = new AtomicInteger(0);
         final double average = IntStream.range(0, tests)
-                .peek(u -> {
-                    if (StringUtils.isEmpty(System.getenv("CI"))) {
-                        System.out.printf("\r %.0f%%", (float)i.incrementAndGet() / (float)tests * 100);
-                    }
-                })
                 .mapToLong(u -> {
                     final Stopwatch sw = Stopwatch.createStarted();
                     try {
@@ -61,6 +56,11 @@ public class Application {
                     }
 
                     return sw.elapsed(TimeUnit.MICROSECONDS);
+                })
+                .peek(u -> {
+                    if (StringUtils.isEmpty(System.getenv("CI"))) {
+                        System.out.printf("\r %.0f%%", (float)i.incrementAndGet() / (float)tests * 100);
+                    }
                 })
                 .average()
                 .orElseThrow();

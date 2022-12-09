@@ -9,7 +9,6 @@ import com.mtab.adventofcode.utils.InputUtils;
 import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.util.*;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.IntStream;
 
@@ -41,48 +40,46 @@ public class Day9 implements Function<List<Day9.Instruction>, Integer> {
                 new Point2D.Double(0,0));
     }
 
-    private BiFunction<Rope, Instruction, Rope> instructionReducer(
-            final Set<Point2D> collector) {
-        return (rope, instruction) -> instruction.stream()
+    private Motion instructionReducer(
+            final Motion motion,
+            final Instruction instruction) {
+        return instruction.stream()
                 .boxed()
-                .reduce(
-                        rope,
-                        (r, i) -> {
-                            final Rope next = Rope.from(r, instruction);
-                            collector.add(next.tail());
+                .reduce(motion,
+                        (m, i) -> {
+                            final Rope next = Rope.from(m.rope(), instruction);;
+                            m.visited().add(next.tail());
 
-                            return next;
+                            return new Motion(
+                                    next,
+                                    m.visited());
                         },
                         CustomErrors.notImplementedCombiner());
     }
 
-    @Override
-    public Integer apply(final List<Instruction> instructions) {
-        final Rope start = new Rope(
+    private Motion getStart() {
+        final Rope startRope = new Rope(
                 new Point2D.Double(0, 0),
                 this.getKnots());
 
         final Set<Point2D> visited = new HashSet<>();
-        visited.add(start.tail());
+        visited.add(startRope.tail());
 
-        instructions.stream()
-                .reduce(start, (rope, instruction) -> instruction.stream()
-                        .boxed()
-                        .reduce(
-                                rope,
-                                (r, i) -> {
-                                    final Rope next = Rope.from(r, instruction);
-                                    visited.add(next.tail());
 
-                                    return next;
-                                },
-                                (r1, r2) -> {
-                                    throw new RuntimeException();
-                                }),
-                        CustomErrors.notImplementedCombiner());
-
-        return visited.size();
+        return new Motion(startRope, visited);
     }
+
+    @Override
+    public Integer apply(final List<Instruction> instructions) {
+        return instructions.stream()
+                .reduce(this.getStart(),
+                        this::instructionReducer,
+                        CustomErrors.notImplementedCombiner())
+                .visited()
+                .size();
+    }
+
+    record Motion(Rope rope, Set<Point2D> visited) {}
 
     record Instruction(Direction direction, int value) {
         static Instruction of(final String s) {
@@ -153,12 +150,6 @@ public class Day9 implements Function<List<Day9.Instruction>, Integer> {
 
 
             return new Rope(head, chain);
-        }
-
-        static boolean tailInRange(
-                final Rope source,
-                final Point2D newHead) {
-            return Rope.tailInRange(source.tail(), newHead);
         }
 
         static boolean tailInRange(

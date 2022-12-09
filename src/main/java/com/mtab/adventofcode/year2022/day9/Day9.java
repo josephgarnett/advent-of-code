@@ -24,14 +24,23 @@ public class Day9 implements Function<List<Day9.Instruction>, Integer> {
                 () -> new Day9().apply(Day9.getInput()),
                 1);
 
-        Preconditions.checkArgument(result == 6269);
+        Preconditions.checkArgument(result == 2557);
     }
 
     @Override
     public Integer apply(final List<Instruction> instructions) {
         final Rope start = new Rope(
                 new Point2D.Double(0, 0),
-                List.of(new Point2D.Double(0,0)));
+                List.of(
+                        new Point2D.Double(0,0),
+                        new Point2D.Double(0,0),
+                        new Point2D.Double(0,0),
+                        new Point2D.Double(0,0),
+                        new Point2D.Double(0,0),
+                        new Point2D.Double(0,0),
+                        new Point2D.Double(0,0),
+                        new Point2D.Double(0,0),
+                        new Point2D.Double(0,0)));
         final Set<Point2D> visited = new HashSet<>();
 
         visited.add(start.tail());
@@ -87,26 +96,58 @@ public class Day9 implements Function<List<Day9.Instruction>, Integer> {
                 case WEST -> new Point2D.Double(source.head().getX() - 1, source.head().getY());
             };
 
-            if (Rope.tailInRange(source, head)) {
-                return new Rope(head, List.of(source.tail()));
-            }
+            final List<Point2D> chain = source.chain()
+                    .stream()
+                    .reduce(
+                            new ArrayList<>(),
+                            (list, p) -> {
+                                final Point2D previousPoint = list.isEmpty() ? head : list.get(list.size() - 1);
 
-            final Point2D tail = switch(instruction.direction()) {
-                case NORTH -> new Point2D.Double(head.getX(), head.getY() - 1);
-                case EAST ->  new Point2D.Double(head.getX() - 1, head.getY());
-                case SOUTH -> new Point2D.Double(head.getX(), head.getY() + 1);
-                case WEST -> new Point2D.Double(head.getX() + 1, head.getY());
-            };
+                                if (Rope.tailInRange(p, previousPoint)) {
+                                    list.add(p);
+                                } else {
+                                    // Otherwise, if the head and tail aren't touching and aren't in the same row or column,
+                                    // the tail always moves one step diagonally to keep up:
+                                    final double deltaX = previousPoint.getX() - p.getX();
+                                    final double deltaY = previousPoint.getY() - p.getY();
+
+                                    final Point2D nextPoint = new Point2D.Double(p.getX(), p.getY());
+
+                                    if (deltaX > 0) {
+                                        nextPoint.setLocation(nextPoint.getX() + 1, nextPoint.getY());
+                                    } else if (deltaX < 0) {
+                                        nextPoint.setLocation(nextPoint.getX() - 1, nextPoint.getY());
+                                    }
+
+                                    if (deltaY > 0) {
+                                        nextPoint.setLocation(nextPoint.getX(), nextPoint.getY() + 1);
+                                    } else if (deltaY < 0) {
+                                        nextPoint.setLocation(nextPoint.getX(), nextPoint.getY() - 1);
+                                    }
+                                    list.add(nextPoint);
+                                }
+
+                                return list;
+                            },
+                            (l1, l2) -> {
+                                throw new RuntimeException();
+                            });
 
 
-            return new Rope(head, List.of(tail));
+            return new Rope(head, chain);
         }
 
         static boolean tailInRange(
                 final Rope source,
                 final Point2D newHead) {
-            return Math.abs(newHead.getY() - source.tail().getY()) <= 1
-                    && Math.abs(newHead.getX() - source.tail().getX()) <= 1;
+            return Rope.tailInRange(source.tail(), newHead);
+        }
+
+        static boolean tailInRange(
+                final Point2D source,
+                final Point2D target) {
+            return Math.abs(target.getY() - source.getY()) <= 1
+                    && Math.abs(target.getX() - source.getX()) <= 1;
         }
 
         Point2D tail() {

@@ -21,8 +21,7 @@ public class Day9 implements Function<List<Day9.Instruction>, Integer> {
     public static void main(final String[] args) throws Exception {
         final var result = Application.challenge(
                 "2022/day9",
-                () -> new Day9().apply(Day9.getInput()),
-                1);
+                () -> new Day9().apply(Day9.getInput()));
 
         Preconditions.checkArgument(result == 2557);
     }

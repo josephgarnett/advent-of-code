@@ -14,7 +14,7 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-      - run: mvn package
+      - run: mvn -B -s ./.github/environment/maven-settings.xml -Dmaven.test.skip=true package
       - id: run-report
         run: |
           echo "result<<EOF" >> $GITHUB_OUTPUT

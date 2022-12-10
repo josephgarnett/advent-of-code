@@ -23,7 +23,7 @@ public class Day10 implements Function<List<Day10.Command>, Long> {
                 "2022/day10",
                 () -> new Day10().apply(Day10.getInput()));
 
-        Preconditions.checkArgument(result == 1);
+        Preconditions.checkArgument(result == 13440);
     }
 
     private static final Set<Integer> TEST_CYCLES = Set.of(

@@ -10,8 +10,6 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
-import static org.fusesource.jansi.Ansi.ansi;
-
 public class Day10 implements Function<List<Day10.Command>, String> {
     public static List<Command> getInput() throws IOException {
         return InputUtils.readLines("2022/day10/input.txt")

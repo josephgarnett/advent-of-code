@@ -51,9 +51,9 @@ public class Day10 implements Function<List<Day10.Command>, String> {
                 final int register = values.get(cycle);
 
                 if (Math.abs(x - register) <= 1) {
-                    sb.append("@@");
+                    sb.append("⭐⭐️");
                 } else {
-                    sb.append("  ");
+                    sb.append("▪️▪️");
                 }
             }
         }

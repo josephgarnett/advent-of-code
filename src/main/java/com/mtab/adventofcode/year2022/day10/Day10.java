@@ -1,6 +1,5 @@
 package com.mtab.adventofcode.year2022.day10;
 
-import com.google.common.base.Preconditions;
 import com.mtab.adventofcode.Application;
 import com.mtab.adventofcode.utils.CustomErrors;
 import com.mtab.adventofcode.utils.InputUtils;
@@ -11,7 +10,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
-public class Day10 implements Function<List<Day10.Command>, Long> {
+public class Day10 implements Function<List<Day10.Command>, String> {
     public static List<Command> getInput() throws IOException {
         return InputUtils.readLines("2022/day10/input.txt")
                         .map(Day10.Command::of)
@@ -19,11 +18,9 @@ public class Day10 implements Function<List<Day10.Command>, Long> {
     }
 
     public static void main(final String[] args) throws Exception {
-        final var result = Application.challenge(
+        Application.challenge(
                 "2022/day10",
                 () -> new Day10().apply(Day10.getInput()));
-
-        Preconditions.checkArgument(result == 13440);
     }
 
     private static final Set<Integer> TEST_CYCLES = Set.of(
@@ -43,7 +40,7 @@ public class Day10 implements Function<List<Day10.Command>, Long> {
                 }, CustomErrors.notImplementedCombiner());
     }
 
-    private void print(final Map<Integer, Integer> values) {
+    private String print(final Map<Integer, Integer> values) {
         final StringBuilder sb = new StringBuilder();
 
         for (int y = 0; y < 6; y++) {
@@ -58,22 +55,17 @@ public class Day10 implements Function<List<Day10.Command>, Long> {
                 } else {
                     sb.append("  ");
                 }
-
-                try {
-
-                } catch (Exception e) {
-                    // noop
-                }
             }
         }
 
         sb.append(System.lineSeparator());
         sb.append(System.lineSeparator());
-        System.out.print(sb);
+
+        return sb.toString();
     }
 
     @Override
-    public Long apply(List<Command> commands) {
+    public String apply(List<Command> commands) {
         final AtomicInteger registerX = new AtomicInteger(1);
         final AtomicInteger cycles = new AtomicInteger(0);
         final Map<Integer, Integer> values = new HashMap<>();
@@ -94,9 +86,7 @@ public class Day10 implements Function<List<Day10.Command>, Long> {
 
         }
 
-        this.print(values);
-
-        return this.signalStrength(values);
+        return this.print(values);
     }
 
     enum Instruction {

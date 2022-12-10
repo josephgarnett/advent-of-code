@@ -2,6 +2,7 @@ package com.mtab.adventofcode.year2022;
 
 import com.google.common.base.Stopwatch;
 import com.mtab.adventofcode.year2022.day1.Day1;
+import com.mtab.adventofcode.year2022.day10.Day10;
 import com.mtab.adventofcode.year2022.day2.Day2;
 import com.mtab.adventofcode.year2022.day3.Day3;
 import com.mtab.adventofcode.year2022.day4.Day4;
@@ -28,6 +29,7 @@ public class Challenge2022 {
         Day7.main(args);
         Day8.main(args);
         Day9.main(args);
+        Day10.main(args);
 
         System.out.print(
                 ansi()

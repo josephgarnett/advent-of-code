@@ -5,7 +5,7 @@
     <title>[2022] Advent of code</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Oxygen+Mono&display=swap" rel="stylesheet">
-    <script src="main.js"></script>
+    <script src="./assets/js/main.js"></script>
 
     <style>
         * {
@@ -20,7 +20,6 @@
 
         h1 {
           color: #fb8500;
-          margin-left: 3rem;
         }
 
         ul {
@@ -30,7 +29,7 @@
         }
 
         li {
-          whitespace: pre;
+          white-space: pre;
         }
 
         li.title {
@@ -40,10 +39,41 @@
         li.summary {
           margin-top: 2rem;
         }
+
+        header {
+          display: flex;
+          align-items: center;
+          margin-left: 3rem;
+        }
+
+        a.icon {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background-color: white;
+          border-radius: 50%;
+          border: solid 1px transparent;
+
+          width: 32px;
+          height: 32px;
+
+          margin-right: 1rem;
+
+          transition: all .2s;
+        }
+
+        a.icon:hover {
+          background-color: silver;
+        }
     </style>
 </head>
 <body>
-    <h1>Advent of code 2022</h1>
+    <header>
+        <a class="icon" href="https://github.com/josephgarnett/advent-of-code">
+            <img src="./assets/icons/github.png" alt="Github link" />
+        </a>
+        <h1>Advent of code 2022</h1>
+    </header>
     <div id="root"></div>
 </body>
 </html>

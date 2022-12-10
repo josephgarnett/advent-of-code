@@ -2,7 +2,7 @@
 
     const COLOR_PATTERN = /^.\[\d+m.*/gi
     const TERMINATOR_PATTERN = /^.\[m/gi
-    fetch('report.txt')
+    fetch('./assets/data/report.txt')
         .then((response) => {
           return response.text();
         })

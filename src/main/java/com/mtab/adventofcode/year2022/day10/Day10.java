@@ -68,27 +68,23 @@ public class Day10 implements Function<List<Day10.Command>, String> {
         final Map<Integer, Integer> values = new HashMap<>();
 
         for (final Command c : commands) {
-            if (c.instruction() == Instruction.NOOP) {
+            for (int i = 0; i < c.instruction().getCycles(); i++) {
                 values.put(
                         cycles.incrementAndGet(),
                         registerX.get());
-            } else {
-                values.put(
-                        cycles.incrementAndGet(),
-                        registerX.get());
-                values.put(
-                        cycles.incrementAndGet(),
-                        registerX.getAndAdd(c.value()));
             }
 
+            values.put(
+                    cycles.incrementAndGet(),
+                    registerX.getAndAdd(c.value()));
         }
 
         return this.print(values);
     }
 
     enum Instruction {
-        NOOP(1),
-        ADDX(2);
+        NOOP(0),
+        ADDX(1);
 
         private final int cycles;
         Instruction(final int cycles) {

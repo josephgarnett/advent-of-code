@@ -58,9 +58,6 @@ public class Day10 implements Function<List<Day10.Command>, String> {
             }
         }
 
-        sb.append(System.lineSeparator());
-        sb.append(System.lineSeparator());
-
         return sb.toString();
     }
 

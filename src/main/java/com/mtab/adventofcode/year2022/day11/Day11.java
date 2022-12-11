@@ -159,7 +159,6 @@ public class Day11 implements Function<List<Day11.Monkey>, Long> {
         }
 
         void next(final Monkey m, final Item i) {
-            // TODO: need to compress values without affecting range
             final Item toPass = i.withConcern(i.concern());
 
             m.items().removeIf(item -> item.id() == i.id());

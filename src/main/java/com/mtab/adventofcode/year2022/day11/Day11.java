@@ -8,7 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.function.BiFunction;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -19,6 +19,7 @@ public class Day11 implements Function<List<Day11.Monkey>, Long> {
     private static final Pattern TEST_PATTERN = Pattern.compile("divisible by (\\d+)");
     private static final Pattern THROW_PATTERN = Pattern.compile("throw to monkey (\\d+)");
     private static final Pattern OPERATION_PATTERN = Pattern.compile("new = old ([+\\-/*]) (\\d+|old)");
+    private static final AtomicLong supermod = new AtomicLong(1);
 
     public static List<Monkey> getInput() throws IOException {
         final List<Monkey> result = new ArrayList<>();
@@ -60,29 +61,19 @@ public class Day11 implements Function<List<Day11.Monkey>, Long> {
                         final String operand = operationMatcher.group(2);
 
                         monkeyBuilder.transformConcern(
-                                (concern, value) -> {
+                                (concern) -> {
                                     final boolean useInputAsOperand = StringUtils.equals("old", operand);
-                                    final var lhs = concern % value;
+                                    final var lhs = concern;
                                     switch (operator) {
                                         case "+" -> {
                                             return useInputAsOperand
-                                                    ? lhs + lhs
-                                                    : lhs + (Long.parseLong(operand) % value);
-                                        }
-                                        case "-" -> {
-                                            return useInputAsOperand
-                                                    ? 0
-                                                    : lhs - (Long.parseLong(operand) % value);
-                                        }
-                                        case "/" -> {
-                                            return useInputAsOperand
-                                                    ? 1
-                                                    : lhs / (Long.parseLong(operand) % value);
+                                                    ? (lhs + lhs)
+                                                    : (lhs + (Long.parseLong(operand)));
                                         }
                                         case "*" -> {
                                             return useInputAsOperand
-                                                    ? lhs * lhs
-                                                    : lhs * (Long.parseLong(operand) % value);
+                                                    ? (lhs * lhs)
+                                                    : (lhs * (Long.parseLong(operand)));
                                         }
                                     }
 
@@ -119,6 +110,10 @@ public class Day11 implements Function<List<Day11.Monkey>, Long> {
 
         result.add(monkeyBuilder.build());
 
+        result.forEach(m -> {
+            supermod.set(supermod.get() * m.testValue());
+        });
+
         return result;
     }
 
@@ -132,7 +127,7 @@ public class Day11 implements Function<List<Day11.Monkey>, Long> {
     public Long apply(final List<Monkey> monkeys) {
         final var shenanigans = new Shenanigans(
                 monkeys,
-                1000,
+                10000,
                 new HashMap<>())
                 .perform();
 
@@ -164,6 +159,7 @@ public class Day11 implements Function<List<Day11.Monkey>, Long> {
         }
 
         void next(final Monkey m, final Item i) {
+            // TODO: need to compress values without affecting range
             final Item toPass = i.withConcern(i.concern());
 
             m.items().removeIf(item -> item.id() == i.id());
@@ -188,19 +184,19 @@ public class Day11 implements Function<List<Day11.Monkey>, Long> {
             @NonNull String id,
             @NonNull List<Item> items,
             long testValue,
-            @NonNull BiFunction<Long, Long, Long> transformConcern,
+            @NonNull Function<Long, Long> transformConcern,
             int nextMonkeyTrue,
             int nextMonkeyFalse) {
 
         @Builder public Monkey {}
 
         public Item transform(final Item old) {
-            final var newConcern = this.transformConcern.apply(old.concern(), this.testValue());
+            final var newConcern = this.transformConcern.apply(old.concern());
 
             if (newConcern < 0) {
                 System.out.println("OVERFLOW");
             }
-            return old.withConcern(newConcern);
+            return old.withConcern(newConcern % supermod.get());
         }
 
         public boolean test(final long concern) {

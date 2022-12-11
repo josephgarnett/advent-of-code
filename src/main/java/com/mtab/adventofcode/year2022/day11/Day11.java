@@ -120,7 +120,10 @@ public class Day11 implements Function<List<Day11.Monkey>, Long> {
     public static void main(final String[] args) {
         Application.challenge(
                 "2022/day11",
-                () -> new Day11().apply(Day11.getInput()));
+                () -> {
+                    supermod.set(1);
+                    return new Day11().apply(Day11.getInput());
+                });
     }
 
     @Override

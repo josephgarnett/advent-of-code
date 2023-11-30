@@ -19,7 +19,7 @@ public class Day11 implements Function<List<Day11.Monkey>, Long> {
     private static final Pattern TEST_PATTERN = Pattern.compile("divisible by (\\d+)");
     private static final Pattern THROW_PATTERN = Pattern.compile("throw to monkey (\\d+)");
     private static final Pattern OPERATION_PATTERN = Pattern.compile("new = old ([+\\-/*]) (\\d+|old)");
-    private static final AtomicLong supermod = new AtomicLong(1);
+    static final AtomicLong supermod = new AtomicLong(1);
 
     public static List<Monkey> getInput() throws IOException {
         final List<Monkey> result = new ArrayList<>();
@@ -61,9 +61,8 @@ public class Day11 implements Function<List<Day11.Monkey>, Long> {
                         final String operand = operationMatcher.group(2);
 
                         monkeyBuilder.transformConcern(
-                                (concern) -> {
+                                (lhs) -> {
                                     final boolean useInputAsOperand = StringUtils.equals("old", operand);
-                                    final var lhs = concern;
                                     switch (operator) {
                                         case "+" -> {
                                             return useInputAsOperand
@@ -110,6 +109,7 @@ public class Day11 implements Function<List<Day11.Monkey>, Long> {
 
         result.add(monkeyBuilder.build());
 
+        supermod.set(1);
         result.forEach(m -> {
             supermod.set(supermod.get() * m.testValue());
         });
@@ -120,10 +120,7 @@ public class Day11 implements Function<List<Day11.Monkey>, Long> {
     public static void main(final String[] args) {
         Application.challenge(
                 "2022/day11",
-                () -> {
-                    supermod.set(1);
-                    return new Day11().apply(Day11.getInput());
-                });
+                () -> new Day11().apply(Day11.getInput()));
     }
 
     @Override

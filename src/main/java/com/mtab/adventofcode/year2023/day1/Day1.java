@@ -29,7 +29,7 @@ public class Day1 implements Function<List<String>, Long> {
                         .filter(u -> u.codePointAt(0) >= 48 && u.codePointAt(0) <= 57)
                         .map(Integer::parseInt)
                         .toList())
-                .mapToLong(t -> Long.parseLong(String.format("%s%s", t.get(0), t.get(t.size() - 1))))
+                .mapToLong(t -> Long.parseLong(String.format("%d%d", t.get(0), t.get(t.size() - 1))))
                 .sum();
     }
 

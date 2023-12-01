@@ -1,6 +1,7 @@
 package com.mtab.adventofcode.year2015;
 
 import com.google.common.base.Stopwatch;
+import com.mtab.adventofcode.year2015.day2.Day2;
 import com.mtab.adventofcode.year2023.day1.Day1;
 
 import java.util.concurrent.TimeUnit;
@@ -12,6 +13,7 @@ public class Challenge2015 {
         final Stopwatch sw = Stopwatch.createStarted();
 
         Day1.main(args);
+        Day2.main(args);
 
         System.out.print(
                 ansi()

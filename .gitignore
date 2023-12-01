@@ -2,6 +2,7 @@
 
 /.idea/
 /target/
+**/resources/2015/
 **/resources/2021/
 **/resources/2022/
 **/resources/2023/

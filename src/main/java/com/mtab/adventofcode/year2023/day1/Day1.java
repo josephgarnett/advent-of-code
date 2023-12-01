@@ -45,6 +45,6 @@ public class Day1 implements Function<List<String>, Long> {
                 () -> new Day1()
                         .apply(Day1.getInput()));
 
-        Preconditions.checkArgument(result == 55386);
+        Preconditions.checkArgument(result == 54824);
     }
 }

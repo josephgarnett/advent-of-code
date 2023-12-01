@@ -13,6 +13,8 @@ public class Challenge2023 {
 
         System.out.println("No Challenges found");
 
+        Day1.main(args);
+
         System.out.print(
                 ansi()
                         .fgYellow()

@@ -2,9 +2,9 @@ No Challenges found
 [94m--- Day 1: Trebuchet?! ---[m
 54824
 ============================================================
-[92mAverage execution time over 500 runs: 2584.01μs
+[92mAverage execution time over 500 runs: 2790.64μs
 [m============================================================
 
 
-[33m🎉🎉 All challenges run, execution time: 1337ms
+[33m🎉🎉 All challenges run, execution time: 1433ms
 [m

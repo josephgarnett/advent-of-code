@@ -18,9 +18,7 @@ import java.util.stream.Stream;
 public class Day3 implements Function<List<Day3.Direction>, Integer> {
     public Integer apply(
             @NonNull final List<Direction> directions) {
-        return IntStream.range(0, directions.size())
-                .boxed()
-                .collect(Collectors.partitioningBy(i -> i % 2 == 0))
+        return this.partition(directions)
                 .values()
                 .stream()
                 .map((list -> list.stream()
@@ -29,6 +27,13 @@ public class Day3 implements Function<List<Day3.Direction>, Integer> {
                 .flatMap(Collection::stream)
                 .collect(Collectors.toSet())
                 .size();
+    }
+
+    private Map<Boolean, List<Integer>> partition(
+            @NonNull final List<Direction> directions) {
+        return IntStream.range(0, directions.size())
+                .boxed()
+                .collect(Collectors.partitioningBy(i -> i % 2 == 0));
     }
 
     private Set<Point> route(@NonNull final Stream<Direction> directions) {

@@ -1,16 +1,17 @@
 [94m--- Day 1: Trebuchet?! ---[m
 54824
 ============================================================
-[92mAverage execution time over 500 runs: 2833.33μs
+[92mAverage execution time over 500 runs: 3031.92μs
 [m============================================================
 
 
+Cubes[gameId=1, snapshots=[{ 🟥  6 } { 🟩  2 } { 🟦12 }]]
 [94m--- Day 2: Cube Conundrum ---[m
 71274
 ============================================================
-[92mAverage execution time over 500 runs: 885.50μs
+[92mAverage execution time over 500 runs: 875.19μs
 [m============================================================
 
 
-[33m🎉🎉 All challenges run, execution time: 1929ms
+[33m🎉🎉 All challenges run, execution time: 2045ms
 [m

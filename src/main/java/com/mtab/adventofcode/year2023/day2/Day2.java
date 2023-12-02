@@ -83,11 +83,8 @@ public class Day2 implements Function<List<Day2.Cubes>, Integer> {
     public static void main(final String[] args) throws Exception {
         final var result = Application.challenge(
                 "2023/day2",
-                (i) -> {
+                i -> {
                     final List<Cubes> input = Day2.getInput();
-                    if (i == 0) {
-                        System.out.println(input.get(0));
-                    }
                     return new Day2()
                             .apply(input);
                 });

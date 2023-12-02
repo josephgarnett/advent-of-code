@@ -81,6 +81,14 @@ public class Day2 implements Function<List<Day2.Cubes>, Integer> {
     }
 
     public static void main(final String[] args) throws Exception {
+        System.out.println(Cubes.builder()
+                .gameId(1)
+                .snapshots(List.of(Snapshot.builder()
+                        .red(6)
+                        .green(2)
+                        .blue(12)
+                        .build()))
+                .build());
         final var result = Application.challenge(
                 "2023/day2",
                 i -> {

@@ -1,4 +1,4 @@
-name: Page
+name: Report
 on:
   push:
     branches:
@@ -27,7 +27,9 @@ jobs:
           echo "$(java -jar ./target/AdventOfCode-1.0-shaded.jar)" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
       - run: echo "${{ steps.run-report.outputs.result }}" > ./src/client/public/data/2023/report.txt
-      - run: |
+      - name: build-client
+        working-directory: src/client
+        run: |
           npm ci
           npm run build
       - run: |

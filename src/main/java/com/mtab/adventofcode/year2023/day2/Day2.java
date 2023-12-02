@@ -21,6 +21,13 @@ public class Day2 implements Function<List<Day2.Cubes>, Long> {
     @Override
     public Long apply(List<Day2.Cubes> cubes) {
         return cubes.stream()
+                .map(Cubes::minimumCubeSnapshot)
+                .mapToLong(s -> s.red() * s.green() * s.blue())
+                .sum();
+    }
+
+    public Long part1(List<Day2.Cubes> cubes) {
+        return cubes.stream()
                 .filter(c -> c.hasValidSnapshots(MAX_RED, MAX_GREEN, MAX_BLUE))
                 .mapToLong(Cubes::gameId)
                 .sum();
@@ -95,7 +102,24 @@ public class Day2 implements Function<List<Day2.Cubes>, Long> {
                             && s.blue() <= maxBlue)
                     .toList()
                     .size() == this.snapshots.size();
-        };
+        }
+
+        Snapshot minimumCubeSnapshot() {
+            final Snapshot.SnapshotBuilder result = Snapshot.builder();
+            this.snapshots()
+                    .forEach(snapshot -> {
+                        if (snapshot.red() > result.red) {
+                            result.red(snapshot.red());
+                        }
+                        if (snapshot.green() > result.green) {
+                            result.green(snapshot.green());
+                        }
+                        if (snapshot.blue() > result.blue) {
+                            result.blue(snapshot.blue());
+                        }
+                    });
+            return result.build();
+        }
     }
 
     @Builder

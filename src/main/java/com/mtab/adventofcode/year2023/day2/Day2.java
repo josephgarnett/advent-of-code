@@ -12,8 +12,6 @@ import java.util.List;
 import java.util.function.Function;
 
 public class Day2 implements Function<List<Day2.Cubes>, Integer> {
-
-    //only 12 red cubes, 13 green cubes, and 14 blue cubes
     private static final int MAX_RED = 12;
     private static final int MAX_GREEN = 13;
     private static final int MAX_BLUE = 14;

@@ -73,7 +73,7 @@ public class Application {
                 .mapToLong(u -> {
                     final Stopwatch sw = Stopwatch.createStarted();
                     try {
-                        result.set(task.apply(i.get()));
+                        result.set(task.apply(u));
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }

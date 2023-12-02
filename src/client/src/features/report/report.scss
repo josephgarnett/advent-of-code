@@ -1,0 +1,28 @@
+.report {
+  list-style: none;
+  padding: 0;
+}
+
+.report-entry {
+  white-space: pre;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  &.title {
+    margin-top: 2rem;
+  }
+
+  &.summary {
+    margin-top: 2rem;
+  }
+
+  &.overflow {
+    cursor: pointer;
+  }
+
+  > pre.overflow {
+    margin: 0 2rem;
+    white-space: normal;
+    color: grey;
+  }
+}

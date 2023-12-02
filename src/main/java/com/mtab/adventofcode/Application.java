@@ -14,6 +14,10 @@ import java.util.stream.IntStream;
 import static org.fusesource.jansi.Ansi.ansi;
 
 public class Application {
+    @FunctionalInterface
+    public interface CheckedFunction<T, R> {
+        R apply(T t) throws Exception;
+    }
     private static final int DEFAULT_TEST_RUNS = 500;
     public static void main(String... args) {
         AnsiConsole.systemInstall();
@@ -31,6 +35,25 @@ public class Application {
     public static <T> T challenge(
             final String baseResourcePath,
             final Callable<T> task,
+            final int tests) {
+        return Application.challenge(
+                baseResourcePath,
+                (i) -> task.call(),
+                tests);
+    }
+
+    public static <T> T challenge(
+            final String baseResourcePath,
+            final CheckedFunction<Integer, T> task) {
+        return Application.challenge(
+                baseResourcePath,
+                task,
+                DEFAULT_TEST_RUNS);
+    }
+
+    public static <T> T challenge(
+            final String baseResourcePath,
+            final CheckedFunction<Integer, T> task,
             final int tests) {
         try {
             System.out.println(
@@ -50,7 +73,7 @@ public class Application {
                 .mapToLong(u -> {
                     final Stopwatch sw = Stopwatch.createStarted();
                     try {
-                        result.set(task.call());
+                        result.set(task.apply(i.get()));
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }

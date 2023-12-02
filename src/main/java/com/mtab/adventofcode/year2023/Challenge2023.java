@@ -2,6 +2,7 @@ package com.mtab.adventofcode.year2023;
 
 import com.google.common.base.Stopwatch;
 import com.mtab.adventofcode.year2023.day1.Day1;
+import com.mtab.adventofcode.year2023.day2.Day2;
 
 import java.util.concurrent.TimeUnit;
 
@@ -11,9 +12,8 @@ public class Challenge2023 {
     public static void main(final String[] args) throws Exception {
         final Stopwatch sw = Stopwatch.createStarted();
 
-        System.out.println("No Challenges found");
-
         Day1.main(args);
+        Day2.main(args);
 
         System.out.print(
                 ansi()

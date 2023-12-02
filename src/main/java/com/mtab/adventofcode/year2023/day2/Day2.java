@@ -5,12 +5,14 @@ import com.mtab.adventofcode.Application;
 import com.mtab.adventofcode.utils.InputUtils;
 import lombok.Builder;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 
+@Slf4j
 public class Day2 implements Function<List<Day2.Cubes>, Integer> {
     private static final int MAX_RED = 12;
     private static final int MAX_GREEN = 13;
@@ -81,8 +83,14 @@ public class Day2 implements Function<List<Day2.Cubes>, Integer> {
     public static void main(final String[] args) throws Exception {
         final var result = Application.challenge(
                 "2023/day2",
-                () -> new Day2()
-                        .apply(Day2.getInput()));
+                (i) -> {
+                    final List<Cubes> input = Day2.getInput();
+                    if (i == 0) {
+                        System.out.println(input.get(0));
+                    }
+                    return new Day2()
+                            .apply(input);
+                });
 
         Preconditions.checkArgument(result == 71274);
     }
@@ -121,5 +129,10 @@ public class Day2 implements Function<List<Day2.Cubes>, Integer> {
     }
 
     @Builder
-    record Snapshot(int red, int green, int blue) {}
+    record Snapshot(int red, int green, int blue) {
+        @Override
+        public String toString() {
+            return String.format("{ 🟥 %2d } { 🟩 %2d } { 🟦%2d }", this.red(), this.green(), this.blue());
+        }
+    }
 }

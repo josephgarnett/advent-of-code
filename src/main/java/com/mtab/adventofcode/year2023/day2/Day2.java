@@ -11,7 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 
-public class Day2 implements Function<List<Day2.Cubes>, Long> {
+public class Day2 implements Function<List<Day2.Cubes>, Integer> {
 
     //only 12 red cubes, 13 green cubes, and 14 blue cubes
     private static final int MAX_RED = 12;
@@ -19,10 +19,10 @@ public class Day2 implements Function<List<Day2.Cubes>, Long> {
     private static final int MAX_BLUE = 14;
 
     @Override
-    public Long apply(List<Day2.Cubes> cubes) {
+    public Integer apply(List<Day2.Cubes> cubes) {
         return cubes.stream()
                 .map(Cubes::minimumCubeSnapshot)
-                .mapToLong(s -> s.red() * s.green() * s.blue())
+                .mapToInt(s -> s.red() * s.green() * s.blue())
                 .sum();
     }
 
@@ -86,7 +86,7 @@ public class Day2 implements Function<List<Day2.Cubes>, Long> {
                 () -> new Day2()
                         .apply(Day2.getInput()));
 
-        Preconditions.checkArgument(result == 1);
+        Preconditions.checkArgument(result == 71274);
     }
 
     @Builder

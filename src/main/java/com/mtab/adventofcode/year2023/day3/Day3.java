@@ -32,7 +32,7 @@ public class Day3 implements Function<Day3.Schematic, Long> {
                 .stream()
                 .map(g -> schematic.regions()
                         .stream()
-                        .filter(r -> r.isValid(List.of(g)))
+                        .filter(r -> r.isInRange(g))
                         .toList())
                 .filter(l -> l.size() == 2)
                 .mapToLong(l -> l.get(0).getValue() * l.get(1).getValue())
@@ -151,17 +151,21 @@ public class Day3 implements Function<Day3.Schematic, Long> {
                     .collect(Collectors.joining("")));
         }
 
-        public boolean isValid(List<SchematicPoint> points) {
+        public boolean isInRange(@NonNull final SchematicPoint p) {
             final int minX = this.getMinX();
             final int maxX = this.getMaxX();
             final int minY = this.getMinY();
             final int maxY = this.getMaxY();
+            return p.y() >= minY
+                    && p.y() <= maxY
+                    && p.x() >= minX
+                    && p.x() <= maxX;
+        }
+
+        public boolean isValid(List<SchematicPoint> points) {
             return points
                     .stream()
-                    .anyMatch(p -> p.y() >= minY
-                            && p.y() <= maxY
-                            && p.x() >= minX
-                            && p.x() <= maxX);
+                    .anyMatch(this::isInRange);
         }
     }
     public record Schematic(List<SchematicRegion> regions, List<SchematicPoint> points) {

@@ -3,6 +3,7 @@ package com.mtab.adventofcode.year2023.day3;
 import com.google.common.base.Preconditions;
 import com.mtab.adventofcode.Application;
 import com.mtab.adventofcode.utils.InputUtils;
+import lombok.Getter;
 import lombok.NonNull;
 import org.apache.commons.lang3.StringUtils;
 
@@ -97,8 +98,7 @@ public class Day3 implements Function<Day3.Schematic, Long> {
                     final Schematic input = Day3.getInput();
                     return new Day3()
                             .apply(input);
-                },
-                1);
+                });
 
         Preconditions.checkArgument(result == 84900879);
     }
@@ -111,44 +111,44 @@ public class Day3 implements Function<Day3.Schematic, Long> {
             return "*".equals(this.value());
         }
     }
-    record SchematicRegion(List<SchematicPoint> points) {
+
+    @Getter
+    static class SchematicRegion {
+        private final List<SchematicPoint> points;
+        private final int minX;
+        private final int maxX;
+        private final int minY;
+        private final int maxY;
+
+        public SchematicRegion(
+                @NonNull final List<SchematicPoint> points) {
+            this.points = points;
+            this.minX = this.points
+                    .stream()
+                    .mapToInt(SchematicPoint::x)
+                    .min()
+                    .orElse(0) - 1;
+            this.maxX = this.points
+                    .stream()
+                    .mapToInt(SchematicPoint::x)
+                    .max()
+                    .orElse(0) + 1;
+            this.minY = this.points
+                    .stream()
+                    .mapToInt(SchematicPoint::y)
+                    .min()
+                    .orElse(0) - 1;
+            this.maxY = this.points
+                    .stream()
+                    .mapToInt(SchematicPoint::y)
+                    .max()
+                    .orElse(0) + 1;
+        }
         public int getValue() {
-            return Integer.parseInt(this.points()
+            return Integer.parseInt(this.getPoints()
                     .stream()
                     .map(SchematicPoint::value)
                     .collect(Collectors.joining("")));
-        }
-
-        public int getMinX() {
-            return this.points
-                    .stream()
-                    .mapToInt(SchematicPoint::x)
-                    .min()
-                    .orElse(0) - 1;
-        }
-
-        public int getMaxX() {
-            return this.points
-                    .stream()
-                    .mapToInt(SchematicPoint::x)
-                    .max()
-                    .orElse(0) + 1;
-        }
-
-        public int getMinY() {
-            return this.points
-                    .stream()
-                    .mapToInt(SchematicPoint::y)
-                    .min()
-                    .orElse(0) - 1;
-        }
-
-        public int getMaxY() {
-            return this.points
-                    .stream()
-                    .mapToInt(SchematicPoint::y)
-                    .max()
-                    .orElse(0) + 1;
         }
 
         public boolean isValid(List<SchematicPoint> points) {

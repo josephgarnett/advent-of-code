@@ -1,9 +1,9 @@
 package com.mtab.adventofcode.year2023;
 
 import com.google.common.base.Stopwatch;
-import com.mtab.adventofcode.year2015.day3.Day3;
 import com.mtab.adventofcode.year2023.day1.Day1;
 import com.mtab.adventofcode.year2023.day2.Day2;
+import com.mtab.adventofcode.year2023.day3.Day3;
 
 import java.util.concurrent.TimeUnit;
 

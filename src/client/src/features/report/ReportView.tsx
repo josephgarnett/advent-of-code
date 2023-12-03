@@ -4,10 +4,18 @@ import { ReportEntry } from "./ReportEntry";
 import './report.scss';
 
 interface ReportViewProps {
-  year: '2023';
+  year: string;
 }
 export function ReportView({ year }: ReportViewProps) {
-  const { data } = useGetReportQuery({ year });
+  const { data, isError } = useGetReportQuery({ year });
+
+  if (isError) {
+    return (
+      <div>
+        {`No data for ${year}`}
+      </div>
+    )
+  }
 
   return (
     <ul className="report">

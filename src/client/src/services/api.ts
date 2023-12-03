@@ -4,7 +4,7 @@ import { nanoid } from '@reduxjs/toolkit';
 import { Report, ReportEntryType } from '../types/Report';
 
 type GetReportRequest = {
-  year: '2023';
+  year: string;
 };
 
 export const api = createApi({

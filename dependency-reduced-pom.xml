@@ -17,7 +17,7 @@
               <shadedArtifactAttached>true</shadedArtifactAttached>
               <transformers>
                 <transformer>
-                  <mainClass>com.mtab.adventofcode.year2023.Challenge2023</mainClass>
+                  <mainClass>com.mtab.adventofcode.AdventOfCode</mainClass>
                 </transformer>
               </transformers>
             </configuration>

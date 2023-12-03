@@ -4,20 +4,20 @@ import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableMap;
 import com.mtab.adventofcode.models.grid.Grid;
 
-import java.awt.geom.Point2D;
+import java.awt.*;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 public class OctopusGrid implements Grid<Octopus> {
-    private final Map<Point2D, Octopus> gridMap;
+    private final Map<Point, Octopus> gridMap;
 
-    private Set<Point2D> nextPoints = new HashSet<>();
+    private Set<Point> nextPoints = new HashSet<>();
 
     public OctopusGrid(final List<Octopus> grid) {
         this.gridMap = this.populate(grid);
-        this.nextPoints.add(new Point2D.Float(0, 0));
+        this.nextPoints.add(new Point(0, 0));
     }
 
     public int computeFlashes() {
@@ -32,9 +32,9 @@ public class OctopusGrid implements Grid<Octopus> {
     }
 
     @Override
-    public Map<Point2D, Octopus> populate(
+    public Map<Point, Octopus> populate(
             final List<Octopus> points) {
-        final ImmutableMap.Builder<Point2D, Octopus> builder = new ImmutableMap.Builder<>();
+        final ImmutableMap.Builder<Point, Octopus> builder = new ImmutableMap.Builder<>();
 
         for (final Octopus o: points) {
             builder.put(o.getPosition(), o);
@@ -44,7 +44,7 @@ public class OctopusGrid implements Grid<Octopus> {
     }
 
     @Override
-    public Map<Point2D, Octopus> getGrid() {
+    public Map<Point, Octopus> getGrid() {
         return this.gridMap;
     }
 

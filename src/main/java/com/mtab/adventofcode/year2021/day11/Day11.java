@@ -3,6 +3,7 @@ package com.mtab.adventofcode.year2021.day11;
 import com.google.common.base.Stopwatch;
 import com.mtab.adventofcode.models.InputGridLoader;
 
+import java.awt.*;
 import java.awt.geom.Point2D;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -44,7 +45,7 @@ public class Day11 implements
 
     @Override
     public Octopus parseElement(final String e, final int x, final int y) {
-        return new Octopus(Integer.parseInt(e), new Point2D.Float(x, y));
+        return new Octopus(Integer.parseInt(e), new Point(x, y));
     }
 
     @Override

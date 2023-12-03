@@ -4,7 +4,7 @@ import com.google.common.base.Stopwatch;
 import com.mtab.adventofcode.models.InputLoader;
 import org.apache.commons.lang3.StringUtils;
 
-import java.awt.geom.Point2D;
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -48,9 +48,9 @@ public class Day13 implements InputLoader<Object[]>, Supplier<Integer> {
             points.add(
                     new Paper.Point(
                             true,
-                            new Point2D.Float(
-                                    Float.parseFloat(coord[0]),
-                                    Float.parseFloat(coord[1]))));
+                            new Point(
+                                    Integer.parseInt(coord[0]),
+                                    Integer.parseInt(coord[1]))));
         }
 
         final Paper paper = new Paper(points);
@@ -62,12 +62,12 @@ public class Day13 implements InputLoader<Object[]>, Supplier<Integer> {
                 folds.add(
                         new Paper.FoldInstruction(
                                 Paper.FoldAxis.VERTICAL,
-                                new Point2D.Float(Float.parseFloat(values[1]), 0)));
+                                new Point(Integer.parseInt(values[1]), 0)));
             } else {
                 folds.add(
                         new Paper.FoldInstruction(
                                 Paper.FoldAxis.HORIZONTAL,
-                                new Point2D.Float(0, Float.parseFloat(values[1]))));
+                                new Point(0, Integer.parseInt(values[1]))));
             }
         }
 

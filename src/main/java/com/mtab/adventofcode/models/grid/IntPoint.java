@@ -2,6 +2,7 @@ package com.mtab.adventofcode.models.grid;
 
 import com.google.common.base.MoreObjects;
 
+import java.awt.*;
 import java.awt.geom.Point2D;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -9,11 +10,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class IntPoint implements GridPoint<AtomicInteger> {
 
     private final AtomicInteger value;
-    private final Point2D position;
+    private final Point position;
 
     public IntPoint(final int value, final int x, final int y) {
         this.value = new AtomicInteger(value);
-        this.position = new Point2D.Double(x, y);
+        this.position = new Point(x, y);
     }
 
     @Override
@@ -22,7 +23,7 @@ public class IntPoint implements GridPoint<AtomicInteger> {
     }
 
     @Override
-    public Point2D getPosition() {
+    public Point getPosition() {
         return this.position;
     }
 

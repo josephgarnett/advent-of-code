@@ -3,7 +3,6 @@ package com.mtab.adventofcode.year2021.day13;
 import com.mtab.adventofcode.models.grid.Grid;
 import com.mtab.adventofcode.models.grid.GridPoint;
 
-import java.awt.geom.Point2D;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -56,7 +55,7 @@ public class Paper implements Grid<Paper.Point> {
 
         for (int i = 0; i < y + 1; ++i) {
             for (int j = 0; j < x + 1; ++j) {
-                final Point2D p = new Point2D.Float(j, i);
+                final java.awt.Point p = new java.awt.Point(j, i);
 
                 if (this.points.contains(new Point(true, p))) {
                     sb.append(" @ ");
@@ -71,22 +70,22 @@ public class Paper implements Grid<Paper.Point> {
     }
 
     @Override
-    public Map<Point2D, Point> getGrid() {
+    public Map<java.awt.Point, Point> getGrid() {
         return null;
     }
 
     @Override
-    public Map<Point2D, Point> populate(List<Point> points) {
+    public Map<java.awt.Point, Point> populate(List<Point> points) {
         return null;
     }
 
     public enum FoldAxis { HORIZONTAL, VERTICAL };
 
     public static class FoldInstruction {
-        private final Point2D foldLine;
+        private final java.awt.Point foldLine;
         private final FoldAxis axis;
 
-        public FoldInstruction(final FoldAxis axis, final Point2D value) {
+        public FoldInstruction(final FoldAxis axis, final java.awt.Point value) {
             this.axis = axis;
             this.foldLine = value;
         }
@@ -95,22 +94,22 @@ public class Paper implements Grid<Paper.Point> {
             return this.axis;
         }
 
-        public Point2D getFoldLine() {
+        public java.awt.Point getFoldLine() {
             return this.foldLine;
         }
     }
 
     public static class Point implements GridPoint<Boolean> {
         private final boolean value;
-        private final Point2D point;
+        private final java.awt.Point point;
 
-        public Point(final boolean value, final Point2D point) {
+        public Point(final boolean value, final java.awt.Point point) {
             this.value = value;
             this.point = point;
         }
 
         public Point mirror(final FoldInstruction fold) {
-            final Point2D p = this.getPosition();
+            final java.awt.Point p = this.getPosition();
 
             if (fold.getAxis() == FoldAxis.VERTICAL) {
                 final int offset = (int)Math.abs(fold.getFoldLine().getX() - p.getX());
@@ -118,9 +117,9 @@ public class Paper implements Grid<Paper.Point> {
 
                 return new Point(
                         this.getValue(),
-                        new Point2D.Float(
-                                (float)(fold.getFoldLine().getX() + (offset * factor)),
-                                (float)this.getPosition().getY()));
+                        new java.awt.Point(
+                                (int) (fold.getFoldLine().getX() + (offset * factor)),
+                                (int) this.getPosition().getY()));
             }
 
             final int offset = (int)Math.abs(fold.getFoldLine().getY() - p.getY());
@@ -128,9 +127,9 @@ public class Paper implements Grid<Paper.Point> {
 
             return new Point(
                     this.getValue(),
-                    new Point2D.Float(
-                            (float)this.getPosition().getX(),
-                            (float)fold.getFoldLine().getY() + (offset * factor)));
+                    new java.awt.Point(
+                            (int) this.getPosition().getX(),
+                            (int) fold.getFoldLine().getY() + (offset * factor)));
         }
 
         @Override
@@ -139,7 +138,7 @@ public class Paper implements Grid<Paper.Point> {
         }
 
         @Override
-        public Point2D getPosition() {
+        public java.awt.Point getPosition() {
             return this.point;
         }
 

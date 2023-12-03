@@ -2,15 +2,15 @@ package com.mtab.adventofcode.year2021.day11;
 
 import com.mtab.adventofcode.models.grid.GridPoint;
 
-import java.awt.geom.Point2D;
+import java.awt.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Octopus implements GridPoint<AtomicInteger> {
 
     private final AtomicInteger value;
-    private final Point2D position;
+    private final Point position;
 
-    public Octopus(final int value, final Point2D position) {
+    public Octopus(final int value, final Point position) {
         this.value = new AtomicInteger(value);
         this.position = position;
     }
@@ -40,7 +40,7 @@ public class Octopus implements GridPoint<AtomicInteger> {
     }
 
     @Override
-    public Point2D getPosition() {
+    public Point getPosition() {
         return this.position;
     }
 }

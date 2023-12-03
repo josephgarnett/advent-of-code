@@ -1,9 +1,9 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createHashRouter } from "react-router-dom";
 
 import { AppRoute } from "./app";
 import { AdventOfCodeRoute } from "./adventOfCode";
 
-export const router = createBrowserRouter([{
+export const router = createHashRouter([{
   path: "/",
   element: <AppRoute />,
   children: [{

@@ -21,6 +21,24 @@
     margin: 0 1.5rem;
   }
 
+  ul, ol {
+    list-style: none;
+  }
+
+  a {
+    color: #fb8500;
+    text-decoration: none;
+    transition: .2s color;
+
+    &:hover {
+      color: #d77102;
+    }
+
+    &:active {
+      text-decoration: none;
+    }
+  }
+
   a.icon {
     display: flex;
     align-items: center;

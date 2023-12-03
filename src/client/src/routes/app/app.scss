@@ -2,3 +2,32 @@
   display: flex;
   flex-direction: column;
 }
+
+.app-header {
+  display: flex;
+  align-items: center;
+}
+
+.app-navigation {
+  ul {
+    display: flex;
+    margin: 0;
+    padding: 0;
+
+    li {
+      padding: 0 .5rem;
+    }
+  }
+
+  a {
+    color: #969696;
+
+    &:active, &.active {
+      color: #fb8500;
+    }
+
+    &:hover {
+      color: #d77102;
+    }
+  }
+}

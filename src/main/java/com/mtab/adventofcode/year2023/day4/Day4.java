@@ -4,11 +4,12 @@ import com.google.common.base.Preconditions;
 import com.mtab.adventofcode.Application;
 import com.mtab.adventofcode.utils.InputUtils;
 import lombok.Builder;
-import lombok.Getter;
 import lombok.NonNull;
+import lombok.Value;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -17,8 +18,9 @@ public class Day4 implements Function<List<Day4.Scratchcard>, Long> {
     @Override
     public Long apply(
             @NonNull final List<Scratchcard> scratchcards) {
+        AtomicInteger i = new AtomicInteger();
         final Map<Scratchcard, Long> scratchcardResults = new HashMap<>();
-        scratchcards.forEach(s -> this.get(s, scratchcards, scratchcardResults));
+        scratchcards.forEach(s -> this.get(s, i.getAndIncrement(), scratchcards, scratchcardResults));
 
         return scratchcardResults.values()
                 .stream()
@@ -28,21 +30,22 @@ public class Day4 implements Function<List<Day4.Scratchcard>, Long> {
 
     private void get(
             @NonNull final Scratchcard scratchcard,
+            final int index,
             @NonNull final List<Scratchcard> scratchcards,
             @NonNull final Map<Scratchcard, Long> results) {
-        results.computeIfPresent(scratchcard, (k, v) -> v + 1);
-        results.computeIfAbsent(scratchcard, k -> 1L);
+        results.compute(scratchcard, (k, v) -> Objects.isNull(v) ? 1 : v + 1);
 
         if (scratchcard.getWinners() == 0) {
             return;
         }
 
         final long value = scratchcard.getWinners();
-        final int position = scratchcards.indexOf(scratchcard);
+
 
         for (int i = 0; i < value; i++) {
-            final Scratchcard next = scratchcards.get(position + i + 1);
-            this.get(next, scratchcards, results);
+            final int position = index + i + 1;
+            final Scratchcard next = scratchcards.get(position);
+            this.get(next, position, scratchcards, results);
         }
     }
 
@@ -82,17 +85,18 @@ public class Day4 implements Function<List<Day4.Scratchcard>, Long> {
                 "2023/day4",
                 () -> new Day4()
                         .apply(Day4.getInput()),
-                50);
+                1);
 
         Preconditions.checkArgument(result == 5554894);
     }
 
-    @Getter
+    @Value
     public static class Scratchcard {
-        private final String id;
-        private final Set<Long> numbers;
-        private final Set<Long> winningNumbers;
-        private final long winners;
+        String id;
+        Set<Long> numbers;
+        Set<Long> winningNumbers;
+        long winners;
+        int hashCode;
 
         @Builder
         public Scratchcard(
@@ -103,6 +107,7 @@ public class Day4 implements Function<List<Day4.Scratchcard>, Long> {
             this.numbers = numbers;
             this.winningNumbers = winningNumbers;
             this.winners = this.computeWinners(numbers, winningNumbers);
+            this.hashCode = Objects.hash(id, numbers, winningNumbers);
         }
 
         private long computeWinners(
@@ -115,6 +120,11 @@ public class Day4 implements Function<List<Day4.Scratchcard>, Long> {
         }
         public long getWinningValue() {
             return (long) Math.pow(2, this.getWinners() - 1);
+        }
+
+        @Override
+        public int hashCode() {
+            return this.hashCode;
         }
     }
 }

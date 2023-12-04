@@ -18,7 +18,7 @@ public class Day4 implements Function<List<Day4.Scratchcard>, Integer> {
     @Override
     public Integer apply(
             @NonNull final List<Scratchcard> scratchcards) {
-        AtomicInteger i = new AtomicInteger();
+        final AtomicInteger i = new AtomicInteger();
         final int[] results = new int[scratchcards.size()];
         scratchcards.forEach(s -> this.get(s, i.getAndIncrement(), scratchcards, results));
 

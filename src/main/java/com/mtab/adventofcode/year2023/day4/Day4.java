@@ -19,7 +19,6 @@ public class Day4 implements Function<List<Day4.Scratchcard>, Integer> {
     public Integer apply(
             @NonNull final List<Scratchcard> scratchcards) {
         AtomicInteger i = new AtomicInteger();
-        final Map<String, Long> scratchcardResults = new HashMap<>();
         final int[] results = new int[scratchcards.size()];
         scratchcards.forEach(s -> this.get(s, i.getAndIncrement(), scratchcards, results));
 
@@ -38,8 +37,7 @@ public class Day4 implements Function<List<Day4.Scratchcard>, Integer> {
             return;
         }
 
-        final long value = scratchcard.getWinners();
-
+        final int value = scratchcard.getWinners();
 
         for (int i = 0; i < value; i++) {
             final int position = index + i + 1;
@@ -67,12 +65,12 @@ public class Day4 implements Function<List<Day4.Scratchcard>, Integer> {
                             .numbers(Arrays.stream(numbersParts[1]
                                             .trim()
                                             .split("\\s+"))
-                                    .map(Long::parseLong)
+                                    .map(Integer::parseInt)
                                     .collect(Collectors.toSet()))
                             .winningNumbers(Arrays.stream(numbersParts[0]
                                             .trim()
                                             .split("\\s+"))
-                                    .map(Long::parseLong)
+                                    .map(Integer::parseInt)
                                     .collect(Collectors.toSet()))
                             .build();
                 })
@@ -91,31 +89,31 @@ public class Day4 implements Function<List<Day4.Scratchcard>, Integer> {
     @Value
     public static class Scratchcard {
         String id;
-        Set<Long> numbers;
-        Set<Long> winningNumbers;
-        long winners;
+        Set<Integer> numbers;
+        Set<Integer> winningNumbers;
+        int winners;
 
         @Builder
         public Scratchcard(
                 @NonNull final String id,
-                @NonNull final Set<Long> numbers,
-                @NonNull final Set<Long> winningNumbers) {
+                @NonNull final Set<Integer> numbers,
+                @NonNull final Set<Integer> winningNumbers) {
             this.id = id;
             this.numbers = numbers;
             this.winningNumbers = winningNumbers;
             this.winners = this.computeWinners(numbers, winningNumbers);
         }
 
-        private long computeWinners(
-                @NonNull final Set<Long> numbers,
-                @NonNull final Set<Long> winningNumbers) {
-            final Set<Long> intersection = new HashSet<>(winningNumbers);
+        private int computeWinners(
+                @NonNull final Set<Integer> numbers,
+                @NonNull final Set<Integer> winningNumbers) {
+            final Set<Integer> intersection = new HashSet<>(winningNumbers);
             intersection.retainAll(numbers);
 
             return intersection.size();
         }
-        public long getWinningValue() {
-            return (long) Math.pow(2, this.getWinners() - 1);
+        public int getWinningValue() {
+            return (int) Math.pow(2, this.getWinners() - 1);
         }
     }
 }

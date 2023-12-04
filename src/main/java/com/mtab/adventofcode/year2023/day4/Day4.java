@@ -13,18 +13,17 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class Day4 implements Function<List<Day4.Scratchcard>, Long> {
+public class Day4 implements Function<List<Day4.Scratchcard>, Integer> {
 
     @Override
-    public Long apply(
+    public Integer apply(
             @NonNull final List<Scratchcard> scratchcards) {
         AtomicInteger i = new AtomicInteger();
-        final Map<Scratchcard, Long> scratchcardResults = new HashMap<>();
-        scratchcards.forEach(s -> this.get(s, i.getAndIncrement(), scratchcards, scratchcardResults));
+        final Map<String, Long> scratchcardResults = new HashMap<>();
+        final int[] results = new int[scratchcards.size()];
+        scratchcards.forEach(s -> this.get(s, i.getAndIncrement(), scratchcards, results));
 
-        return scratchcardResults.values()
-                .stream()
-                .mapToLong(t -> t)
+        return Arrays.stream(results)
                 .sum();
     }
 
@@ -32,8 +31,8 @@ public class Day4 implements Function<List<Day4.Scratchcard>, Long> {
             @NonNull final Scratchcard scratchcard,
             final int index,
             @NonNull final List<Scratchcard> scratchcards,
-            @NonNull final Map<Scratchcard, Long> results) {
-        results.compute(scratchcard, (k, v) -> Objects.isNull(v) ? 1 : v + 1);
+            int[] results) {
+        results[index]++;
 
         if (scratchcard.getWinners() == 0) {
             return;
@@ -84,8 +83,7 @@ public class Day4 implements Function<List<Day4.Scratchcard>, Long> {
         final var result = Application.challenge(
                 "2023/day4",
                 () -> new Day4()
-                        .apply(Day4.getInput()),
-                1);
+                        .apply(Day4.getInput()));
 
         Preconditions.checkArgument(result == 5554894);
     }
@@ -96,7 +94,6 @@ public class Day4 implements Function<List<Day4.Scratchcard>, Long> {
         Set<Long> numbers;
         Set<Long> winningNumbers;
         long winners;
-        int hashCode;
 
         @Builder
         public Scratchcard(
@@ -107,7 +104,6 @@ public class Day4 implements Function<List<Day4.Scratchcard>, Long> {
             this.numbers = numbers;
             this.winningNumbers = winningNumbers;
             this.winners = this.computeWinners(numbers, winningNumbers);
-            this.hashCode = Objects.hash(id, numbers, winningNumbers);
         }
 
         private long computeWinners(
@@ -120,11 +116,6 @@ public class Day4 implements Function<List<Day4.Scratchcard>, Long> {
         }
         public long getWinningValue() {
             return (long) Math.pow(2, this.getWinners() - 1);
-        }
-
-        @Override
-        public int hashCode() {
-            return this.hashCode;
         }
     }
 }

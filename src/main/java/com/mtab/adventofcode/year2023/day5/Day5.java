@@ -3,7 +3,6 @@ package com.mtab.adventofcode.year2023.day5;
 import com.google.common.base.Preconditions;
 import com.mtab.adventofcode.Application;
 import com.mtab.adventofcode.utils.InputUtils;
-import com.mtab.adventofcode.year2023.day4.Day4;
 import lombok.Builder;
 import lombok.NonNull;
 import lombok.Value;
@@ -14,11 +13,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
-import java.util.stream.LongStream;
 
 public class Day5 implements Function<Day5.Almanac, Long> {
 

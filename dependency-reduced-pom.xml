@@ -17,7 +17,7 @@
               <shadedArtifactAttached>true</shadedArtifactAttached>
               <transformers>
                 <transformer>
-                  <mainClass>com.mtab.adventofcode.AdventOfCode</mainClass>
+                  <mainClass>io.garnett.adventofcode.AdventOfCode</mainClass>
                 </transformer>
               </transformers>
             </configuration>

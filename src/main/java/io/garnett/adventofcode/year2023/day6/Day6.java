@@ -64,8 +64,7 @@ public class Day6 implements Function<Day6.Regatta, Long> {
         final var result = Application.challenge(
                 "2023/day6",
                 () -> new Day6()
-                        .apply(Day6.getInput()),
-                1);
+                        .apply(Day6.getInput()));
 
         Preconditions.checkArgument(result == 45128024);
     }

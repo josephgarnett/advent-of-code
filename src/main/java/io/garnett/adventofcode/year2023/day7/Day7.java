@@ -40,8 +40,7 @@ public class Day7 implements Function<List<Day7.Hand>, Long> {
         final var result = Application.challenge(
                 "2023/day7",
                 () -> new Day7()
-                        .apply(Day7.getInput()),
-                1);
+                        .apply(Day7.getInput()));
 
         Preconditions.checkArgument(result == 254115617);
     }

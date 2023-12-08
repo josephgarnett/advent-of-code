@@ -99,10 +99,9 @@ public class Day8 implements Function<Day8.Context, Long> {
         final var result = Application.challenge(
                 "2023/day8",
                 () -> new Day8()
-                        .apply(Day8.getInput()),
-                1);
+                        .apply(Day8.getInput()));
 
-        Preconditions.checkArgument(result == 254115617);
+        Preconditions.checkArgument(result == 15726453850399L);
     }
 
     @Builder

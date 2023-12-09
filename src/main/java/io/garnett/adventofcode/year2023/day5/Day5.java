@@ -65,20 +65,14 @@ public class Day5 implements Function<Day5.Almanac, Long> {
                 continue;
             }
 
-            if (StringUtils.startsWithIgnoreCase(l, "seed-to-soil map")) {
-                builder.seedToSoil(new GardeningMap(getRanges.get()));
-            } else if (StringUtils.startsWithIgnoreCase(l, "soil-to-fertilizer map")) {
-                builder.soilToFertilizer(new GardeningMap(getRanges.get()));
-            } else if (StringUtils.startsWithIgnoreCase(l, "fertilizer-to-water map")) {
-                builder.fertilizerToWater(new GardeningMap(getRanges.get()));
-            } else if (StringUtils.startsWithIgnoreCase(l, "water-to-light map")) {
-                builder.waterToLight(new GardeningMap(getRanges.get()));
-            } else if (StringUtils.startsWithIgnoreCase(l, "light-to-temperature map")) {
-                builder.lightToTemperature(new GardeningMap(getRanges.get()));
-            } else if (StringUtils.startsWithIgnoreCase(l, "temperature-to-humidity map")) {
-                builder.temperatureToHumidity(new GardeningMap(getRanges.get()));
-            } else if (StringUtils.startsWithIgnoreCase(l, "humidity-to-location map")) {
-                builder.humidityToLocation(new GardeningMap(getRanges.get()));
+            switch(l) {
+                case "seed-to-soil map:" -> builder.seedToSoil(new GardeningMap(getRanges.get()));
+                case "soil-to-fertilizer map:" -> builder.soilToFertilizer(new GardeningMap(getRanges.get()));
+                case "fertilizer-to-water map:" -> builder.fertilizerToWater(new GardeningMap(getRanges.get()));
+                case "water-to-light map:" -> builder.waterToLight(new GardeningMap(getRanges.get()));
+                case "light-to-temperature map:" -> builder.lightToTemperature(new GardeningMap(getRanges.get()));
+                case "temperature-to-humidity map:" -> builder.temperatureToHumidity(new GardeningMap(getRanges.get()));
+                case "humidity-to-location map:" -> builder.humidityToLocation(new GardeningMap(getRanges.get()));
             }
         }
 

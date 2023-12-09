@@ -9,6 +9,7 @@ import io.garnett.adventofcode.year2023.day5.Day5;
 import io.garnett.adventofcode.year2023.day6.Day6;
 import io.garnett.adventofcode.year2023.day7.Day7;
 import io.garnett.adventofcode.year2023.day8.Day8;
+import io.garnett.adventofcode.year2023.day9.Day9;
 
 import java.util.concurrent.TimeUnit;
 
@@ -26,6 +27,7 @@ public class Challenge2023 {
         Day6.main(args);
         Day7.main(args);
         Day8.main(args);
+        Day9.main(args);
 
         System.out.print(
                 ansi()

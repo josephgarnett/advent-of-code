@@ -65,7 +65,7 @@ public class Day5Test {
 
         Assert.assertEquals(
                 List.of(
-                        new Day5.Bucket(81, 11),
+                        new Day5.Bucket(45, 11),
                         new Day5.Bucket(78, 3)),
                 result);
     }
@@ -106,7 +106,54 @@ public class Day5Test {
         Assert.assertEquals(
                 List.of(
                         new Day5.Bucket(85, 11),
-                        new Day5.Bucket(78, 3)),
+                        new Day5.Bucket(82, 3)),
+                result);
+    }
+
+    @Test
+    public void seedToBuckets_fertilizer_to_water() {
+        final Day5.Seed seed = new Day5.Seed(List.of(
+                new Day5.Bucket(57, 13)));
+        final List<Day5.Range> ranges = List.of(
+                new Day5.Range(
+                        new Day5.Bucket(53, 8),
+                        new Day5.Bucket(49, 8)),
+                new Day5.Range(
+                        new Day5.Bucket(11, 42),
+                        new Day5.Bucket(0, 42)),
+                new Day5.Range(
+                        new Day5.Bucket(0, 7),
+                        new Day5.Bucket(42, 7)),
+                new Day5.Range(
+                        new Day5.Bucket(7, 4),
+                        new Day5.Bucket(57, 4)));
+
+        final var result = seed.toBuckets(ranges);
+        Assert.assertEquals(
+                List.of(
+                        new Day5.Bucket(53, 4),
+                        new Day5.Bucket(61, 9)),
+                result);
+    }
+
+    @Test
+    public void seedToBuckets_soil_to_fertilizer() {
+        final Day5.Seed seed = new Day5.Seed(List.of(
+                new Day5.Bucket(81, 14)));
+        final List<Day5.Range> ranges = List.of(
+                new Day5.Range(
+                        new Day5.Bucket(15, 37),
+                        new Day5.Bucket(0, 37)),
+                new Day5.Range(
+                        new Day5.Bucket(52, 2),
+                        new Day5.Bucket(37, 2)),
+                new Day5.Range(
+                        new Day5.Bucket(0, 15),
+                        new Day5.Bucket(39, 15)));
+
+        final var result = seed.toBuckets(ranges);
+        Assert.assertEquals(
+                List.of(new Day5.Bucket(81, 14)),
                 result);
     }
 
@@ -174,7 +221,9 @@ public class Day5Test {
 
         final var result = range.apply(input);
         Assert.assertEquals(
-                new Day5.Bucket(50, 5),
+                List.of(
+                        new Day5.Bucket(50, 5),
+                        new Day5.Bucket(95, 5)),
                 result.get());
     }
 
@@ -187,7 +236,9 @@ public class Day5Test {
 
         final var result = range.apply(input);
         Assert.assertEquals(
-                new Day5.Bucket(55, 5),
+                List.of(
+                        new Day5.Bucket(55, 5),
+                        new Day5.Bucket(110, 5)),
                 result.get());
     }
 }

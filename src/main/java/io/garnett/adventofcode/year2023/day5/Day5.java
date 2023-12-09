@@ -22,7 +22,6 @@ public class Day5 implements Function<Day5.Almanac, Long> {
         return almanac.getSeeds()
                 .stream()
                 .map(almanac::getSeedLocation)
-                .peek(System.out::println)
                 .mapToLong(Seed::getMinValue)
                 .min()
                 .orElseThrow();
@@ -90,8 +89,7 @@ public class Day5 implements Function<Day5.Almanac, Long> {
         final var result = Application.challenge(
                 "2023/day5",
                 () -> new Day5()
-                        .apply(Day5.getInput()),
-                1);
+                        .apply(Day5.getInput()));
 
         // Preconditions.checkArgument(result == 157211394);
         Preconditions.checkArgument(result == 50855035);
@@ -136,18 +134,28 @@ public class Day5 implements Function<Day5.Almanac, Long> {
             final List<Bucket> buckets = new ArrayList<>(this.buckets());
             final List<Bucket> result = new ArrayList<>();
 
-            ranges.forEach(range -> {
-                if (buckets.isEmpty()) {
-                    return;
-                }
+            while (!buckets.isEmpty()) {
                 final Bucket bucket = buckets.get(0);
-                final Optional<List<Bucket>> mapped = range.apply(bucket);
+                boolean isMapped = false;
 
-                mapped.ifPresent((r) -> {
+                for (final Range range: ranges) {
+                    final Optional<List<Bucket>> mapped = range.apply(bucket);
+
+                    if (mapped.isPresent()) {
+                        final List<Bucket> r = mapped.get();
+                        buckets.remove(bucket);
+                        result.add(r.get(0));
+                        buckets.addAll(r.subList(1, r.size()));
+                        isMapped = true;
+                        break;
+                    }
+                }
+
+                if (!isMapped) {
                     buckets.remove(bucket);
-                    result.addAll(r);
-                });
-            });
+                    result.add(bucket);
+                }
+            }
 
             result.addAll(buckets);
 
@@ -157,7 +165,7 @@ public class Day5 implements Function<Day5.Almanac, Long> {
 
     public record Bucket(long start, long length) {
         public long end() {
-            return this.start() + (this.length() - 1);
+            return this.start() + this.length();
         }
     }
 
@@ -179,8 +187,8 @@ public class Day5 implements Function<Day5.Almanac, Long> {
             final long scaledStart = bucket.start() - offset;
             final long scaledEnd = bucket.end() - offset;
 
-            if (scaledStart > this.target().end()
-                || scaledEnd < this.target().start()) {
+            if (scaledStart > this.target().end() - 1
+                || scaledEnd - 1 < this.target().start()) {
                 return Optional.empty();
             }
 

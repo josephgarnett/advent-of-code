@@ -2,6 +2,7 @@ package io.garnett.adventofcode.year2023.day5;
 
 import com.google.common.base.Preconditions;
 import io.garnett.adventofcode.Application;
+import io.garnett.adventofcode.utils.CustomErrors;
 import io.garnett.adventofcode.utils.InputUtils;
 import lombok.Builder;
 import lombok.NonNull;
@@ -12,9 +13,9 @@ import java.io.IOException;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 public class Day5 implements Function<Day5.Almanac, Long> {
-
 
     @Override
     public Long apply(
@@ -101,16 +102,22 @@ public class Day5 implements Function<Day5.Almanac, Long> {
         GardeningMap temperatureToHumidity;
         GardeningMap humidityToLocation;
 
+        List<Function<Seed, Seed>> transformers = List.of(
+                );
+
         public Seed getSeedLocation(
                 @NonNull final Seed seed) {
-            final Seed soil = this.seedToSoil.transformer().apply(seed);
-            final Seed fertilizer = this.soilToFertilizer.transformer().apply(soil);
-            final Seed water = this.fertilizerToWater.transformer().apply(fertilizer);
-            final Seed light = this.waterToLight.transformer().apply(water);
-            final Seed temperature = this.lightToTemperature.transformer().apply(light);
-            final Seed humidity = this.temperatureToHumidity.transformer().apply(temperature);
-
-            return this.humidityToLocation.transformer().apply(humidity);
+            return Stream.of(
+                    this.seedToSoil.transformer(),
+                    this.soilToFertilizer.transformer(),
+                    this.fertilizerToWater.transformer(),
+                    this.waterToLight.transformer(),
+                    this.lightToTemperature.transformer(),
+                    this.temperatureToHumidity.transformer(),
+                    this.humidityToLocation.transformer())
+                    .reduce(seed,
+                            (intermediate, transformer) -> transformer.apply(intermediate),
+                            CustomErrors.notImplementedCombiner());
         }
     }
 

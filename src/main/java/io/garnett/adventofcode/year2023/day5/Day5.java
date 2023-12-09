@@ -102,9 +102,6 @@ public class Day5 implements Function<Day5.Almanac, Long> {
         GardeningMap temperatureToHumidity;
         GardeningMap humidityToLocation;
 
-        List<Function<Seed, Seed>> transformers = List.of(
-                );
-
         public Seed getSeedLocation(
                 @NonNull final Seed seed) {
             return Stream.of(

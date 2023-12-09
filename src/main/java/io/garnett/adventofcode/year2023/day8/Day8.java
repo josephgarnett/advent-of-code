@@ -30,6 +30,7 @@ public class Day8 implements Function<Day8.Context, Long> {
                         t,
                         new ArrayDeque<>(instructions),
                         nodes))
+                // alternate .reduce(1L, ArithmeticUtils::lcm)
                 .toList();
 
         return LowestCommonMultiple.lcm(paths);

@@ -91,7 +91,6 @@ public class Day5 implements Function<Day5.Almanac, Long> {
                 () -> new Day5()
                         .apply(Day5.getInput()));
 
-        // Preconditions.checkArgument(result == 157211394);
         Preconditions.checkArgument(result == 50855035);
     }
 

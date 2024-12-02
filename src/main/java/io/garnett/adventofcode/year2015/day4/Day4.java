@@ -38,7 +38,7 @@ public class Day4 implements Function<String, Integer> {
                         .apply(Day4.getInput()),
                 20);
 
-        Preconditions.checkArgument(result == 2631);
+        Preconditions.checkArgument(result == 1038736);
     }
 }
 

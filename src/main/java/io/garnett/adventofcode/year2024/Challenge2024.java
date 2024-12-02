@@ -2,6 +2,7 @@ package io.garnett.adventofcode.year2024;
 
 import com.google.common.base.Stopwatch;
 import io.garnett.adventofcode.year2024.day1.Day1;
+import io.garnett.adventofcode.year2024.day2.Day2;
 
 import java.util.concurrent.TimeUnit;
 
@@ -12,6 +13,7 @@ public class Challenge2024 {
         final Stopwatch sw = Stopwatch.createStarted();
 
         Day1.main(args);
+        Day2.main(args);
 
         System.out.print(
                 ansi()

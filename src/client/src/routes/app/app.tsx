@@ -16,6 +16,9 @@ export function AppRoute() {
           <nav className="app-navigation">
             <ul>
               <li>
+                <NavLink to="/2024">2024</NavLink>
+              </li>
+              <li>
                 <NavLink to="/2023">2023</NavLink>
               </li>
               <li>

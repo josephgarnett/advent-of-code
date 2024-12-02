@@ -7,7 +7,7 @@ export function AdventOfCodeRoute() {
 
   if (!year) {
     return (
-      <Navigate to="/2023" replace />
+      <Navigate to="/2024" replace />
     );
   }
 

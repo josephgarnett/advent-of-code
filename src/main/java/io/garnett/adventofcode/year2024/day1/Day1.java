@@ -17,6 +17,7 @@ import java.util.stream.IntStream;
 public class Day1 implements ToLongFunction<List<ImmutablePair<Integer, Integer>>> {
 
     private static final long PART_1_RESULT = 1722302;
+    private static final long PART_2_RESULT = 20373490;
 
     @Override
     public long applyAsLong(
@@ -69,6 +70,6 @@ public class Day1 implements ToLongFunction<List<ImmutablePair<Integer, Integer>
                 () -> new Day1()
                         .applyAsLong(Day1.getInput()));
 
-        Preconditions.checkArgument(result == PART_1_RESULT);
+        Preconditions.checkArgument(result == PART_2_RESULT);
     }
 }

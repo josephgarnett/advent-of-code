@@ -18,9 +18,11 @@ export function AppRoute() {
               <li>
                 <NavLink to="/2024">2024</NavLink>
               </li>
+              /
               <li>
                 <NavLink to="/2023">2023</NavLink>
               </li>
+              /
               <li>
                 <NavLink to="/2022">2022</NavLink>
               </li>

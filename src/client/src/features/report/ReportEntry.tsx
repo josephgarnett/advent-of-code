@@ -2,6 +2,7 @@ import { useLayoutEffect, useRef, useState } from "react";
 import { clsx } from 'clsx';
 
 import { ReportEntry as ReportEntryProps } from '../../types/Report';
+
 export function ReportEntry(props: ReportEntryProps) {
   const itemRef = useRef<HTMLLIElement>(null);
   const [isExpanded, setIsExpanded] = useState(false);

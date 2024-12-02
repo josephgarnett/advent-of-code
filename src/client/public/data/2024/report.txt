@@ -1,5 +1,5 @@
 [94m--- Day 1: Historian Hysteria ---[m
 20373490
 ============================================================
-[92mAverage execution time over 500 runs: 1209.39μs
+[92mAverage execution time over 500 runs: 1214.69μs
 [m============================================================

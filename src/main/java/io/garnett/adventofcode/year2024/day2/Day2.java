@@ -55,10 +55,6 @@ public class Day2 implements ToLongFunction<List<List<Integer>>> {
             }
 
             for (int i = 1; i < report.size(); i++) {
-                if (errors != -1) {
-                    break;
-                }
-
                 var previous = report.get(i - 1);
                 var current = report.get(i);
                 var difference = previous - current;
@@ -80,6 +76,10 @@ public class Day2 implements ToLongFunction<List<List<Integer>>> {
                         errors = i - 1;
                     }
                 }
+
+                if (errors != -1) {
+                    break;
+                }
             }
 
             if (errors > -1 && retry) {
@@ -95,6 +95,10 @@ public class Day2 implements ToLongFunction<List<List<Integer>>> {
 
             return errors == -1;
         };
+    }
+
+    private boolean safeValue(final int value) {
+        return value >= MIN_SAFE_DELTA && value <= MAX_SAFE_DELTA;
     }
 
     private static List<List<Integer>> getInput() throws IOException {

@@ -11,10 +11,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Set up JDK 17
+      - name: Set up JDK 21
         uses: actions/setup-java@v2
         with:
-          java-version: '17'
+          java-version: '21'
           distribution: 'temurin'
       - uses: actions/setup-node@v3
       - name: package
@@ -33,6 +33,12 @@ jobs:
           echo "$(java -jar ./target/AdventOfCode-1.0-shaded.jar -y 2023)" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
       - run: echo "${{ steps.run-report-2023.outputs.result }}" > ./src/client/public/data/2023/report.txt
+      - id: run-report-2024
+        run: |
+          echo "result<<EOF" >> $GITHUB_OUTPUT
+          echo "$(java -jar ./target/AdventOfCode-1.0-shaded.jar -y 2024)" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+      - run: echo "${{ steps.run-report-2024.outputs.result }}" > ./src/client/public/data/2024/report.txt
       - name: build-client
         working-directory: src/client
         run: |

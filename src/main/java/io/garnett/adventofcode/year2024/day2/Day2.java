@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.IntFunction;
 import java.util.function.Predicate;
 import java.util.function.ToLongFunction;
 import java.util.stream.IntStream;
@@ -44,11 +45,12 @@ public class Day2 implements ToLongFunction<List<List<Integer>>> {
 
     private Predicate<List<Integer>> evaluateSafety(final boolean retry) {
         return report -> {
-            var first = report.get(0);
-            var second = report.get(1);
-            var increasing = first < second;
-            var decreasing = first > second;
-            var errors = -1;
+            final int first = report.get(0);
+            final int second = report.get(1);
+            final boolean increasing = first < second;
+            final boolean decreasing = first > second;
+
+            int errors = -1;
 
             if (!increasing && !decreasing) {
                 errors = 0;
@@ -59,22 +61,8 @@ public class Day2 implements ToLongFunction<List<List<Integer>>> {
                 var current = report.get(i);
                 var difference = previous - current;
 
-                if (increasing) {
-                    if (difference > -MIN_SAFE_DELTA) {
-                        errors = i - 1;
-                    }
-
-                    if (difference < -MAX_SAFE_DELTA) {
-                        errors = i - 1;
-                    }
-                } else {
-                    if (difference < MIN_SAFE_DELTA) {
-                        errors = i - 1;
-                    }
-
-                    if (difference > MAX_SAFE_DELTA) {
-                        errors = i - 1;
-                    }
+                if (unsafeValue(difference, increasing)) {
+                    errors = i - 1;
                 }
 
                 if (errors != -1) {
@@ -84,12 +72,7 @@ public class Day2 implements ToLongFunction<List<List<Integer>>> {
 
             if (errors > -1 && retry) {
                 return IntStream.range(0, report.size())
-                        .mapToObj(t -> {
-                            var next = new ArrayList<>(report);
-                            next.remove(t);
-
-                            return next;
-                        })
+                        .mapToObj(this.removeUnsafeLevel(report))
                         .anyMatch(this.evaluateSafety(false));
             }
 
@@ -97,8 +80,22 @@ public class Day2 implements ToLongFunction<List<List<Integer>>> {
         };
     }
 
-    private boolean safeValue(final int value) {
-        return value >= MIN_SAFE_DELTA && value <= MAX_SAFE_DELTA;
+    private IntFunction<List<Integer>> removeUnsafeLevel(
+            @NonNull final List<Integer> report) {
+        return unsafePosition -> {
+            final List<Integer> next = new ArrayList<>(report);
+            next.remove(unsafePosition);
+
+            return next;
+        };
+    }
+
+    private boolean unsafeValue(final int value, final boolean increasing) {
+        if (increasing) {
+            return value > -MIN_SAFE_DELTA || value < -MAX_SAFE_DELTA;
+        }
+
+        return value < MIN_SAFE_DELTA || value > MAX_SAFE_DELTA;
     }
 
     private static List<List<Integer>> getInput() throws IOException {

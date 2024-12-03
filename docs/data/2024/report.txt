@@ -1,23 +1,23 @@
 [94m--- Day 1: Historian Hysteria ---[m
 20373490
 ============================================================
-[92mAverage execution time over 500 runs: 1154.43μs
+[92mAverage execution time over 500 runs: 1239.99μs
 [m============================================================
 
 
 [94m--- Day 2: Red-Nosed Reports ---[m
 577
 ============================================================
-[92mAverage execution time over 500 runs: 1588.03μs
+[92mAverage execution time over 500 runs: 1468.59μs
 [m============================================================
 
 
 [94m--- Day 3: Perfectly Spherical Houses in a Vacuum ---[m
 2631
 ============================================================
-[92mAverage execution time over 500 runs: 1434.94μs
+[92mAverage execution time over 500 runs: 1401.69μs
 [m============================================================
 
 
-[33m🎉🎉 All challenges run, execution time: 2154ms
+[33m🎉🎉 All challenges run, execution time: 2122ms
 [m

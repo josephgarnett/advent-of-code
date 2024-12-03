@@ -7,11 +7,9 @@ import lombok.NonNull;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.ToLongFunction;
-import java.util.regex.Matcher;
+import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -21,32 +19,35 @@ public class Day3 implements ToLongFunction<String> {
     private static final String CONDITIONAL_FALSE_INSTRUCTION = "don't";
     private static final Pattern INSTRUCTIONS = Pattern.compile("(do\\(\\))|(don't\\(\\))|(mul\\(\\d+,\\d+\\))");
 
+    private final AtomicBoolean enabled = new AtomicBoolean(true);
+
     @Override
     public long applyAsLong(
             @NonNull final String input) {
-        final Matcher matcher = INSTRUCTIONS.matcher(input);
-        final List<String> multiplications = new ArrayList<>();
-        final AtomicBoolean enabled = new AtomicBoolean(true);
+        return INSTRUCTIONS.matcher(input)
+                .results()
+                .map(MatchResult::group)
+                .reduce(0L,
+                        this::apply,
+                        Long::sum);
+    }
 
-        while (matcher.find()) {
-            final String instruction = matcher.group();
-
-            if (StringUtils.startsWith(instruction, CONDITIONAL_TRUE_INSTRUCTION)) {
-                enabled.set(true);
-            }
-
-            if (StringUtils.startsWith(instruction, CONDITIONAL_FALSE_INSTRUCTION)) {
-                enabled.set(false);
-            }
-
-            if (StringUtils.startsWith(instruction, MULTIPLICATION_INSTRUCTION) && enabled.get()) {
-                multiplications.add(matcher.group());
-            }
+    private long apply(
+            final long result,
+            @NonNull final String instruction) {
+        if (StringUtils.startsWith(instruction, CONDITIONAL_TRUE_INSTRUCTION)) {
+            enabled.set(true);
         }
 
-        return multiplications.stream()
-                .mapToInt(this::multiply)
-                .sum();
+        if (StringUtils.startsWith(instruction, CONDITIONAL_FALSE_INSTRUCTION)) {
+            enabled.set(false);
+        }
+
+        if (StringUtils.startsWith(instruction, MULTIPLICATION_INSTRUCTION) && enabled.get()) {
+            return result + multiply(instruction);
+        }
+
+        return result;
     }
 
     private int multiply(@NonNull final String expression) {

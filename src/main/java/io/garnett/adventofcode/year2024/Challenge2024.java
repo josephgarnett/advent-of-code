@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 import static org.fusesource.jansi.Ansi.ansi;
 
 public class Challenge2024 {
-    public static void main(final String[] args) throws Exception {
+    public static void main(final String[] args) {
         final Stopwatch sw = Stopwatch.createStarted();
 
         Day1.main(args);

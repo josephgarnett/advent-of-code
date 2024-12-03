@@ -1,7 +1,7 @@
 package io.garnett.adventofcode.year2024;
 
 import com.google.common.base.Stopwatch;
-import io.garnett.adventofcode.year2015.day3.Day3;
+import io.garnett.adventofcode.year2024.day3.Day3;
 import io.garnett.adventofcode.year2024.day1.Day1;
 import io.garnett.adventofcode.year2024.day2.Day2;
 

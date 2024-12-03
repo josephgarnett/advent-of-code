@@ -1,7 +1,7 @@
 *.iml
 
 /.idea/
-!/.idea/fileTemplates
+!/.idea/fileTemplates/
 /target/
 **/resources/2015/
 **/resources/2021/

@@ -2,8 +2,11 @@ package io.garnett.adventofcode.year2024.day1;
 
 import com.google.common.base.Preconditions;
 import io.garnett.adventofcode.Application;
+import io.garnett.adventofcode.models.ChallengeResult;
+import io.garnett.adventofcode.models.ChallengeSolution;
 import io.garnett.adventofcode.utils.InputUtils;
 import lombok.NonNull;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
 import java.io.IOException;
@@ -14,15 +17,20 @@ import java.util.function.ToLongFunction;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class Day1 implements ToLongFunction<List<ImmutablePair<Integer, Integer>>> {
+public class Day1 implements ChallengeSolution<List<ImmutablePair<Integer, Integer>>, Long> {
 
     private static final long PART_1_RESULT = 1722302;
     private static final long PART_2_RESULT = 20373490;
 
     @Override
-    public long applyAsLong(
+    public ChallengeResult<Long> solve(
             @NonNull final List<ImmutablePair<Integer, Integer>> input) {
-        return this.part2(input);
+        return new ChallengeResult<>(
+                this.part2(input),
+                () -> IntStream.range(0, 10)
+                        .mapToObj(t -> StringUtils.repeat("██", (int)(Math.random() * 30)))
+                        .collect(Collectors.joining("\n"))
+        );
     }
 
     private long part2(
@@ -68,8 +76,8 @@ public class Day1 implements ToLongFunction<List<ImmutablePair<Integer, Integer>
         final var result = Application.challenge(
                 "2024/day1",
                 () -> new Day1()
-                        .applyAsLong(Day1.getInput()));
+                        .solve(Day1.getInput()));
 
-        Preconditions.checkArgument(result == PART_2_RESULT);
+        Preconditions.checkArgument(result.equals(PART_2_RESULT));
     }
 }

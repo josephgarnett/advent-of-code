@@ -2,6 +2,8 @@ package io.garnett.adventofcode.year2024.day4;
 
 import com.google.common.base.Preconditions;
 import io.garnett.adventofcode.Application;
+import io.garnett.adventofcode.models.ChallengeResult;
+import io.garnett.adventofcode.models.ChallengeSolution;
 import io.garnett.adventofcode.utils.Direction;
 import io.garnett.adventofcode.utils.InputUtils;
 import lombok.NonNull;
@@ -9,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.awt.*;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -16,24 +19,25 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.function.ToLongFunction;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-public class Day4 implements ToLongFunction<Map<Point, String>> {
+public class Day4 implements ChallengeSolution<Map<Point, String>, Long> {
 
     private static final String P1_TARGET = "XMAS";
     private static final String P2_TARGET = "MAS";
     private static final String P2_TARGET_ALT = "SAM";
 
     @Override
-    public long applyAsLong(
+    public ChallengeResult<Long> solve(
             @NonNull final Map<Point, String> input) {
         return this.part2(input);
     }
 
-    private long part2(
+    private ChallengeResult<Long> part2(
             @NonNull final Map<Point, String> input) {
         final Set<Point> xmases = new HashSet<>();
 
@@ -48,31 +52,48 @@ public class Day4 implements ToLongFunction<Map<Point, String>> {
                 .sum();
 
         xmases.forEach(p -> {
-            input.put(p, "🎅🏻");
-            input.put(new Point(p.x - 1, p.y - 1), "🎄");
-            input.put(new Point(p.x - 1, p.y + 1), "🎄");
-            input.put(new Point(p.x + 1, p.y - 1), "🎄");
-            input.put(new Point(p.x + 1, p.y + 1), "🎄");
+            input.put(p, "@");
+            input.put(new Point(p.x - 1, p.y - 1), "*");
+            input.put(new Point(p.x - 1, p.y + 1), "*");
+            input.put(new Point(p.x + 1, p.y - 1), "*");
+            input.put(new Point(p.x + 1, p.y + 1), "*");
         });
 
-        input.keySet()
-                .stream()
-                .sorted((p1, p2) -> {
-                    if (p1.y == p2.y) {
-                        return p1.x - p2.x;
-                    }
-                    return p1.y - p2.y;
-                })
-                .collect(Collectors.groupingBy(t -> t.y))
-                .entrySet()
-                .stream()
-                .limit(10)
-                .forEach((entry) -> System.out.println(entry.getValue().stream()
-                        .map(input::get)
-                        .limit(50)
-                        .collect(Collectors.joining())));
+        return new ChallengeResult<>(result,
+                this.stringify(input, result));
+    }
 
-        return result;
+    private Supplier<String> stringify(
+            @NonNull Map<Point, String> input,
+            long result
+    ) {
+        return () -> {
+            final StringBuilder builder = new StringBuilder();
+
+            final String graphic = input.keySet()
+                    .stream()
+                    .sorted((p1, p2) -> {
+                        if (p1.y == p2.y) {
+                            return p1.x - p2.x;
+                        }
+                        return p1.y - p2.y;
+                    })
+                    .collect(Collectors.groupingBy(t -> t.y))
+                    .entrySet()
+                    .stream()
+                    .limit(10)
+                    .map(entry -> entry.getValue().stream()
+                            .map(input::get)
+                            .limit(50)
+                            .map(t -> StringUtils.leftPad(StringUtils.rightPad(t, 2, " "), 2, " "))
+                            .collect(Collectors.joining()))
+                    .collect(Collectors.joining("\n"));
+
+            return builder.append(graphic)
+                    .append("\n\n")
+                    .append(result)
+                    .toString();
+        };
     }
 
     private long part1(
@@ -178,8 +199,8 @@ public class Day4 implements ToLongFunction<Map<Point, String>> {
         final var result = Application.challenge(
                 "2024/day4",
                 () -> new Day4()
-                .applyAsLong(Day4.getInput()));
+                .solve(Day4.getInput()));
 
-        Preconditions.checkArgument(result == 1965);
+        Preconditions.checkArgument(result.value() == 1965);
     }
 }

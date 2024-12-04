@@ -27,7 +27,6 @@ public class Day4 implements ToLongFunction<Map<Point, String>> {
     private static final String P2_TARGET = "MAS";
     private static final String P2_TARGET_ALT = "SAM";
 
-    // TODO: print some condensed grid?
     @Override
     public long applyAsLong(
             @NonNull final Map<Point, String> input) {
@@ -65,11 +64,13 @@ public class Day4 implements ToLongFunction<Map<Point, String>> {
                     return p1.y - p2.y;
                 })
                 .collect(Collectors.groupingBy(t -> t.y))
-                .forEach((key, points) -> {
-                    System.out.println(points.stream()
-                            .map(input::get)
-                            .collect(Collectors.joining()));
-                });
+                .entrySet()
+                .stream()
+                .limit(10)
+                .forEach((entry) -> System.out.println(entry.getValue().stream()
+                        .map(input::get)
+                        .limit(50)
+                        .collect(Collectors.joining())));
 
         return result;
     }

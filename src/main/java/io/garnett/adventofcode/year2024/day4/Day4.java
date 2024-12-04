@@ -85,6 +85,11 @@ public class Day4 implements ChallengeSolution<Map<Point, String>, Long> {
                     .map(entry -> entry.getValue().stream()
                             .map(input::get)
                             .limit(50)
+                            .map(t -> switch(t) {
+                                case "@" -> "🎅🏻";
+                                case "*" -> "🎄";
+                                default -> "🐾";
+                            })
                             .map(t -> StringUtils.leftPad(StringUtils.rightPad(t, 2, " "), 2, " "))
                             .collect(Collectors.joining()))
                     .collect(Collectors.joining("\n"));

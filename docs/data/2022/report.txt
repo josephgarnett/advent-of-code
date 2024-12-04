@@ -1,63 +1,63 @@
 [94m--- Day 1: Calorie Counting ---[m
 196804
 ============================================================
-[92mAverage execution time over 500 runs: 850.56μs
+[92mAverage execution time over 500 runs: 786.59μs
 [m============================================================
 
 
 [94m--- Day 2: Rock Paper Scissors ---[m
 10835
 ============================================================
-[92mAverage execution time over 500 runs: 614.60μs
+[92mAverage execution time over 500 runs: 605.09μs
 [m============================================================
 
 
 [94m--- Day 3: Rucksack Reorganization ---[m
 2276
 ============================================================
-[92mAverage execution time over 500 runs: 1254.88μs
+[92mAverage execution time over 500 runs: 1356.48μs
 [m============================================================
 
 
 [94m--- Day 4: Camp Cleanup ---[m
 852
 ============================================================
-[92mAverage execution time over 500 runs: 1336.53μs
+[92mAverage execution time over 500 runs: 1264.78μs
 [m============================================================
 
 
 [94m--- Day 5: Supply Stacks ---[m
 RGLVRCQSB
 ============================================================
-[92mAverage execution time over 500 runs: 534.18μs
+[92mAverage execution time over 500 runs: 578.47μs
 [m============================================================
 
 
 [94m--- Day 6: Tuning Trouble ---[m
 2950
 ============================================================
-[92mAverage execution time over 500 runs: 1137.66μs
+[92mAverage execution time over 500 runs: 1121.05μs
 [m============================================================
 
 
 [94m--- Day 7: No Space Left On Device ---[m
 3866390
 ============================================================
-[92mAverage execution time over 500 runs: 1166.62μs
+[92mAverage execution time over 500 runs: 1243.43μs
 [m============================================================
 
 
 [94m--- Day 8: Treetop Tree House ---[m
 291840
 ============================================================
-[92mAverage execution time over 500 runs: 2996.22μs
+[92mAverage execution time over 500 runs: 3003.43μs
 [m============================================================
 
 
 [94m--- Day 9: Rope Bridge ---[m
 2557
 ============================================================
-[92mAverage execution time over 500 runs: 3026.00μs
+[92mAverage execution time over 500 runs: 3064.35μs
 [m============================================================
 
 
@@ -70,16 +70,16 @@
 @@        @@    @@  @@        @@    @@  @@  @@    @@    @@  @@        @@    @@  
 @@        @@@@@@    @@@@@@@@    @@@@@@  @@    @@  @@    @@  @@@@@@@@  @@    @@  
 ============================================================
-[92mAverage execution time over 500 runs: 117.06μs
+[92mAverage execution time over 500 runs: 120.13μs
 [m============================================================
 
 
 [94m--- Day 11: Monkey in the Middle ---[m
 15333249714
 ============================================================
-[92mAverage execution time over 500 runs: 58422.19μs
+[92mAverage execution time over 500 runs: 60353.77μs
 [m============================================================
 
 
-[33m🎉🎉 All challenges run, execution time: 35870ms
+[33m🎉🎉 All challenges run, execution time: 36844ms
 [m

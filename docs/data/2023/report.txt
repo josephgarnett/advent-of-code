@@ -1,7 +1,7 @@
 [94m--- Day 1: Trebuchet?! ---[m
 54824
 ============================================================
-[92mAverage execution time over 500 runs: 2645.48μs
+[92mAverage execution time over 500 runs: 2735.06μs
 [m============================================================
 
 
@@ -9,58 +9,58 @@
 Cubes[gameId=1, snapshots=[{ 🟥  0 } { 🟩  8 } { 🟦 0 }, { 🟥  1 } { 🟩  5 } { 🟦 6 }, { 🟥  4 } { 🟩  2 } { 🟦 1 }, { 🟥  1 } { 🟩 10 } { 🟦 2 }, { 🟥  3 } { 🟩  0 } { 🟦 2 }]]
 71274
 ============================================================
-[92mAverage execution time over 500 runs: 970.06μs
+[92mAverage execution time over 500 runs: 1165.02μs
 [m============================================================
 
 
 [94m--- Day 3: Gear Ratios ---[m
 84900879
 ============================================================
-[92mAverage execution time over 500 runs: 7280.62μs
+[92mAverage execution time over 500 runs: 7156.97μs
 [m============================================================
 
 
 [94m--- Day 4: Scratchcards ---[m
 5554894
 ============================================================
-[92mAverage execution time over 500 runs: 19006.86μs
+[92mAverage execution time over 500 runs: 18975.71μs
 [m============================================================
 
 
 [94m--- Day 5: If You Give A Seed A Fertilizer ---[m
 50855035
 ============================================================
-[92mAverage execution time over 500 runs: 331.44μs
+[92mAverage execution time over 500 runs: 326.47μs
 [m============================================================
 
 
 [94m--- Day 6: Wait For It ---[m
 45128024
 ============================================================
-[92mAverage execution time over 500 runs: 41853.09μs
+[92mAverage execution time over 500 runs: 41449.66μs
 [m============================================================
 
 
 [94m--- Day 7: Camel Cards ---[m
 254115617
 ============================================================
-[92mAverage execution time over 500 runs: 13541.40μs
+[92mAverage execution time over 500 runs: 13153.69μs
 [m============================================================
 
 
 [94m--- Day 8: Haunted Wasteland ---[m
 15726453850399
 ============================================================
-[92mAverage execution time over 500 runs: 6561.47μs
+[92mAverage execution time over 500 runs: 6560.95μs
 [m============================================================
 
 
 [94m--- Day 9: Mirage Maintenance ---[m
 1005
 ============================================================
-[92mAverage execution time over 500 runs: 1945.57μs
+[92mAverage execution time over 500 runs: 1859.97μs
 [m============================================================
 
 
-[33m🎉🎉 All challenges run, execution time: 47145ms
+[33m🎉🎉 All challenges run, execution time: 46782ms
 [m

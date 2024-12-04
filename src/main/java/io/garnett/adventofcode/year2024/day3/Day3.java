@@ -2,18 +2,21 @@ package io.garnett.adventofcode.year2024.day3;
 
 import com.google.common.base.Preconditions;
 import io.garnett.adventofcode.Application;
+import io.garnett.adventofcode.models.ChallengeResult;
+import io.garnett.adventofcode.models.ChallengeSolution;
 import io.garnett.adventofcode.utils.InputUtils;
 import lombok.NonNull;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.ToLongFunction;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public class Day3 implements ToLongFunction<String> {
+public class Day3 implements ChallengeSolution<String, Long> {
     private static final String MULTIPLICATION_INSTRUCTION = "mul";
     private static final String CONDITIONAL_TRUE_INSTRUCTION = "do";
     private static final String CONDITIONAL_FALSE_INSTRUCTION = "don't";
@@ -22,14 +25,22 @@ public class Day3 implements ToLongFunction<String> {
     private final AtomicBoolean enabled = new AtomicBoolean(true);
 
     @Override
-    public long applyAsLong(
+    public ChallengeResult<Long> solve(
             @NonNull final String input) {
-        return INSTRUCTIONS.matcher(input)
+        final List<String> sequence = new ArrayList<>();
+        final long result = INSTRUCTIONS.matcher(input)
                 .results()
                 .map(MatchResult::group)
+                .peek(sequence::add)
                 .reduce(0L,
                         this::apply,
                         Long::sum);
+
+        return new ChallengeResult<>(
+                result,
+                () -> sequence.stream()
+                        .limit(8)
+                        .collect(Collectors.joining(" -> ")) + "...");
     }
 
     private long apply(
@@ -68,8 +79,8 @@ public class Day3 implements ToLongFunction<String> {
         final var result = Application.challenge(
                 "2024/day3",
                 () -> new Day3()
-                        .applyAsLong(Day3.getInput()));
+                        .solve(Day3.getInput()));
 
-        Preconditions.checkArgument(result == 76911921);
+        Preconditions.checkArgument(result.value() == 76911921);
     }
 }

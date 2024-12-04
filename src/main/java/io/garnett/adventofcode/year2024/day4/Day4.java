@@ -10,8 +10,11 @@ import org.apache.commons.lang3.StringUtils;
 import java.awt.*;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.function.ToLongFunction;
 import java.util.stream.Collectors;
@@ -24,7 +27,7 @@ public class Day4 implements ToLongFunction<Map<Point, String>> {
     private static final String P2_TARGET = "MAS";
     private static final String P2_TARGET_ALT = "SAM";
 
-
+    // TODO: print some condensed grid?
     @Override
     public long applyAsLong(
             @NonNull final Map<Point, String> input) {
@@ -33,11 +36,42 @@ public class Day4 implements ToLongFunction<Map<Point, String>> {
 
     private long part2(
             @NonNull final Map<Point, String> input) {
-        return input.entrySet()
+        final Set<Point> xmases = new HashSet<>();
+
+        final long result = input.entrySet()
                 .stream()
                 .filter(t -> StringUtils.equals("A", t.getValue()))
-                .mapToLong(this.mapToX(input))
+                .map(this.mapToX(input))
+                .peek(t -> t.ifPresent(xmases::add))
+                .mapToLong(t -> t
+                        .map(p -> 1)
+                        .orElse(0))
                 .sum();
+
+        xmases.forEach(p -> {
+            input.put(p, "🎅🏻");
+            input.put(new Point(p.x - 1, p.y - 1), "🎄");
+            input.put(new Point(p.x - 1, p.y + 1), "🎄");
+            input.put(new Point(p.x + 1, p.y - 1), "🎄");
+            input.put(new Point(p.x + 1, p.y + 1), "🎄");
+        });
+
+        input.keySet()
+                .stream()
+                .sorted((p1, p2) -> {
+                    if (p1.y == p2.y) {
+                        return p1.x - p2.x;
+                    }
+                    return p1.y - p2.y;
+                })
+                .collect(Collectors.groupingBy(t -> t.y))
+                .forEach((key, points) -> {
+                    System.out.println(points.stream()
+                            .map(input::get)
+                            .collect(Collectors.joining()));
+                });
+
+        return result;
     }
 
     private long part1(
@@ -49,13 +83,16 @@ public class Day4 implements ToLongFunction<Map<Point, String>> {
                 .sum();
     }
 
-    private ToLongFunction<Map.Entry<Point, String>> mapToX(
+    private Function<Map.Entry<Point, String>, Optional<Point>> mapToX(
             @NonNull final Map<Point, String> map) {
-        return entry -> Stream.of(
+        return entry ->
+                Stream.of(
                         Direction.NORTH_EAST,
                         Direction.NORTH_WEST)
                 .map(direction -> this.buildFromCenter(entry.getKey(), direction, map, 1))
-                .allMatch(s -> StringUtils.equals(P2_TARGET, s) || StringUtils.equals(P2_TARGET_ALT, s)) ? 1 : 0;
+                .allMatch(s -> StringUtils.equals(P2_TARGET, s) || StringUtils.equals(P2_TARGET_ALT, s)) ?
+                        Optional.of(entry.getKey()) :
+                        Optional.empty();
     }
 
     private ToLongFunction<Map.Entry<Point, String>> mapToMatches(

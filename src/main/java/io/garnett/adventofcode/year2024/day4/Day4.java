@@ -11,8 +11,8 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.awt.*;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -60,45 +60,42 @@ public class Day4 implements ChallengeSolution<Map<Point, String>, Long> {
         });
 
         return new ChallengeResult<>(result,
-                this.stringify(input, result));
+                this.stringify(input));
     }
 
     private Supplier<String> stringify(
-            @NonNull Map<Point, String> input,
-            long result
-    ) {
-        return () -> {
-            final StringBuilder builder = new StringBuilder();
-
-            final String graphic = input.keySet()
-                    .stream()
-                    .sorted((p1, p2) -> {
-                        if (p1.y == p2.y) {
-                            return p1.x - p2.x;
-                        }
-                        return p1.y - p2.y;
-                    })
-                    .collect(Collectors.groupingBy(t -> t.y))
-                    .entrySet()
-                    .stream()
-                    .limit(10)
-                    .map(entry -> entry.getValue().stream()
-                            .map(input::get)
-                            .limit(50)
-                            .map(t -> switch(t) {
-                                case "@" -> "🎅🏻";
-                                case "*" -> "🎄";
-                                default -> "🐾";
-                            })
-                            .map(t -> StringUtils.leftPad(StringUtils.rightPad(t, 2, " "), 2, " "))
-                            .collect(Collectors.joining()))
-                    .collect(Collectors.joining("\n"));
-
-            return builder.append(graphic)
-                    .append("\n\n")
-                    .append(result)
-                    .toString();
+            @NonNull Map<Point, String> input) {
+        final Comparator<Point> yByX = (p1, p2) -> {
+            if (p1.y == p2.y) {
+                return p1.x - p2.x;
+            }
+            return p1.y - p2.y;
         };
+
+        return () -> input.keySet()
+                .stream()
+                .sorted(yByX)
+                .collect(Collectors.groupingBy(t -> t.y))
+                .entrySet()
+                .stream()
+                .limit(10)
+                .map(entry -> entry.getValue().stream()
+                        .map(input::get)
+                        .limit(50)
+                        .map(t -> switch(t) {
+                            case "@" -> "🎅🏻";
+                            case "*" -> "🎄";
+                            default -> "🐾";
+                        })
+                        .map(t -> StringUtils.leftPad(
+                                StringUtils.rightPad(
+                                        t,
+                                        2,
+                                        " "),
+                                2,
+                                " "))
+                        .collect(Collectors.joining()))
+                .collect(Collectors.joining("\n"));
     }
 
     private long part1(

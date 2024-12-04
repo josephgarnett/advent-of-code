@@ -109,6 +109,7 @@ public class Day9 implements Function<List<Day9.Instruction>, Integer> {
                 case EAST ->  new Point2D.Double(source.head().getX() + 1, source.head().getY());
                 case SOUTH -> new Point2D.Double(source.head().getX(), source.head().getY() - 1);
                 case WEST -> new Point2D.Double(source.head().getX() - 1, source.head().getY());
+                default -> throw new IllegalStateException();
             };
 
             final List<Point2D> chain = source.chain()

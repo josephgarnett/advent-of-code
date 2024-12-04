@@ -7,24 +7,48 @@ import lombok.NonNull;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.ToLongFunction;
 import java.util.regex.Pattern;
-import java.util.stream.Stream;
-
-/*
-It contains at least three vowels (aeiou only), like aei, xazegov, or aeiouaeiouaeiou.
-It contains at least one letter that appears twice in a row, like xx, abcdde (dd), or aabbccdd (aa, bb, cc, or dd).
-It does not contain the strings ab, cd, pq, or xy, even if they are part of one of the other requirements.
-
- */
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class Day5 implements ToLongFunction<List<String>> {
     private static final Pattern DOUBLE_LETTERS = Pattern.compile("([a-z])\\1");
     private static final Pattern VOWEL_REQUIREMENTS = Pattern.compile("[aeiou]");
+    private static final Pattern SEQUENCE = Pattern.compile("([a-z])[a-z]\\1");
     private static final List<String> NAUGHTY_LIST = List.of("ab", "cd", "pq", "xy");
+
+    private static final List<String> TEST_CASES = List.of(
+            "abcdefghglmnop",
+            "qjhvhtzxzqqjkmpb",
+            "xxyxx",
+            "afafa",
+            "uurcxstgmygtbstg",
+            "ieodomkazucvgmuy");
 
     @Override
     public long applyAsLong(
+            @NonNull final List<String> input) {
+        return this.part2(input);
+    }
+
+    private long part2(
+            @NonNull final List<String> input) {
+        return input.stream()
+                // TODO: has a problem with overlaps
+                .filter(t -> IntStream.range(0, t.length() - 1)
+                        .mapToObj(i -> t.substring(i, i + 2))
+                        .collect(Collectors.groupingBy(Function.identity()))
+                        .values()
+                        .stream()
+                        .anyMatch(group -> group.size() > 1))
+                .filter(t -> SEQUENCE.matcher(t).find())
+                .peek(System.out::println)
+                .count();
+    }
+
+    private long part1(
             @NonNull final List<String> input) {
         return input.stream()
                 .filter((t -> NAUGHTY_LIST.stream()
@@ -44,7 +68,8 @@ public class Day5 implements ToLongFunction<List<String>> {
         final var result = Application.challenge(
                 "2015/day5",
                 () -> new Day5()
-                        .applyAsLong(Day5.getInput()));
+                        .applyAsLong(Day5.getInput()),
+                1);
 
         Preconditions.checkArgument(result == 236);
     }

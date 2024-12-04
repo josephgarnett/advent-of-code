@@ -2,6 +2,8 @@ package io.garnett.adventofcode.year2024.day2;
 
 import com.google.common.base.Preconditions;
 import io.garnett.adventofcode.Application;
+import io.garnett.adventofcode.models.ChallengeResult;
+import io.garnett.adventofcode.models.ChallengeSolution;
 import io.garnett.adventofcode.utils.InputUtils;
 import lombok.NonNull;
 
@@ -11,10 +13,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.IntFunction;
 import java.util.function.Predicate;
-import java.util.function.ToLongFunction;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class Day2 implements ToLongFunction<List<List<Integer>>> {
+public class Day2 implements ChallengeSolution<List<List<Integer>>, Integer> {
 
     private static final long PART_1_RESULT = 534;
     private static final long PART_2_RESULT = 577;
@@ -23,7 +26,7 @@ public class Day2 implements ToLongFunction<List<List<Integer>>> {
     private static final int MAX_SAFE_DELTA = 3;
 
     @Override
-    public long applyAsLong(
+    public ChallengeResult<Integer> solve(
             @NonNull final List<List<Integer>> input) {
         return this.part2(input);
     }
@@ -35,13 +38,27 @@ public class Day2 implements ToLongFunction<List<List<Integer>>> {
                 .count();
     }
 
-    private long part2(
+    private ChallengeResult<Integer> part2(
             @NonNull final List<List<Integer>> input) {
-        return input.stream()
+        final List<List<Integer>> safeReports = input.stream()
                 .filter(this.evaluateSafety(true))
-                .count();
+                .toList();
+
+        return new ChallengeResult<>(
+                safeReports.size(),
+                this.stringify(input, safeReports));
     }
 
+    private Supplier<String> stringify(
+            @NonNull final List<List<Integer>> input,
+            @NonNull final List<List<Integer>> safeReports) {
+        return () -> input.stream()
+                .limit(20)
+                .map(t -> safeReports.contains(t) ?
+                        "✅" + t :
+                        "⚠️" + t)
+                .collect(Collectors.joining("\n"));
+    }
 
     private Predicate<List<Integer>> evaluateSafety(final boolean retry) {
         return report -> {
@@ -112,8 +129,8 @@ public class Day2 implements ToLongFunction<List<List<Integer>>> {
         final var result = Application.challenge(
                 "2024/day2",
                 () -> new Day2()
-                        .applyAsLong(Day2.getInput()));
+                        .solve(Day2.getInput()));
 
-        Preconditions.checkArgument(result == PART_2_RESULT);
+        Preconditions.checkArgument(result.value() == PART_2_RESULT);
     }
 }

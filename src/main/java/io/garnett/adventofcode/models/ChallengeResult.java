@@ -14,6 +14,9 @@ public record ChallengeResult<T>(
 
     @Override
     public String toString() {
-        return this.stringify.get();
+        return this.stringify.get() +
+                "\n" +
+                "\n" +
+                this.value;
     }
 }

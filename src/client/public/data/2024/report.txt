@@ -1,23 +1,23 @@
 [94m--- Day 1: Historian Hysteria ---[m
 20373490
 ============================================================
-[92mAverage execution time over 500 runs: 1238.88μs
+[92mAverage execution time over 500 runs: 1162.85μs
 [m============================================================
 
 
 [94m--- Day 2: Red-Nosed Reports ---[m
 577
 ============================================================
-[92mAverage execution time over 500 runs: 1658.42μs
+[92mAverage execution time over 500 runs: 1689.68μs
 [m============================================================
 
 
 [94m--- Day 3: Mull It Over ---[m
 76911921
 ============================================================
-[92mAverage execution time over 500 runs: 735.43μs
+[92mAverage execution time over 500 runs: 687.57μs
 [m============================================================
 
 
-[33m🎉🎉 All challenges run, execution time: 1892ms
+[33m🎉🎉 All challenges run, execution time: 1839ms
 [m

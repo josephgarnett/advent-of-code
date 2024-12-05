@@ -34,7 +34,7 @@ public class Day5 implements ChallengeSolution<PrintingInstructions, Long> {
                                 .toList())
                         .mapToLong(t -> t.get(t.size() / 2))
                         .sum(),
-                () -> StringUtils.EMPTY);
+                () -> "🖨");
     }
 
     private Comparator<Integer> createOrderComparator(

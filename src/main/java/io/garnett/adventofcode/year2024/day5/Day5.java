@@ -12,12 +12,11 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
-import java.util.function.ToLongFunction;
 import java.util.stream.Collectors;
 
 public class Day5 implements ChallengeSolution<PrintingInstructions, Long> {
@@ -28,11 +27,31 @@ public class Day5 implements ChallengeSolution<PrintingInstructions, Long> {
         return new ChallengeResult<>(
                 input.printJobs()
                         .stream()
-                        .filter(t -> t.stream()
+                        .filter(t -> !t.stream()
                                 .allMatch(this.validatePageOrder(t, input)))
-                        .mapToLong(t -> t.get((int) t.size() / 2))
+                        .map(t -> t.stream()
+                                .sorted(this.createOrderComparator(input))
+                                .toList())
+                        .mapToLong(t -> t.get(t.size() / 2))
                         .sum(),
                 () -> StringUtils.EMPTY);
+    }
+
+    private Comparator<Integer> createOrderComparator(
+            @NonNull final PrintingInstructions input) {
+        return (a, b) -> {
+            final List<ImmutablePair<Integer, Integer>> testValues = input.pageOrdering().getOrDefault(a, List.of());
+
+            if (testValues.contains(new ImmutablePair<>(a, b))) {
+                return -1;
+            }
+
+            if (a.equals(b)) {
+                return 0;
+            }
+
+            return 1;
+        };
     }
 
     private Predicate<Integer> validatePageOrder(
@@ -42,7 +61,7 @@ public class Day5 implements ChallengeSolution<PrintingInstructions, Long> {
             final int position = job.indexOf(t);
 
             if (position == job.size() - 1) {
-                return true; // TODO: could be an edge case?
+                return true;
             }
 
             final Set<Integer> nextPages = Set.copyOf(job.subList(position + 1, job.size()));
@@ -84,6 +103,6 @@ public class Day5 implements ChallengeSolution<PrintingInstructions, Long> {
                 () -> new Day5()
                         .solve(Day5.getInput()));
 
-        Preconditions.checkArgument(result.value() == 5087);
+        Preconditions.checkArgument(result.value() == 4971);
     }
 }
